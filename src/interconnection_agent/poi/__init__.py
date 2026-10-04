@@ -8,7 +8,8 @@ unmapped, never guessed.
 
 Nothing here does fuzzy matching. Probabilistic grouping belongs only to the offline
 proposal script (``scripts/propose_poi_aliases.py``), which is not importable from this
-package — a probabilistic join beneath a verified claim would break Tier 1 determinism.
+package. A probabilistic join beneath a verified claim would let the number check see
+different rows from run to run.
 """
 
 from __future__ import annotations

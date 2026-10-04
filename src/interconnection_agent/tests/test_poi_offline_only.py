@@ -1,4 +1,4 @@
-"""The runtime never imports the fuzzy matcher — a guard on Tier 1 determinism.
+"""The runtime never imports the fuzzy matcher, so the number check always sees the same rows.
 
 Fuzzy matching is allowed only in the offline proposal script. If any runtime module
 reached ``rapidfuzz`` (directly, or by importing the script), a probabilistic join could

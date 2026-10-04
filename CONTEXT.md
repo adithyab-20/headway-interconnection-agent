@@ -1,82 +1,92 @@
 # Interconnection Due-Diligence
 
-Assesses the interconnection risk of a proposed generation project by grounding every
-factual claim in a specific row of public ISO queue data, and by stating plainly which
-claims cannot be verified that way.
+Judges how risky it will be to connect a proposed power plant to the grid. Every number is
+backed by specific rows of public queue data, and anything that can't be backed that way
+is labelled as such.
 
 ## Language
 
 ### Grid and geography
 
 **ISO**:
-The market operator that runs an interconnection queue — CAISO, PJM, MISO, ERCOT, SPP,
-NYISO, ISO-NE. The coarsest scope a query can name.
+An independent system operator: the organisation that runs the grid in a large area and
+keeps its interconnection queue. Examples: CAISO (California), PJM, MISO, ERCOT, SPP, NYISO,
+ISO-NE. This is the widest area a question can be about.
 _Avoid_: RTO, market, region (see Study Region)
 
 **Study Region**:
-A sub-ISO zone the operator uses to organise its studies, e.g. CAISO's "Northern",
-"Fresno", "Eastern". Nested strictly inside one ISO. Only `caiso_raw` has this grain.
+A smaller planning area inside one ISO, which the operator uses to organise its studies, for
+example CAISO's "Northern", "Fresno", and "Eastern". Each one sits entirely inside a single
+ISO. Only CAISO's own file (`caiso_raw`) records this.
 _Avoid_: region, zone, area
 
 **Non-ISO Entity**:
-A balancing authority in a territory with no organised market (LBNL's "West" and
-"Southeast" catch-alls). It is not an ISO and must never be stored as one.
+The local utility area that runs the grid where there is no ISO. LBNL lumps these into
+"West" and "Southeast". These are not ISOs and must never be stored as one.
 _Avoid_: non-ISO region
 
 **POI (Point of Interconnection)**:
-The substation or transmission line where a project physically connects to the grid.
-Recorded twice: `poi_raw` (the operator's free text, verbatim) and `poi_normalized`
-(after grouping rules).
+The substation or power line where a project physically connects to the grid. Stored twice:
+`raw_poi` (the operator's text, exactly as typed) and `normalized_poi` (after spellings are
+grouped).
 _Avoid_: interconnection point, station, tie-in
 
 ### Project lifecycle
 
 **Project**:
-One interconnection request. Identified canonically by (`source`, `native_id`).
+One request to connect to the grid. Identified by which dataset it came from plus that
+dataset's own ID (`source`, `native_id`).
 
 **Energization**:
-The date a project actually began commercial operation. Distinct from the *proposed*
-online date, which is a forecast and frequently wrong.
+The date a project actually started operating. Not the same as the *proposed* online date,
+which is a forecast and is often wrong.
 _Avoid_: completion, COD, going live
 
 **Time-to-Energization**:
-`actual_online_date − q_date`, computable only for projects that reached operation, and
-therefore a **survivor statistic** — biased optimistic, since projects still crawling
-through year nine are invisible to it. The caveat is emitted with the number, not left to
-the model's discretion.
+How long a project waited from joining the queue to starting operation
+(`actual_online_date − q_date`). It can only be measured for projects that finished, so it
+looks better than reality: projects still stuck in year nine aren't counted. This warning
+is returned together with the number, so it can't be left out.
 
 **Saturation**:
-Pending MW at a POI relative to the MW historically energized there. Requires `caiso_raw`;
-LBNL has no equivalent grain.
+How crowded a substation is: MW still waiting to connect there, compared with MW that has
+actually been connected there before. Needs CAISO's own file (`caiso_raw`); LBNL's data
+doesn't have the detail.
 
 **Withdrawal**:
-A request leaving the queue without energizing. The dominant outcome — most queued
-projects withdraw.
+A project leaving the queue without ever being connected. This is the most common outcome:
+most projects in the queue drop out.
 
 **Vintage**:
-The calendar year a project entered the queue (`q_date` year). The cohorting axis for
-every rate, because older vintages have had more time to resolve.
+The year a project joined the queue (the year of `q_date`). Every rate is worked out per
+vintage, because older projects have had more time to reach an outcome.
 
 **Resolved**:
-A project that has reached a terminal outcome — energized or withdrawn. Projects still
-active are *unresolved* and belong in neither numerator nor denominator of a rate.
+A project that has reached a final outcome: connected or withdrawn. Projects still waiting
+are *unresolved*, and are left out of both the top and the bottom of a rate.
 
 **Resolved Withdrawal Rate**:
-`withdrawn / (withdrawn + operational)` within a vintage, reported alongside the count
-still unresolved. The pooled all-years version is biased low and is not used.
+For one vintage, `withdrawn / (withdrawn + operational)`, reported together with how many
+projects are still waiting. A single rate over all years at once comes out too low, so it
+isn't used.
 _Avoid_: withdrawal rate (unqualified)
 
-### Data provenance
+### Where numbers come from
 
 **Source**:
-Which dataset a row came from: `caiso_raw` (the operator's own weekly workbook) or
-`lbnl` (Berkeley Lab's pre-normalized national file). CAISO projects appear in **both**,
-so the two are never aggregated together.
+Which dataset a row came from: `caiso_raw` (CAISO's own weekly spreadsheet) or `lbnl`
+(Berkeley Lab's cleaned-up national dataset). CAISO projects appear in **both**, so the two
+are never added together.
 
 **Provenance**:
-The specific source rows an analysis result was derived from — source, `native_id`, and
-the field values used. Every analysis function returns this alongside its numbers.
+The exact source rows a result was worked out from: the source, each row's `native_id`, and
+the values used. Every analysis function returns this together with its numbers.
+
+**Assessment**:
+One complete answer the agent gives about a site: a set of claims, each checked, turned
+into readable text.
 
 **Claim**:
-One factual assertion in a generated assessment, carrying its own verification status.
+One factual statement in an assessment, carrying the numbers it states, the rows they came
+from, and whether the check passed.
 _Avoid_: statement, fact, finding

@@ -1,64 +1,81 @@
-# Claims are generated structured; prose is rendered from them, never parsed back
+# The model returns structured claims; the text is built from them, never parsed back
 
-**Status:** accepted — Phase 4 design is frozen as of this ADR.
+**Status:** accepted. This is the design for build step 4 (checking every number).
 
-The original plan had the Assess node write prose and Tier 1 re-extract numbers from it.
-That turns verification into an NLP problem whose characteristic failure is the *false
-contradiction* — rounding ("~450 MW" vs 448.3), unit restatement (years vs days), and above
-all derived values, which appear in no source row by construction and would flag as
-contradicted despite being correct. Derived figures are most of what a risk assessment
-actually says, so this would have pushed Tier 1 coverage down and inflated Tier 3, shrinking
-the project's thesis.
+**The problem.** The original plan had the model write prose, and code would then pull the
+numbers back out of the text to check them. That turns checking into a language-parsing
+problem. Its typical failure is marking a correct number as wrong:
 
-We invert it. The Assess node emits structured claims only, each carrying its text, the
-values it asserts, how each value was derived, and the source rows it cites. Tier 1 is then
-a join and an arithmetic re-check — deterministic, exact pass/fail — and the final prose is
-rendered by concatenating the text of claims that passed. A failed claim cannot appear as
-verified, because the renderer reads the verification result.
+- rounding ("about 450 MW" against 448.3),
+- unit changes (years against days),
+- and above all numbers the model worked out itself, like a sum or a percentage. These
+  don't appear in any single source row, so a text checker would mark them wrong even when
+  they're right.
 
-## The derivation enum
+Worked-out numbers are most of what a risk assessment says. So under the original plan, most
+of the report would end up "unchecked" and sent for human review, which defeats the point of
+the project.
 
-`derivation` is a **closed set**: `direct`, `sum`, `count`, `median`, `ratio`. Each has
-exactly one verifier function. Anything outside the enum is a hard fail. Tolerance is
-per-unit and written into the README — MW to the nearest 10 or 5%, years to one decimal,
-percentages to the whole point — because "within tolerance" is otherwise vibes with a table
-of contents. `source` is likewise a closed enum: `caiso_raw | lbnl`, those exact strings
-everywhere.
+**The decision.** Turn it around. The model's Assess step returns structured claims only.
+Each claim carries its sentence, the numbers it states, how each number was worked out, and
+the source rows it cites. Checking is then a database lookup plus redoing the arithmetic,
+with a clear pass or fail every time. The final text is built by joining the sentences of
+claims that passed. A failed claim can't appear as checked, because the code that builds the
+text reads the check result.
 
-## Distribution stats are quoted, not re-derived
+## How a number can be worked out: a fixed list
 
-`median`, percentiles, and the outputs of the four domain analysis functions stay *in* the
-enum, but their verifier is a **faithful-quotation check** — claim value equals function
-return — not recomputation. Re-deriving them through Tier 1 would require a claim to cite
-every row of the cohort (235 row IDs for a CAISO timeline) just so the verifier could redo
-what tested code already did. That verifies the wrong party: the analysis functions are
-deterministic, unit-tested code; the model is not.
+`derivation` must be one of five values: `direct` (copied from one row), `sum`, `count`,
+`median`, or `ratio`. Each has exactly one checking function. Anything else fails outright.
 
-## No free-hand row selection
+How close is close enough is set per unit and written down in the repo: MW to the nearest
+10 or within 5%, years to one decimal place, percentages to the whole point. Without a
+written rule, "close enough" is just a feeling.
 
-Every tool result carries a `tool_call_id` and its full returned row-ID set, persisted in
-the trace. Each claim value references the `tool_call_id` it derives from, and Tier 1
-compares the cited rows against what that call actually returned — set equality for
-`sum`/`count`/`median`/`ratio`, membership for `direct`. An agent citing 2 of 3 returned
-rows and summing them correctly still fails. Paired with the rule that all narrowing happens
-in SQL — the agent never mentally filters a broader result set — this makes free-hand row
-selection structurally impossible rather than merely discouraged.
+`source` is a fixed list too: `caiso_raw` or `lbnl`, spelled exactly like that everywhere.
 
-## The limit that remains, stated rather than hidden
+## Medians and analysis results are compared, not recalculated
 
-Tier 1 proves arithmetic, provenance, and full coverage of the returned rows of the query a
-claim derives from. It does **not** prove that query was the *right* query — wrong POI
-argument, missing filter, wrong tool. Every number then verifies perfectly while the
-assessment is about the wrong place. The offline retrieval eval (Eval 2) closes the
-deterministically definable part of that gap; the two are complementary, not substitutes.
-The irreducible residual is comparability judgment — whether this project is fairly compared
-against that cohort at all — and that is the honest content of Tier 3.
+`median`, percentiles, and the outputs of the four analysis functions stay on the list. But
+they're checked by confirming that the claim quotes exactly what the function returned, not
+by recalculating them. Recalculating would mean a claim has to cite every row in the group
+(235 row IDs for a CAISO wait-time figure) just so the checker can repeat work that tested
+code already did. That checks the wrong thing. The analysis functions are ordinary tested
+code. The model is the part that needs checking.
 
-## Rejected: promptfoo for judge calibration
+## The model can't pick and choose rows
 
-Considered for running the Tier 2 judge against the hand-labeled set. Rejected: Tier 1 is
-deterministic Python where it contributes nothing, the calibration run is ~40 lines of
-pytest over a labeled CSV, and the labeled CSV — the actual work — is needed either way.
-Adding a config DSL and a web UI whose defense is weaker than this project's Kafka defense
-costs more credibility than it buys. Revisit only if several judge prompts or models need
-systematic comparison across the label set.
+Every query the agent runs gets an ID (`tool_call_id`), and the full list of row IDs it
+returned is saved in a query log. Each number in a claim names the query it came from, and
+the checker compares the rows the claim cites with the rows that query actually returned.
+
+- For `sum`, `count`, `median`, and `ratio`, they must be exactly the same rows.
+- For `direct`, the cited row must be one of them.
+
+So an agent that cites 2 of the 3 rows a query returned, and adds those 2 up correctly,
+still fails. Add the rule that all filtering happens in SQL (the agent never takes a broad
+result and filters it in its head), and picking convenient rows becomes impossible rather
+than just discouraged.
+
+## What the checks still can't prove
+
+The checks prove the arithmetic, where each number came from, and that a claim used every row
+its query returned. They do **not** prove the query was the *right* one: the wrong
+substation, a missing filter, or the wrong tool. In that case every number checks out
+perfectly while the assessment is about the wrong place.
+
+An offline test closes part of that gap: answer-key test cases check that the agent picked
+the right rows, wherever the right rows can be pinned down exactly. The two work together;
+neither replaces the other. What's left after both is judging whether two projects are
+really comparable at all. That's a human call, and the README says so.
+
+## Rejected: promptfoo for measuring the AI reviewer
+
+We considered promptfoo for running the AI reviewer (the second model that grades the
+wording-based parts of an assessment) against the set of human-graded samples. Rejected. The
+number checker is plain Python, where promptfoo adds nothing. Measuring the reviewer is
+about 40 lines of pytest over a labelled CSV, and the labelled CSV, which is the real work,
+is needed either way. A new configuration language and a web interface would be hard to
+justify, and an unjustified tool hurts the project's credibility more than it helps.
+Reconsider only if several reviewer prompts or models need comparing side by side across the
+labelled set.
