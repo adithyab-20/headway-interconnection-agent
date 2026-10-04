@@ -53,9 +53,29 @@ The Compose service publishes Postgres on **host port 5433** (mapped to the cont
 so it does not collide with a Postgres you may already have installed locally on 5432. CI uses
 the same 5433 mapping, so the default DSN resolves identically there.
 
+## Before the first model call: API key and spending cap
+
+Nothing calls the model yet, but the guards for when something does are already in place.
+
+1. **Set a monthly spending cap in the Anthropic console first.** This is required, not
+   optional. It is the one limit that holds even if the code has a bug, so it must exist
+   before any agent run.
+2. **Put the API key in `.env`, never in a committed file.** Copy `.env.example` to `.env`
+   and fill in `ANTHROPIC_API_KEY`. Git ignores `.env`, and CI scans every commit for
+   anything that looks like a key and fails the build if it finds one.
+3. **Per-assessment limits are enforced in code** (`interconnection_agent.budget`). One
+   assessment may make at most `AGENT_MAX_TURNS` model calls (default 10) and use at most
+   `AGENT_MAX_TOKENS_PER_ASSESSMENT` tokens in total (default 200,000). Each call may write
+   at most `AGENT_MAX_OUTPUT_TOKENS_PER_CALL` tokens (default 16,000). Going over any of these
+   stops the assessment with an error that names the limit. An answer the model could not
+   finish is also an error, not a shorter answer passed along as if it were complete.
+   A call's token count is only known once it returns, so the call that crosses the total
+   is still paid for: the total can go over by at most one call, and then everything stops.
+
 ## Developer checks
 
-The same checks CI runs on every push and pull request (see `.github/workflows/ci.yml`):
+The same checks CI runs on every push and pull request (see `.github/workflows/ci.yml`).
+CI also scans the full git history for leaked keys, which needs no local step.
 
 ```bash
 uv run ruff check           # lint

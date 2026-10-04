@@ -48,3 +48,23 @@ jobs:
 
       - name: Test (pytest)
         run: uv run pytest
+
+  secret-scan:
+    # Fails the build if any commit in the repository's history contains something that
+    # looks like a credential (API keys, tokens, private keys). Scans the whole history on
+    # every run, not just the new commits: a key committed and later deleted is still public.
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.30.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP" gitleaks
+
+      - name: Scan full history for secrets
+        run: '"$RUNNER_TEMP/gitleaks" git . --redact --no-banner'
