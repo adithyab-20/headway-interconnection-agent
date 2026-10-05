@@ -48,6 +48,24 @@ How long a project waited from joining the queue to starting operation
 looks better than reality: projects still stuck in year nine aren't counted. This warning
 is returned together with the number, so it can't be left out.
 
+**Chance of Reaching Operation**:
+For projects like a given one (same technology, similar size), the share expected to reach
+operation within N years of joining the queue. Projects still waiting count for the years
+they have been seen, never as successes or failures. Always shown with a likely range and
+the number of past projects behind it, and labelled with the queue rules the history comes
+from.
+_Avoid_: success rate, completion rate (unqualified)
+
+**Typical Wait**:
+The time by which half of the projects that eventually reach operation have done so, read
+from the same calculation as the Chance of Reaching Operation.
+
+**Realistic MW Ahead**:
+The MW waiting at a substation, with each waiting project counted only by its chance of
+still being built given how long it has already waited. A crowded substation full of old,
+stuck projects has far fewer realistic MW ahead than its raw total.
+_Avoid_: effective queue, adjusted MW
+
 **Saturation**:
 How crowded a substation is: MW still waiting to connect there, compared with MW that has
 actually been connected there before. Needs CAISO's own file (`caiso_raw`); LBNL's data
@@ -87,6 +105,20 @@ One complete answer the agent gives about a site: a set of claims, each checked,
 into readable text.
 
 **Claim**:
-One factual statement in an assessment, carrying the numbers it states, the rows they came
-from, and whether the check passed.
+One statement in an assessment. Every claim is either a Factual Claim or a Judgement.
 _Avoid_: statement, fact, finding
+
+**Factual Claim**:
+A claim that states numbers worked out from specific source rows. Code checks it against
+the data; a person never needs to.
+
+**Judgement**:
+A claim that interprets the numbers (a likely cause, whether projects are comparable, a
+recommendation). Code cannot check it, so a person approves it, rejects it, or rewrites it.
+_Avoid_: opinion, qualitative claim
+
+**Adjustment**:
+A change a person makes to what goes into an assessment, such as excluding a project with a
+reason or narrowing which projects count. The affected numbers are then worked out again
+and checked again. Numbers themselves are never typed over.
+_Avoid_: override, manual edit
