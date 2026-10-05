@@ -187,7 +187,6 @@ forecast for new requests.
 | **Enverus** | "Project Completion Probability" shown as a percentage. It comes from a "binary classification machine learning model" trained on past operational and withdrawn projects. Inputs include status, capacity, developer, days in queue, substation capacity and study duration. Claims "70-80% accuracy" ([2024](https://www.enverus.com/blog/successfully-navigating-the-interconnection-queue-with-project-probability/), [2025](https://www.enverus.com/blog/predict-iso-project-success-with-interconnection-queue-probability/)) | Confirmed (vendor blog) |
 | **Interconnection.fyi** | Status, MW, type, county, year; no score ([homepage](https://www.interconnection.fyi/)) | Confirmed |
 | **GridStatus** | Queue browser and API with standardised columns, per search snippets. Pages blocked our fetch | Unconfirmed |
-| **Paces** | "Catch grid, environmental, and permitting risks"; no numeric score ([homepage](https://www.paces.com/)) | Confirmed |
 | **LevelTen** | Search snippets mention assessing "likelihood of completion"; not visible on the pages we fetched | Unconfirmed |
 | **Grid Strategies / Brattle** | Letter grades for *ISOs*, not projects; CAISO got "B" ([2024](https://gridstrategiesllc.com/wp-content/uploads/2024/03/AEI-2024-Generation-Interconnection-Scorecard.pdf)) | Confirmed |
 
