@@ -229,11 +229,21 @@ plan_files/
 data/*
 !data/publicqueuereport.xlsx
 !data/README.md
-# The LBNL source workbook is 15 MB and stays out of git; the POI cross-check
-# (tests/integration/test_poi_lbnl_crosscheck.py) reads this frozen slice of its CAISO
-# poi_name column instead — small enough to commit, so the assertion runs in CI.
-!data/lbnl_caiso_poi.csv
+# The LBNL source workbook is 15 MB and stays out of git; tests that need it skip without it.
+# Small public files the loader reads (credited in data/README.md).
+!data/cluster-15-interconnection-requests.xlsx
+!data/attachment-b1-v8-constraint-mapping-2024-ipe.xlsx
+!data/attachment-a-transmission-capability-estimates-for-use-in-the-cpuc-irp-process-2026.xlsx
+!data/approved-projects-transmission-planning-process-jul-2026.xlsx
+!data/board-approved-2025-2026-transmission-plan-appendix-h-projects.pdf
+!data/osm_substations_ca_nv_az.json
 
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Draft review files from scripts/propose_places.py (the approved result is committed).
+review/
+
+# Throwaway worktrees made by background agents.
+.claude/worktrees/

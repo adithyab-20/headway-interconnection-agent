@@ -34,3 +34,33 @@ The dataset is licensed under the
 
 California ISO, Lawrence Berkeley National Laboratory, GridTracker,
 and their respective contributors do not endorse this project.
+
+## CAISO public planning files
+
+Files:
+- `cluster-15-interconnection-requests.xlsx`: the 2023 batch of interconnection requests
+- `attachment-b1-v8-constraint-mapping-2024-ipe.xlsx`: which connection points sit behind
+  which transmission bottlenecks (2024 edition)
+- `attachment-a-transmission-capability-estimates-for-use-in-the-cpuc-irp-process-2026.xlsx`:
+  room behind each bottleneck and the cost of the next upgrade (2022 dollars)
+- `approved-projects-transmission-planning-process-jul-2026.xlsx`: approved grid upgrades
+  and their expected finish dates
+- `board-approved-2025-2026-transmission-plan-appendix-h-projects.pdf`: the 2025–2026
+  transmission plan's fact sheets (cost ranges)
+
+Source: California Independent System Operator (CAISO), https://www.caiso.com/
+
+Used in accordance with the
+[CAISO Terms of Use](https://www.caiso.com/privacy-terms-of-use). California ISO is credited as
+the source, and all notices in the files remain intact. California ISO does not endorse this
+project.
+
+## OpenStreetMap substations
+
+File: `osm_substations_ca_nv_az.json` (substations in California, Nevada and Arizona,
+fetched through the Overpass API; data as of the timestamp inside the file)
+
+© OpenStreetMap contributors. Available under the
+[Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/); see
+https://www.openstreetmap.org/copyright. The substation positions table derived from it,
+`src/interconnection_agent/places/positions.csv`, is published under the same licence.

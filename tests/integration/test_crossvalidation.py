@@ -131,41 +131,21 @@ def lbnl_caiso(conn_module: Conn) -> Figures:
     return _figures(conn_module, "source = 'lbnl' AND iso = 'CAISO'")
 
 
-def test_caiso_and_lbnl_agree_on_the_withdrawal_figure(caiso: Figures, lbnl_caiso: Figures) -> None:
-    assert caiso.withdrawal == pytest.approx(lbnl_caiso.withdrawal, abs=CROSS_CHECK_TOL)
-
-
-def test_caiso_and_lbnl_agree_on_the_energization_figure(
-    caiso: Figures, lbnl_caiso: Figures
+def test_our_caiso_loader_agrees_with_berkeley_labs_copy(
+    conn_module: Conn, caiso: Figures, lbnl_caiso: Figures
 ) -> None:
+    # Guard first: if a source failed to load, every share below would be a silent 0/0.
+    sources = {row[0] for row in conn_module.execute("SELECT DISTINCT source FROM projects")}
+    assert {"caiso_raw", "lbnl"} <= sources
+    assert caiso.withdrawal == pytest.approx(lbnl_caiso.withdrawal, abs=CROSS_CHECK_TOL)
     assert caiso.energization == pytest.approx(lbnl_caiso.energization, abs=CROSS_CHECK_TOL)
 
 
-def test_caiso_withdrawal_lands_near_the_public_advocates_figure(caiso: Figures) -> None:
-    assert caiso.withdrawal == pytest.approx(PUB_ADV_WITHDRAWAL, abs=PUB_ADV_WITHDRAWAL_TOL)
-
-
-def test_caiso_energization_lands_near_the_public_advocates_figure(caiso: Figures) -> None:
-    assert caiso.energization == pytest.approx(PUB_ADV_ENERGIZATION, abs=PUB_ADV_ENERGIZATION_TOL)
-
-
-def test_lbnl_caiso_subset_lands_near_the_public_advocates_figures(lbnl_caiso: Figures) -> None:
-    # The same published values check LBNL's CAISO subset by the same cumulative method — an
-    # independent second path to the Public Advocates numbers, each within its measured band.
-    assert lbnl_caiso.withdrawal == pytest.approx(PUB_ADV_WITHDRAWAL, abs=PUB_ADV_WITHDRAWAL_TOL)
-    assert lbnl_caiso.energization == pytest.approx(
-        PUB_ADV_ENERGIZATION, abs=PUB_ADV_ENERGIZATION_TOL
-    )
-
-
-def test_the_two_sources_are_both_actually_present(conn_module: Conn) -> None:
-    # Guard the guard: if a source failed to seed, count(*) would be zero and every share
-    # above would be a silent 0/0. Assert both sources landed rows before trusting the bands.
-    counts: dict[str, int] = {
-        cast(str, row[0]): cast(int, row[1])
-        for row in conn_module.execute(
-            "SELECT source, count(*) FROM projects GROUP BY source"
-        ).fetchall()
-    }
-    assert counts.get("caiso_raw", 0) > 0
-    assert counts.get("lbnl", 0) > 0
+def test_both_sources_land_near_the_public_advocates_figures(
+    caiso: Figures, lbnl_caiso: Figures
+) -> None:
+    for figures in (caiso, lbnl_caiso):
+        assert figures.withdrawal == pytest.approx(PUB_ADV_WITHDRAWAL, abs=PUB_ADV_WITHDRAWAL_TOL)
+        assert figures.energization == pytest.approx(
+            PUB_ADV_ENERGIZATION, abs=PUB_ADV_ENERGIZATION_TOL
+        )

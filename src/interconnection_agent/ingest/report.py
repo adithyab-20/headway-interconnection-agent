@@ -59,6 +59,10 @@ class SheetReport:
     unmapped_rows: int = 0
     mw_written: float = 0.0
     unmapped_mw: float = 0.0
+    # Study-progress cells outside the reviewed mapping (ingest/study_progress.py), and how
+    # many rows carried one; those rows keep an empty furthest step.
+    unrecognised_study_values: tuple[str, ...] = ()
+    unrecognised_study_rows: int = 0
 
     @property
     def rows_dropped(self) -> int:

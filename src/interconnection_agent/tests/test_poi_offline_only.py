@@ -23,6 +23,8 @@ def test_importing_the_runtime_does_not_import_rapidfuzz() -> None:
         "import interconnection_agent.poi; "
         "import interconnection_agent.ingest; "
         "import interconnection_agent.cli; "
+        "import interconnection_agent.places; "
+        "import interconnection_agent.load; "
         "assert 'rapidfuzz' not in sys.modules, "
         "'runtime code imported the offline fuzzy matcher'"
     )
