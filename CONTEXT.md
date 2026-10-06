@@ -56,6 +56,12 @@ the number of past projects behind it, and labelled with the queue rules the his
 from.
 _Avoid_: success rate, completion rate (unqualified)
 
+**Comparison Group**:
+The past projects a new project is compared with to work out its Chance of Reaching
+Operation. Chosen as the most similar group that still has enough past projects to trust
+(by type, then size, then local area); the user can make it narrower or broader.
+_Avoid_: cohort, peer set, "projects like yours" (informal)
+
 **Typical Wait**:
 The time by which half of the projects that eventually reach operation have done so, read
 from the same calculation as the Chance of Reaching Operation.

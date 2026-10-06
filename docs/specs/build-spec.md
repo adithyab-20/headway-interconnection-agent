@@ -1,5 +1,7 @@
 # Interconnection Due-Diligence Agent: Build Plan
 
+> **Superseded** by [`product-spec.md`](product-spec.md). Kept for history.
+
 This plan is meant to stand on its own, so assume no other context. The decisions below were
 made on purpose. Follow them as written, and ask before changing the design.
 

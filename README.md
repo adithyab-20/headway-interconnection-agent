@@ -26,9 +26,8 @@ More detail:
   so on).
 - [`docs/adr/`](docs/adr/): short write-ups of the main design decisions and why they were
   made.
-- [`docs/specs/vertical-slice.md`](docs/specs/vertical-slice.md): the plan for the first
-  working version.
-- [`docs/specs/build-spec.md`](docs/specs/build-spec.md): the full build plan.
+- [`docs/specs/product-spec.md`](docs/specs/product-spec.md): what the product does, as a
+  short list of behaviours.
 
 ## Where it stands
 
@@ -50,8 +49,8 @@ Built so far:
   and a CI check that fails if an API key is ever committed. These are in place before
   anything calls the model.
 
-Not built yet: the analysis functions, the agent itself, and the code that checks each
-number. They're tracked as GitHub issues #9–#15.
+Not built yet: the numbers, the agent, the checking, and the map app. See the
+[product spec](docs/specs/product-spec.md).
 
 ## Requirements
 

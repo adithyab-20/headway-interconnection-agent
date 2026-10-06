@@ -1,5 +1,7 @@
 # Plan: the first working version
 
+> **Superseded** by [`product-spec.md`](product-spec.md). Kept for history.
+
 **What this covers:** build steps 1–4 of [`build-spec.md`](build-spec.md) (load the data,
 set up the database, build the agent and its analysis functions, check every number), plus
 the first 10 answer-key test cases. Output is JSON and command-line only; there is no
