@@ -17,7 +17,6 @@ Gorman,way/63908845,34.7904804,-118.827152,Gorman Substation,2026-10-06,Los Ange
 Grant,way/33111585,37.671444,-122.1595919,Grant Substation,2026-10-06,Alameda,Alameda
 Green Valley,way/24397698,36.9520512,-121.7604186,Green Valley Substation,2026-10-06,Santa Cruz,Santa Cruz
 Harry Allen,way/71837876,36.4274003,-114.9069319,Harry Allen Substation,2026-10-06,Clark,Lincoln
-Humboldt,way/162934426,41.2272733,-115.9399678,Humboldt,2026-10-06,Elko,Humboldt
 Innovation,way/606500067,36.5822326,-115.9473218,Innovation Substation,2026-10-06,Nye,Clark/Nye
 Inyokern,way/164758876,35.6526475,-117.7958919,Inyokern Substation,2026-10-06,Kern,Inyo
 Las Positas,way/865190320,37.7005872,-121.7334824,Las Positas Substation,2026-10-06,Alameda,San Mateo
@@ -50,7 +49,7 @@ Tracy,way/613571074,37.7488257,-121.4159518,Tracy Substation,2026-10-06,San Joaq
 Trinity,way/711541435,40.7180012,-122.9343909,Trinity Substation,2026-10-06,Trinity,Shasta/Trinity
 Tulare,way/199049644,36.21337,-119.3303801,Tulare Substation,2026-10-06,Tulare,Kings
 Vaca Dixon,relation/12204895,38.4034895,-121.9202262,Vaca Dixon Substation,2026-10-06,Solano,Glenn
-Vista,way/302045339,36.3172993,-116.010797,Vista Substation,2026-10-06,Nye,Nye
+Vista,way/33604800,34.0406913,-117.3206273,Vista Substation,2026-10-06,San Bernardino,San Bernardino
 Walnut,way/384800363,34.0081672,-117.9499642,Walnut Substation,2026-10-06,Los Angeles,Los Angeles
 Warnerville,way/79248632,37.7417051,-120.8023645,Warnerville Substation,2026-10-06,Stanislaus,San Joaquin
 Westwood,way/1421948094,40.2998877,-121.0015104,Westwood Substation,2026-10-06,Lassen,Lassen
@@ -352,3 +351,13 @@ Wolfe,way/116534901,37.3344053,-122.0205664,Wolfe Substation,2026-10-06,Santa Cl
 Woodland,way/36730100,38.6784701,-121.7600433,Woodland Substation,2026-10-06,Yolo,Yolo
 Woodward,way/179415242,36.8962778,-119.751018,Woodward Substation,2026-10-06,Fresno,Fresno
 Wyandotte,way/151116308,39.4915666,-121.5409382,Wyandotte Substation,2026-10-06,Butte,
+Valley,way/61601149,33.7395005,-117.1564367,Valley Substation,2026-10-06,Riverside,Riverside
+Gamebird,way/439012890,36.161969,-115.8994445,Gamebird Switchard,2026-10-06,Nye,Nye
+Vista (Nye County),way/302045339,36.3172993,-116.010797,Vista Substation,2026-10-06,Nye,Nye
+Mesa (Los Angeles County),way/66209607,34.0365975,-118.1116208,Mesa Substation,2026-10-06,Los Angeles,Los Angeles
+Eagle Rock,way/183206679,38.8289511,-122.8101652,Eagle Rock Substation,2026-10-06,Sonoma,Mendocino
+Eagle Rock (Los Angeles County),way/39515681,34.1508286,-118.1843149,Eagle Rock Switchyard,2026-10-06,Los Angeles,Los Angeles
+Kearny,relation/13791347,32.8330901,-117.134041,Kearny Substation,2026-10-06,San Diego,San Diego
+Martell,way/1276250545,38.3691227,-120.7967676,Martell Substation,2026-10-06,Amador,Amador
+San Jose B,way/24168995,37.3409379,-121.9014665,San Jose Substation B,2026-10-06,Santa Clara,
+Westley,way/32707508,37.5160275,-121.2307996,Westley Substation,2026-10-06,Stanislaus,Stanislaus

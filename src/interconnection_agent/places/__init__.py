@@ -10,6 +10,8 @@ here is applied through reviewed tables in this folder, by exact match only:
   * ``bottleneck_names.csv``- each bottleneck as the bottleneck list names it -> the name
                               the cost file uses, and a short name.
   * ``upgrade_places.csv``  - each planned upgrade -> the places it's at.
+  * ``fact_sheet_names.csv``- each upgrade fact sheet the tracker names differently -> the
+                              tracker's plan id (read by ``sources``).
 
 Anything these tables don't recognise is left unplaced and reported, never guessed. A site
 with no reviewed position falls back to its county.
@@ -173,22 +175,34 @@ def _apply_bottlenecks(
                 "CAISO transmission capability estimates, 2026" if cost is not None else None,
             ),
         )
+    # A point that's a line counts at both its ends, like a project on a line, except at an
+    # end the list names itself: the list's own answer for that place stands.
     unmatched = []
+    links: list[tuple[str, str, str | None]] = []  # (place, bottleneck, via line)
+    listed_itself: set[str] = set()
     for point, listed_names in sources.behind.items():
         spelling = spellings.get(normalize_station(point))
-        if spelling is None or spelling.kind != "substation":
+        if spelling is None:
             unmatched.append(point)
             continue
-        place = place_id(spelling.site, spelling.voltage_kv)
-        if place not in places:
-            continue
-        for listed in listed_names:
-            if listed in names:
-                conn.execute(
-                    "INSERT INTO place_bottleneck_links (place, bottleneck) VALUES (%s, %s) "
-                    "ON CONFLICT DO NOTHING",
-                    (place, names[listed]["bottleneck"]),
-                )
+        if spelling.kind == "substation":
+            ends, via = [spelling.site], None
+            listed_itself.add(place_id(spelling.site, spelling.voltage_kv))
+        else:
+            ends, via = [spelling.site, spelling.other_end or spelling.site], point
+        links += [
+            (place_id(site, spelling.voltage_kv), names[listed]["bottleneck"], via)
+            for site in ends
+            for listed in listed_names
+            if listed in names
+        ]
+    for place, bottleneck, via in links:
+        if place in places and (via is None or place not in listed_itself):
+            conn.execute(
+                "INSERT INTO place_bottleneck_links (place, bottleneck, via_line) "
+                "VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+                (place, bottleneck, via),
+            )
     return sorted(unmatched)
 
 

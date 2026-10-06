@@ -1,5 +1,5 @@
 station_key,kind,site,voltage_kv,other_end_site
-0.2-mile from moro hill tap on the moro hill tap-monserate 69 kv line,line,Moro Hill,69,Monserate
+0.2-mile from moro hill tap on the moro hill tap-monserate 69 kv line,line,Morro Hill,69,Monserate
 230/138/69 kv south bay (650 mw cc),substation,South Bay,230,
 substation 5 (aka whirlwind),substation,Whirlwind,230,
 antelope,substation,Antelope,66,
@@ -9,7 +9,7 @@ antelope cal cement 60 kv line,line,Antelope,66,Cal Cement
 arco-tulare lake line,line,Arco,70,Tulare Lake
 arco-midway & gates-midway 230 kv,line,Arco,230,Midway
 arco-midway,line,Arco,230,Midway
-arco caneras 70 kv line,line,Arco,70,Caneras
+arco caneras 70 kv line,line,Arco,70,Carneras
 at switch 125 outside harter sub,substation,Harter,,
 230 kv bus at the kelso substation via the mariposa energy 230 kv tie line,substation,Kelso,230,
 bahia moraga 230 kv line,line,Bahia,230,Moraga
@@ -87,7 +87,7 @@ geyers #12-fulton 230 kv line,line,Geysers,230,Fulton
 geysers #3 & #4 pp 115 kv,substation,Geysers,115,
 geyers 17-fulton #2 230 kv line,line,Geysers,230,Fulton
 geysers #3 cloverdale 115 kv line,line,Geysers,115,Cloverdale
-gold hill-eight mile road,line,Gold Hill,230,Eight Mile Road
+gold hill-eight mile road,line,Gold Hill,230,Eight Mile
 gould substation 230k kv,substation,Gould,230,
 greenleaf #1 tap 115 kv,substation,Greenleaf,115,
 greenleaf #1 115 kv tap,substation,Greenleaf,115,
@@ -173,7 +173,6 @@ midway substation via midway-sunset gen-tie 230 kv line,substation,Midway,230,
 miller #1 115 kv line,substation,Miller,115,
 mira loma substation 220 kv tap,substation,Mira Loma,230,
 mira loma substation,substation,Mira Loma,230,
-mission substation,substation,Mission,138,
 mojave generating station 500 kv bus,substation,Mohave Generating,500,
 morro bay substation,substation,Morro Bay,230,
 morrow bay-gates 230 kv line,line,Morro Bay,230,Gates
@@ -326,7 +325,7 @@ antelope substation 66 kv bus,substation,Antelope,66,
 antelope-neenach 66 kv,line,Antelope,66,Neenach
 antelope 230 kv,substation,Antelope,230,
 antelope-magunden #2 230 kv line,line,Antelope,230,Magunden
-antelope-calcement 66 kv line,line,Antelope,66,Calcement
+antelope-calcement 66 kv line,line,Antelope,66,Cal Cement
 antelope-magunden #1 220 kv line,line,Antelope,230,Magunden
 antelope-magunden 230 kv,line,Antelope,230,Magunden
 antelope-cal cement 66 kv,line,Antelope,66,Cal Cement
@@ -348,7 +347,7 @@ arco 70 kv,substation,Arco,70,
 arco substation 230 kv,substation,Arco,230,
 arco-midway 230 kv line,line,Arco,230,Midway
 arco substation 230 kv bus,substation,Arco,230,
-arco-polonios pass 70 kv,line,Arco,70,Polonios Pass
+arco-polonios pass 70 kv,line,Arco,70,Polonio Pass
 arco 230 kv substation,substation,Arco,230,
 arco substation 69 kv bus,substation,Arco,69,
 arco substation 70 kv,substation,Arco,70,
@@ -363,8 +362,8 @@ artesian ranch substation 69 kv,substation,Artesian Ranch,69,
 ash-valley center 69 kv line,line,Ash,69,Valley Center
 ash substation 69 kv,substation,Ash,69,
 ashlan ave 230 kv,substation,Ashlan Ave,230,
-500 kv at ocotillo express,substation,At Ocotillo Express,500,
-60 kv bus at posdef qf facility,substation,At Posdef Qf Facility,60,
+500 kv at ocotillo express,substation,Ocotillo,500,
+60 kv bus at posdef qf facility,substation,Posdef,60,
 atascadero 70 kv,substation,Atascadero,70,
 atlantic substation 230 kv,substation,Atlantic,230,
 atlantic 60 kv,substation,Atlantic,60,
@@ -407,7 +406,7 @@ bellota-tesla 230 kv tap,line,Bellota,230,Tesla
 bellota 115 kv,substation,Bellota,115,
 bellota-warnerville 230 kv line,line,Bellota,230,Warnerville
 belmont 115 kv,substation,Belmont,115,
-belotta 115 kv,substation,Belotta,115,
+belotta 115 kv,substation,Bellota,115,
 belridge-temblor 115 kv,line,Belridge,115,Temblor
 benton 60 kv,substation,Benton,60,
 bernardo substation 69 kv,substation,Bernardo,69,
@@ -482,7 +481,7 @@ calcite substation 230 kv,substation,Calcite,230,
 calcite substation 220 kv bus,substation,Calcite,230,
 calcite 230 kv,substation,Calcite,230,
 calcite substation 220 kv,substation,Calcite,230,
-calcite substation gen-tie at 230 kv,line,Calcite Gen,230,Tie At
+calcite substation gen-tie at 230 kv,substation,Calcite,230,
 caliente 230 kv,substation,Caliente,230,
 caliente sw sta-midway #1,line,Caliente,230,Midway
 caliente switching station 230 kv,substation,Caliente,230,
@@ -616,20 +615,20 @@ cool water-kramer 115 kv line,line,Cool Water,115,Kramer
 cooley landing 60 kv substation,substation,Cooley Landing,60,
 cooley landing 60 kv,substation,Cooley Landing,60,
 cooley landing 115 kv,substation,Cooley Landing,115,
-coolwater-kramer 230 kv line,line,Coolwater,230,Kramer
-coolwater substation 115 kv,substation,Coolwater,115,
-coolwater-dunn siding 115 kv line,line,Coolwater,115,Dunn Siding
-coolwater 220 kv bus,substation,Coolwater,230,
-coolwater-dunnsiding-baker substation 115 kv,substation,Coolwater,115,
-coolwater 115 kv substation,substation,Coolwater,115,
-coolwater-kramer 115 kv line,line,Coolwater,115,Kramer
-coolwater substation 230 kv,substation,Coolwater,230,
+coolwater-kramer 230 kv line,line,Cool Water,230,Kramer
+coolwater substation 115 kv,substation,Cool Water,115,
+coolwater-dunn siding 115 kv line,line,Cool Water,115,Dunn Siding
+coolwater 220 kv bus,substation,Cool Water,230,
+coolwater-dunnsiding-baker substation 115 kv,substation,Cool Water,115,
+coolwater 115 kv substation,substation,Cool Water,115,
+coolwater-kramer 115 kv line,line,Cool Water,115,Kramer
+coolwater substation 230 kv,substation,Cool Water,230,
 coppermine 70 kv,substation,Coppermine,70,
 copus-old river 70 kv,line,Copus,70,Old River
 copus-old river 70 kv line,line,Copus,70,Old River
 copus 70 kv,substation,Copus,70,
 copus road sub 70 kv bus,substation,Copus Road,70,
-coram-rosemond 66 kv line,line,Coram,66,Rosemond
+coram-rosemond 66 kv line,line,Coram,66,Rosamond
 corcoran-smyrna 115 kv line,line,Corcoran,115,Smyrna
 corcoran-smyrna 115 kv,line,Corcoran,115,Smyrna
 corcoran 70 kv,substation,Corcoran,70,
@@ -689,7 +688,7 @@ cuyama 2 substation 70 kv,substation,Cuyama 2,70,
 dairyland-mendota transmission line 115 kv,line,Dairyland,115,Mendota Transmission
 dairyland-mendota 115 kv line,line,Dairyland,115,Mendota
 dairyland-mendota 115 kv line tap,line,Dairyland,115,Mendota
-dairyland-legrand 115 kv,line,Dairyland,115,Legrand
+dairyland-legrand 115 kv,line,Dairyland,115,Le Grand
 dairyland 115 kv,substation,Dairyland,115,
 davis 115 kv,substation,Davis,115,
 del amo substation 500 kv,substation,Del Amo,500,
@@ -702,7 +701,7 @@ delaney-colorado river line 500 kv,line,Delaney,500,Colorado River
 delaney substation 500 kv,substation,Delaney,500,
 delaney-colorado river 500 kv,line,Delaney,500,Colorado River
 delevan substation 230 kv,substation,Delevan,230,
-delevan-vaca #3 230 kv line,line,Delevan,230,Vaca
+delevan-vaca #3 230 kv line,line,Delevan,230,Vaca Dixon
 delevan 230 kv,substation,Delevan,230,
 delevan-cortina,line,Delevan,230,Cortina
 delta switching yard-tesla 230 kv line,line,Delta Switching Yard,230,Tesla
@@ -740,7 +739,7 @@ divide-cabrillo #2 115 kv line tap,line,Divide,115,Cabrillo
 divide 115 kv,substation,Divide,115,
 divide 70 kv,substation,Divide,70,
 division substation 69 kv,substation,Division,69,
-dixon-vaca #2 60 kv,line,Dixon,60,Vaca
+dixon-vaca #2 60 kv,line,Dixon,60,Vaca Dixon
 dixon 60 kv,substation,Dixon,60,
 dixon landing-mckee 115 kv line,line,Dixon Landing,115,Mckee
 dixon landing 115 kv,substation,Dixon Landing,115,
@@ -756,10 +755,10 @@ eagle mountain-blythe 161 kv,line,Eagle Mountain,161,Blythe
 eagle mountain-blythe sce 161 kv,line,Eagle Mountain,161,Blythe Sce
 eagle mountain substation 230 kv,substation,Eagle Mountain,230,
 eagle rock substation 115 kv,substation,Eagle Rock,115,
-eagle rock 230 kv,substation,Eagle Rock,230,
+eagle rock 230 kv,substation,Eagle Rock (Los Angeles County),230,
 eagle rock 115 kv,substation,Eagle Rock,115,
 eagle rock 60 kv,substation,Eagle Rock,60,
-eagle rock substation 230 kv,substation,Eagle Rock,230,
+eagle rock substation 230 kv,substation,Eagle Rock (Los Angeles County),230,
 east county substation 138 kv,substation,East County,138,
 east county substation 500 kv,substation,East County,500,
 east county 230 kv,substation,East County,230,
@@ -777,13 +776,13 @@ eastshore substation 230 kv bus,substation,Eastshore,230,
 eastshore substation 230 kv,substation,Eastshore,230,
 eastshore 115 kv,substation,Eastshore,115,
 eastshore 230 kv,substation,Eastshore,230,
-eco sub 230 kv bus,substation,Eco,230,
-eco sub 230 kv,substation,Eco,230,
-eco-miguel 500 kv,line,Eco,500,Miguel
-eco 230 kv,substation,Eco,230,
-eco substation 138 kv,substation,Eco,138,
-eco substation 230 kv,substation,Eco,230,
-eco substation 500 kv,substation,Eco,500,
+eco sub 230 kv bus,substation,East County,230,
+eco sub 230 kv,substation,East County,230,
+eco-miguel 500 kv,line,East County,500,Miguel
+eco 230 kv,substation,East County,230,
+eco substation 138 kv,substation,East County,138,
+eco substation 230 kv,substation,East County,230,
+eco substation 500 kv,substation,East County,500,
 edenvale 115 kv,substation,Edenvale,115,
 edes 115 kv,substation,Edes,115,
 egbert 230 kv,substation,Egbert,230,
@@ -794,9 +793,9 @@ el capitan 115 kv,substation,El Capitan,115,
 el casco 230 kv,substation,El Casco,230,
 el casco substation 230 kv,substation,El Casco,230,
 el cerrito g 115 kv,substation,El Cerrito G,115,
-el dorado 220 kv switchyard,substation,El Dorado,230,
-el dorado 230 kv substation,substation,El Dorado,230,
-el dorado-ivanpah 115 kv line,line,El Dorado,115,Ivanpah
+el dorado 220 kv switchyard,substation,Eldorado,230,
+el dorado 230 kv substation,substation,Eldorado,230,
+el dorado-ivanpah 115 kv line,line,Eldorado,115,Ivanpah
 el dorado ph 115 kv,substation,El Dorado Ph,115,
 el nido substation 230 kv,substation,El Nido,230,
 el nido substation 115 kv,substation,El Nido,115,
@@ -845,7 +844,7 @@ excelsior switching station 115 kv,substation,Excelsior,115,
 excelsior 115 kv,substation,Excelsior,115,
 excelsior sw sta 115 kv,substation,Excelsior,115,
 excelsior switch station 115 kv,substation,Excelsior Switch,115,
-exchequer-legrand 115 kv,line,Exchequer,115,Legrand
+exchequer-legrand 115 kv,line,Exchequer,115,Le Grand
 exchequer ph 70 kv,substation,Exchequer Ph,70,
 "station ""f"" substation 69 kv",substation,F,69,
 new fairfield substation 230 kv bus,substation,Fairfield,230,
@@ -900,7 +899,7 @@ gates 230 kv bus,substation,Gates,230,
 gates-templeton 230 kv line,line,Gates,230,Templeton
 gates 500 kv,substation,Gates,500,
 gates-coalinga #1 70 kv,line,Gates,70,Coalinga
-gates-coalinga #1 70 kv line at jacalito,line,Gates,70,Coalinga At Jacalito
+gates-coalinga #1 70 kv line at jacalito,line,Gates,70,Coalinga
 gates sub 230 kv,substation,Gates,230,
 gates-midway line 230 kv line,line,Gates,230,Midway
 genesee substation 69 kv,substation,Genesee,69,
@@ -919,12 +918,12 @@ glenn 230 kv,substation,Glenn,230,
 glenn #3 60 kv,substation,Glenn,60,
 glenn 60 kv,substation,Glenn,60,
 glenwood 60 kv,substation,Glenwood,60,
-gold hill-eight mile road 230 kv,line,Gold Hill,230,Eight Mile Road
-gold hill-eight mile 230 kv lines,line,Gold Hill,230,Eight Mile Lines
+gold hill-eight mile road 230 kv,line,Gold Hill,230,Eight Mile
+gold hill-eight mile 230 kv lines,line,Gold Hill,230,Eight Mile
 gold hill 60 kv,substation,Gold Hill,60,
 gold hill 115 kv,substation,Gold Hill,115,
 gold hill 230 kv,substation,Gold Hill,230,
-gold hill-eight mile road 230 kv line,line,Gold Hill,230,Eight Mile Road
+gold hill-eight mile road 230 kv line,line,Gold Hill,230,Eight Mile
 goldtown-lancaster 66 kv line,line,Goldtown,66,Lancaster
 goldtown-corum 66 kv line,line,Goldtown,66,Corum
 goldtown-corum 66 kv,line,Goldtown,66,Corum
@@ -991,7 +990,7 @@ helm sub 70 kv bus,substation,Helm,70,
 helm substation 230 kv,substation,Helm,230,
 helm 230 kv,substation,Helm,230,
 helms-schindler 70 kv,line,Helms,70,Schindler
-henreitta-gwf 115 kv line,line,Henreitta,115,Gwf
+henreitta-gwf 115 kv line,line,Henrietta,115,Gwf
 henrietta-lemoore nas 70 kv,line,Henrietta,70,Lemoore Nas
 henrietta 230 kv,substation,Henrietta,230,
 henrietta-lemoore 70 kv,line,Henrietta,70,Lemoore
@@ -1009,7 +1008,7 @@ henrietta-jacobs corner 70 kv,line,Henrietta,70,Jacobs Corner
 henrietta-tulare lake 70 kv line,line,Henrietta,70,Tulare Lake
 henrietta-tulare 70 kv line,line,Henrietta,70,Tulare
 henrietta 115 kv,substation,Henrietta,115,
-henrietta-gwf 115 kv line at leprino jct ss,line,Henrietta,115,Gwf At Leprino Jct Ss
+henrietta-gwf 115 kv line at leprino jct ss,line,Henrietta,115,Gwf
 henrietta-lemoore nas 70 kv line,line,Henrietta,70,Lemoore Nas
 henrietta substantion 70 kv,substation,Henrietta Substantion,70,
 herdlyn-tracy 70 kv-long:-121.577185 lat: 37.800654,substation,Herdlyn,70,
@@ -1165,7 +1164,7 @@ kramer-inyokern-randsburg no.1 115 kv,substation,Kramer,115,
 kramer substation 230 kv,substation,Kramer,230,
 kramer-tortilla 115 kv line,line,Kramer,115,Tortilla
 kramer 230 kv sub,substation,Kramer,230,
-kramer-ransburg 115 kv line,line,Kramer,115,Ransburg
+kramer-ransburg 115 kv line,line,Kramer,115,Randsburg
 kramer-cool water 115 kv line,line,Kramer,115,Cool Water
 kramer-victor 115 kv line,line,Kramer,115,Victor
 kramer sub 220 kv bus,substation,Kramer,230,
@@ -1218,9 +1217,9 @@ lawrence 115 kv,substation,Lawrence,115,
 laytonville 60 kv,substation,Laytonville,60,
 le grand substation 115 kv,substation,Le Grand,115,
 le grand 115 kv,substation,Le Grand,115,
-le grand-chowcilla 115 kv,line,Le Grand,115,Chowcilla
+le grand-chowcilla 115 kv,line,Le Grand,115,Chowchilla
 proposed lee lake substation 500 kv,substation,Lee Lake,500,
-legrand-dairyland 115 kv line,line,Legrand,115,Dairyland
+legrand-dairyland 115 kv line,line,Le Grand,115,Dairyland
 lemoore-henrietta 115 kv line,line,Lemoore,115,Henrietta
 lemoore 70 kv,substation,Lemoore,70,
 leprino sw sta 115 kv,substation,Leprino,115,
@@ -1254,17 +1253,17 @@ logan creek 230 kv,substation,Logan Creek,230,
 lone tree-cayetano at the jackson substation,line,Lone Tree,230,Cayetano
 lone tree 230 kv,substation,Lone Tree,230,
 long beach gen station 220 kv switchyard,substation,Long Beach Gen,230,
-loop gold hill-eight mile road 230 kv line,line,Loop Gold Hill,230,Eight Mile Road
-loop loveland-los coches 69 kv line,line,Loop Loveland,69,Los Coches
-loop redman-lancaster 66 kv,line,Loop Redman,66,Lancaster
-loop talega-escondido 230 kv line,line,Loop Talega,230,Escondido
+loop gold hill-eight mile road 230 kv line,line,Gold Hill,230,Eight Mile
+loop loveland-los coches 69 kv line,line,Loveland,69,Los Coches
+loop redman-lancaster 66 kv,line,Redman,66,Lancaster
+loop talega-escondido 230 kv line,line,Talega,230,Escondido
 los banos-o'neil pgp 70 kv line,line,Los Banos,70,O'Neil Pgp
 los banos-dos amigos 230 kv,line,Los Banos,230,Dos Amigos
 los banos-gates #3 500 kv line,line,Los Banos,500,Gates
 los banos-gates #1 500 kv,line,Los Banos,500,Gates
 los banos 230 kv,substation,Los Banos,230,
 los banos substation 230 kv,substation,Los Banos,230,
-los banos-westly 230 kv line,line,Los Banos,230,Westly
+los banos-westly 230 kv line,line,Los Banos,230,Westley
 los banos-panoche #1 230 kv line,line,Los Banos,230,Panoche
 los banos 70 kv,substation,Los Banos,70,
 los banos substation 500 kv,substation,Los Banos,500,
@@ -1365,7 +1364,7 @@ mercy springs 70 kv switching station,substation,Mercy Springs,70,
 mercy springs sw sta 70 kv,substation,Mercy Springs,70,
 meridian 60 kv,substation,Meridian,60,
 mesa 230 kv,substation,Mesa,230,
-mesa substation 500 kv,substation,Mesa,500,
+mesa substation 500 kv,substation,Mesa (Los Angeles County),500,
 mesa-divide #1 115 kv line,line,Mesa,115,Divide
 mesa substation 115 kv,substation,Mesa,115,
 mesa substation 230 kv,substation,Mesa,230,
@@ -1492,7 +1491,7 @@ napa 60 kv,substation,Napa,60,
 narrows substation 69 kv,substation,Narrows,69,
 national city substation 69 kv,substation,National City,69,
 naval station metering substation 69 kv,substation,Naval Metering,69,
-new 230/500 kv substation near the 500 kv iv-ml line,line,Near The Iv,230,Ml
+new 230/500 kv substation near the 500 kv iv-ml line,line,Imperial Valley,500,Miguel
 neenach substation 69 kv,substation,Neenach,69,
 neenach substation 66 kv,substation,Neenach,66,
 neenach-bailey 66 kv line,line,Neenach,66,Bailey
@@ -1539,7 +1538,7 @@ oceano 115 kv,substation,Oceano,115,
 oceanside substation 69 kv,substation,Oceanside,69,
 ocotillo switchyard 500 kv,substation,Ocotillo,500,
 ocotillo substation 500 kv,substation,Ocotillo,500,
-69 kv bus of the el cajon sub,substation,Of The El Cajon,69,
+69 kv bus of the el cajon sub,substation,El Cajon,69,
 old river-kern #1 70 kv,line,Old River,70,Kern
 old river substation 70 kv,substation,Old River,70,
 old river 70 kv,substation,Old River,70,
@@ -1555,15 +1554,15 @@ olive substation 115 kv,substation,Olive,115,
 olive switching station-smynra 115 kv line,line,Olive,115,Smynra
 olive 115 kv,substation,Olive,115,
 olive switch station-smyrna 115 kv line,line,Olive Switch,115,Smyrna
-olive switching substation 115 kv,substation,Olive Switching,115,
+olive switching substation 115 kv,substation,Olive Switch,115,
 olivenhain substation 69 kv,substation,Olivenhain,69,
-new switchyard on los esteros-trimble line 115 kv,line,On Los Esteros,115,Trimble
-tap on maricopa-copus line 70 kv,line,On Maricopa,70,Copus
-new substation on north gila-imperial valley 500 kv line,line,On North Gila,500,Imperial Valley
-new 230 kv switchyard on the chino-serrano line,line,On The Chino,230,Serrano
-new 230 kv switchyard on the mira loma-vista #2 line,line,On The Mira Loma,230,Vista
-new 115 kv switching station on the panoche-schindler 115 kv #1 line,line,On The Panoche,115,Schindler
-115 kv tap on woodland-davis 115 kv line,line,On Woodland,115,Davis
+new switchyard on los esteros-trimble line 115 kv,line,Los Esteros,115,Trimble
+tap on maricopa-copus line 70 kv,line,Maricopa,70,Copus
+new substation on north gila-imperial valley 500 kv line,line,North Gila,500,Imperial Valley
+new 230 kv switchyard on the chino-serrano line,line,Chino,230,Serrano
+new 230 kv switchyard on the mira loma-vista #2 line,line,Mira Loma,230,Vista
+new 115 kv switching station on the panoche-schindler 115 kv #1 line,line,Panoche,115,Schindler
+115 kv tap on woodland-davis 115 kv line,line,Woodland,115,Davis
 oregon trail 60 kv,substation,Oregon Trail,60,
 orland b 60 kv,substation,Orland B,60,
 oro loma-panoche 115 kv,line,Oro Loma,115,Panoche
@@ -1748,7 +1747,7 @@ rio hondo substation 230 kv,substation,Rio Hondo,230,
 rio hondo substation 220 kv,substation,Rio Hondo,230,
 rio oso substation 115 kv,substation,Rio Oso,115,
 rio oso substation 230 kv bus,substation,Rio Oso,230,
-rio oso-lockford 230 kv,line,Rio Oso,230,Lockford
+rio oso-lockford 230 kv,line,Rio Oso,230,Lockeford
 rio oso 230 kv,substation,Rio Oso,230,
 rio oso-woodland #1 115 kv line,line,Rio Oso,115,Woodland
 rio oso-atlantic 230 kv/rio oso-gold hill 230 kv,substation,Rio Oso,230,
@@ -1764,7 +1763,7 @@ rock creek ph 230 kv,substation,Rock Creek Ph,230,
 rosamond-del sur 66 kv line,line,Rosamond,66,Del Sur
 rosamond-cal cement 66 kv line,line,Rosamond,66,Cal Cement
 rosamond 66 kv-tap 52,substation,Rosamond,66,
-66 kv rosamond-delsur line,line,Rosamond,66,Delsur
+66 kv rosamond-delsur line,line,Rosamond,66,Del Sur
 rosamond-corum 66 kv,line,Rosamond,66,Corum
 rose canyon substation 69 kv,substation,Rose Canyon,69,
 115 kv rosedale substation,substation,Rosedale,115,
@@ -1794,14 +1793,14 @@ san fran airport 115 kv,substation,San Fran A,115,
 san jose a 115 kv,substation,San Jose A,115,
 san leandro u 115 kv,substation,San Leandro U,115,
 new substations san luis-melrose 69 kv,line,San Luis,69,Melrose
-san luis obispo-tremblor 115 kv line,line,San Luis Obispo,115,Tremblor
+san luis obispo-tremblor 115 kv line,line,San Luis Obispo,115,Temblor
 san luis obispo 115 kv,substation,San Luis Obispo,115,
 san luis obispo 70 kv,substation,San Luis Obispo,70,
-san luis rey substation 230 kv,line,San Luis Rey,230,Mission
-san luis rey substation 69 kv,line,San Luis Rey,230,Mission
-san luis rey-pendleton 69 kv line,line,San Luis Rey,230,Mission
-san luis rey-stuart 69 kv line,line,San Luis Rey,230,Mission
-san luis rey-melrose 69 kv,line,San Luis Rey,230,Mission
+san luis rey substation 230 kv,substation,San Luis Rey,230,
+san luis rey substation 69 kv,substation,San Luis Rey,69,
+san luis rey-pendleton 69 kv line,line,San Luis Rey,69,Pendleton
+san luis rey-stuart 69 kv line,line,San Luis Rey,69,Stuart
+san luis rey-melrose 69 kv,line,San Luis Rey,69,Melrose
 san marcos substation 69 kv,substation,San Marcos,69,
 san mateo 138 kv,substation,San Mateo,138,
 san mateo 115 kv,substation,San Mateo,115,
@@ -1814,7 +1813,7 @@ san onofre nuclear generating station 230 kv switchyard,substation,San Onofre,23
 san pablo 115 kv,substation,San Pablo,115,
 san rafael 115 kv,substation,San Rafael,115,
 san ramon 230 kv,substation,San Ramon,230,
-san ysabel substation 69 kv,substation,San Ysabel,69,
+san ysabel substation 69 kv,substation,Santa Ysabel,69,
 san ysidro substation 69 kv,substation,San Ysidro,69,
 sandlot substation 220 kv,substation,Sandlot,230,
 sandlot substation 230 kv,substation,Sandlot,230,
@@ -1836,7 +1835,7 @@ sce highwind substation 230 kv,substation,Highwind,230,
 sce owned eldorado 220 kv bus,substation,Sce Owned Eldorado,230,
 sce owned eldorado bus 230 kv,substation,Sce Owned Eldorado,230,
 sce portion of eldorado substation 230 kv,substation,Eldorado,230,
-sce rancho vista 500 kv sub,substation,Sce Rancho Vista,500,
+sce rancho vista 500 kv sub,substation,Rancho Vista,500,
 sce valley substation 500 kv,substation,Sce Valley,500,
 schindler substation 70 kv,substation,Schindler,70,
 schindler 115 kv,substation,Schindler,115,
@@ -1967,7 +1966,7 @@ tejon 70 kv,substation,Tejon,70,
 telega-escondido 230 kv line,line,Telega,230,Escondido
 telegraph canyon substation 138 kv,substation,Telegraph Canyon,138,
 temblor-san luis obispo 115 kv line,line,Temblor,115,San Luis Obispo
-temblor-kernridge 115 kv line,line,Temblor,115,Kernridge
+temblor-kernridge 115 kv line,line,Temblor,115,Kern Ridge
 temblor-king ellis 70 kv,line,Temblor,70,King Ellis
 temblor 115 kv,substation,Temblor,115,
 templeton substation 230 kv,substation,Templeton,230,
@@ -1975,7 +1974,7 @@ templeton 230 kv,substation,Templeton,230,
 templeton 70 kv,substation,Templeton,70,
 tesla-westley 230 kv lines,line,Tesla,230,Westley
 tesla-newark #1 230 kv line,line,Tesla,230,Newark
-tesla-bellota 230 kv lines,line,Tesla,230,Bellota Lines
+tesla-bellota 230 kv lines,line,Tesla,230,Bellota
 tesla-bellota 230 kv line,line,Tesla,230,Bellota
 tesla-miller 115 kv,line,Tesla,115,Miller
 tesla-keslo 230 kv,line,Tesla,230,Keslo
@@ -1987,7 +1986,7 @@ tesla substation 230 kv bus,substation,Tesla,230,
 tesla sub 115 kv,substation,Tesla,115,
 tesla substation 115 kv,substation,Tesla,115,
 tesla substation 230 kv,substation,Tesla,230,
-tesla-manteca 115 kv line via schulte switchyard,line,Tesla,115,Manteca Via Schulte
+tesla-manteca 115 kv line via schulte switchyard,line,Tesla,115,Manteca
 115 kv tesla-stockton cogen trans. line.,line,Tesla,115,Stockton Cogen Jct
 tesla-tracy 115 kv,line,Tesla,115,Tracy
 tesla-stagg 230 kv,line,Tesla,230,Stagg
@@ -2000,9 +1999,9 @@ thousandaire substation 138 kv,substation,Thousandaire,138,
 tidewater 230 kv,substation,Tidewater,230,
 tiger creek ph 230 kv,substation,Tiger Creek Ph,230,
 tivy valley 70 kv,substation,Tivy Valley,70,
-line tap to 69 kv-plainfield,line,To,69,Plainfield
+line tap to 69 kv-plainfield,substation,Plainfield,69,
 new substation to loop in tl2330 talega-escondido 230 kv line,line,Talega,230,Escondido
-new switchyard to loop the eco-miguel 500 kv line,line,To Loop The Eco,500,Miguel
+new switchyard to loop the eco-miguel 500 kv line,line,East County,500,Miguel
 torrey pines substation 69 kv,substation,Torrey Pines,69,
 tortilla-kramer 115 kv line,line,Tortilla,115,Kramer
 tortilla substation 115 kv,substation,Tortilla,115,
@@ -2038,31 +2037,31 @@ ukiah substation 115 kv bus,substation,Ukiah,115,
 ukiah 115 kv,substation,Ukiah,115,
 unionpgae 70 kv,substation,Unionpgae,70,
 urban substation 69 kv,substation,Urban,69,
-vaca-dixon substation 500 kv,line,Vaca,500,Dixon
-vaca-lakeville #1 230 kv line,line,Vaca,230,Lakeville
-vaca-vacaville-jameson-north tower 115 kv,substation,Vaca,115,
-vaca-dixon 230 kv,line,Vaca,230,Dixon
-vaca-dixon 115 kv,line,Vaca,115,Dixon
-vaca-dixon 500 kv,line,Vaca,500,Dixon
-tap vaca-rio oso 115 kv line,line,Vaca,115,Rio Oso
-vaca-bahia 230 kv line,line,Vaca,230,Bahia
-vaca-dixon sub 115 kv bus,line,Vaca,115,Dixon
-vaca-tesla 500 kv line,line,Vaca,500,Tesla
+vaca-dixon substation 500 kv,substation,Vaca Dixon,500,
+vaca-lakeville #1 230 kv line,line,Vaca Dixon,230,Lakeville
+vaca-vacaville-jameson-north tower 115 kv,substation,Vaca Dixon,115,
+vaca-dixon 230 kv,line,Vaca Dixon,230,Dixon
+vaca-dixon 115 kv,line,Vaca Dixon,115,Dixon
+vaca-dixon 500 kv,line,Vaca Dixon,500,Dixon
+tap vaca-rio oso 115 kv line,line,Vaca Dixon,115,Rio Oso
+vaca-bahia 230 kv line,line,Vaca Dixon,230,Bahia
+vaca-dixon sub 115 kv bus,line,Vaca Dixon,115,Dixon
+vaca-tesla 500 kv line,line,Vaca Dixon,500,Tesla
 vaca dixon 115 kv,substation,Vaca Dixon,115,
 vaca dixon 230 kv,substation,Vaca Dixon,230,
 vaca dixon 500 kv,substation,Vaca Dixon,500,
 vaca dixon 60 kv,substation,Vaca Dixon,60,
 vacaville 115 kv,substation,Vacaville,115,
 vallecitos 60 kv,substation,Vallecitos,60,
-valley substation 138 kv,substation,Valley,138,
+valley substation 138 kv,substation,Valley (Nye County),138,
 valley substation 500 kv,substation,Valley,500,
 valley substation 500 kv bus,substation,Valley,500,
-valley substation 138 kv (vea),substation,Valley,138,
+valley substation 138 kv (vea),substation,Valley (Nye County),138,
 valley substation 500 kv (sce),substation,Valley,500,
 valley center 69 kv sub,substation,Valley Center,69,
 valley center substation 69 kv,substation,Valley Center,69,
 valley home 115 kv,substation,Valley Home,115,
-valley springs-martel #2 60 kv line,line,Valley Springs,60,Martel
+valley springs-martel #2 60 kv line,line,Valley Springs,60,Martell
 valley springs 230 kv,substation,Valley Springs,230,
 valley springs substation 60 kv,substation,Valley Springs,60,
 valley springs 60 kv,substation,Valley Springs,60,
@@ -2095,17 +2094,17 @@ vincent-lugo 500 kv line,line,Vincent,500,Lugo
 vincent substation 230 kv,substation,Vincent,230,
 vincent 230 kv,substation,Vincent,230,
 vincent sub 230 kv bus,substation,Vincent,230,
-vincent 230 kv sub.,substation,Vincent .,230,
+vincent 230 kv sub.,substation,Vincent,230,
 vine substation 69 kv,substation,Vine,69,
 vineyard 230 kv,substation,Vineyard,230,
 vista-mira loma 230 kv line,line,Vista,230,Mira Loma
 vista substation 230 kv,substation,Vista,230,
-vista substation 138 kv,substation,Vista,138,
-vista substation 138 kv (vea),substation,Vista,138,
+vista substation 138 kv,substation,Vista (Nye County),138,
+vista substation 138 kv (vea),substation,Vista (Nye County),138,
 vista substation 138 kv bus.,substation,Vista .,138,
 volta-south 60 kv line,line,Volta,60,South
 volta/south 60 kv,substation,Volta South,60,
-vota-south 60 kv,line,Vota,60,South
+vota-south 60 kv,line,Volta,60,South
 wabash canyon substation 69 kv,substation,Wabash Canyon,69,
 wahtoke 115 kv,substation,Wahtoke,115,
 walnut substation 220 kv,substation,Walnut,230,
@@ -2124,8 +2123,8 @@ west fresno substation 115 kv,substation,West Fresno,115,
 west fresno 115 kv,substation,West Fresno,115,
 west sacramento 115 kv,substation,West Sacramento,115,
 westfield sub 70 kv,substation,Westfield,70,
-westly-quinto 230 kv,line,Westly,230,Quinto
-westly-quinto 230 kv line,line,Westly,230,Quinto
+westly-quinto 230 kv,line,Westley,230,Quinto
+westly-quinto 230 kv line,line,Westley,230,Quinto
 westpark-magunden 115 kv,line,Westpark,115,Magunden
 westpark 115 kv,substation,Westpark,115,
 westwood 60 kv,substation,Westwood,60,
@@ -2188,3 +2187,20 @@ woodward 115 kv,substation,Woodward,115,
 wyandotte 115 kv,substation,Wyandotte,115,
 yuba city cogen tap line-pease 60 kv,line,Yuba City Cogen,60,Pease
 zondwind sub 66 kv bus,substation,Zondwind,66,
+500 kv collector station 40 mi east of ngila sub and 4.5 mi w of proposed agua caliente sub,line,Hassayampa,500,North Gila
+bellota-warnerville and bellota cottle lines 230 kv,line,Bellota,230,Warnerville
+between rio del junction and bridgeville,line,Rio Del Junction,,Bridgeville
+ckt i & 2 delevan-vaca and cortina-vaca 230 kv lines,line,Delevan,230,Vaca Dixon
+"cortina-vaca 230; delevan-vaca #1 230 kv, and delevan-vaca #2 230 kv",line,Cortina,230,Vaca Dixon
+coalinga cogen 70 kv tap & tornado dist,substation,Coalinga Cogen,70,
+cortina-mendocino and cortina-eagle rock 115 kv lines,line,Cortina,115,Mendocino
+diablo canyon-morro bay 230 kv and diablo canyon-mesa 230 kv lines,line,Diablo Canyon,230,Morro Bay
+either goldtown-corum or goldtown-lancaster 66 kv line on holt st.,line,Goldtown,66,Corum
+goldtown-corum or goldtown-lancaster 66 kv line,line,Goldtown,66,Corum
+eldorado switchyard 220 kv & ncp merchant substation 230 kv,substation,Eldorado,230,
+moss-linding-salinas-soledad 115 kv #1 and #2 lines #1 line & tap n/o moss landing-salinas-soledad #2,line,Moss Landing,115,Soledad
+q1244 switching station 230 kv,substation,Fink,230,
+twl series compensation station 500 kv,line,Delaney,500,Colorado River
+cortina-mendocino and cortina-eagle rock lines,line,Cortina,115,Mendocino
+q1806 switchyard substation 138 kv,line,Trabuco,138,Capistrano
+bellota-warnerville and bellota cottle lines 230 kv line,line,Bellota,230,Warnerville

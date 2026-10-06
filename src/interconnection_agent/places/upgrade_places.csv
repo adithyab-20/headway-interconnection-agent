@@ -32,9 +32,9 @@ plan_id,site,voltage_kv
 1314-E-01,Colorado River,500
 2122-R-03,Contra Costa,230
 2122-R-03,Contra Costa Pp,230
-2425-R-12,Coolwater,115
-2223-R-05,Coolwater,115
-2223-R-05,Coolwater,230
+2425-R-12,Cool Water,115
+2223-R-05,Cool Water,115
+2223-R-05,Cool Water,230
 2122-R-05,Coppermine,70
 2324-R-03,Cortina,60
 2425-R-05,Cortina,60

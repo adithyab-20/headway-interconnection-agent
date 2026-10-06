@@ -203,6 +203,11 @@ def test_each_substation_gets_a_map_position_or_falls_back_to_its_county(
     assert by == "openstreetmap" and osm_id
     assert 37.9 < num(lat) < 38.4 and -122.2 < num(lon) < -121.6  # Solano County
 
+    # Two substations share the name Mesa. The 500 kV one is in Los Angeles County, not at
+    # the other Mesa in San Luis Obispo County.
+    lat, lon = one(conn, "SELECT latitude, longitude FROM places WHERE place LIKE 'Mesa%%500 kV'")
+    assert 33.9 < num(lat) < 34.2 and -118.3 < num(lon) < -118.0
+
     # Trout Canyon isn't in OpenStreetMap: it falls back to its county, with no point.
     assert one(
         conn,
@@ -239,6 +244,12 @@ def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(
         62.6,
         "all electricity customers",
     )
+    # The fact sheet spells this one "Tes l a – Trimble – Metcalf ..." (page 13); a reviewed
+    # name table still gives the tracker's upgrade its $712M-$1,424M.
+    assert one(
+        conn,
+        "SELECT cost_low_musd, cost_high_musd FROM planned_upgrades WHERE plan_id = '2526-R-17'",
+    ) == (712.0, 1424.0)
     assert ("Newark", 230) in set(
         conn.execute(
             "SELECT pl.site, pl.voltage_kv FROM planned_upgrades u JOIN places pl USING (place) "
@@ -254,6 +265,25 @@ def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(
         "WHERE pl.site = 'Whirlwind' AND pl.voltage_kv = 230 AND b.bottleneck = 'Antelope-Vincent'",
     )[0]
     assert num(cost) == pytest.approx(13.2e6 / 1_500_000)
+
+    # A point on the bottleneck list that's a line counts at both ends, saying which line,
+    # unless an end has its own row in the list: the list's own answer for it stands.
+    # The Pittsburg-Kirker-Columbia Steel 115 kV line sits behind Collinsville-Tesla.
+    line = "Pittsburg-Kirker-Columbia Steel 115 kV line"
+    assert set(
+        conn.execute(
+            "SELECT pl.site, pl.voltage_kv FROM place_bottlenecks b JOIN places pl USING (place) "
+            "WHERE b.bottleneck = 'Collinsville-Tesla 500 kV Line' AND b.via_line = %s",
+            (line,),
+        ).fetchall()
+    ) == {("Pittsburg", 115), ("Columbia Steel", 115)}
+    # Tesla 230 kV ends the Pittsburg-Tesla line but has its own row: only that row counts.
+    own, from_lines = one(
+        conn,
+        "SELECT count(*) FILTER (WHERE via_line IS NULL), count(*) FILTER (WHERE via_line IS NOT "
+        "NULL) FROM place_bottlenecks WHERE place = 'Tesla 230 kV'",
+    )
+    assert num(own) > 0 and from_lines == 0
 
 
 @pytest.mark.skipif(

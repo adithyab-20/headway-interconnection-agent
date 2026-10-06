@@ -76,12 +76,15 @@ CREATE TABLE bottlenecks (
 CREATE TABLE place_bottleneck_links (
     place      text NOT NULL REFERENCES places (place),
     bottleneck text NOT NULL REFERENCES bottlenecks (bottleneck),
+    -- NULL when the list names this place itself. Otherwise the line, as the list names it,
+    -- that ends at this place: used only for places with no row of their own in the list.
+    via_line   text,
     PRIMARY KEY (place, bottleneck)
 );
 
 CREATE VIEW place_bottlenecks AS
-SELECT l.place, b.bottleneck, b.room_left_mw, b.added_mw, b.cost_musd_2022, b.listed_in,
-       b.costed_in,
+SELECT l.place, b.bottleneck, l.via_line, b.room_left_mw, b.added_mw, b.cost_musd_2022,
+       b.listed_in, b.costed_in,
        b.cost_musd_2022 * 1e6 / nullif(b.added_mw * 1000, 0) AS cost_per_kw_2022
 FROM place_bottleneck_links l JOIN bottlenecks b USING (bottleneck);
 

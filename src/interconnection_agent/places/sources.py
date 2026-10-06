@@ -6,12 +6,14 @@
     and its cost, in 2022 dollars.
   * Planned upgrades (July 2026 tracker, plus the yearly plan's fact sheets for cost ranges).
 
-These readers only parse. Linking what they name to our places goes through the reviewed
+These readers only parse, apart from matching fact sheets to the tracker through the reviewed
+``fact_sheet_names.csv``. Linking what they name to our places goes through the reviewed
 tables in this package.
 """
 
 from __future__ import annotations
 
+import csv
 import datetime
 import re
 from dataclasses import dataclass
@@ -28,6 +30,8 @@ COST_TO_ADD_ROOM = (
 )
 UPGRADE_TRACKER = "approved-projects-transmission-planning-process-jul-2026.xlsx"
 UPGRADE_FACT_SHEETS = "board-approved-2025-2026-transmission-plan-appendix-h-projects.pdf"
+# Reviewed: fact sheets whose name the tracker spells differently -> the tracker's plan id.
+FACT_SHEET_NAMES = Path(__file__).parent / "fact_sheet_names.csv"
 
 
 @dataclass(frozen=True)
@@ -131,6 +135,8 @@ def _cost_to_add_room(path: Path) -> dict[str, tuple[float, float]]:
 
 def _upgrades(tracker: Path, fact_sheets: Path) -> tuple[list[Upgrade], list[str]]:
     costs, unread = _fact_sheet_costs(fact_sheets)
+    with FACT_SHEET_NAMES.open(newline="") as f:
+        sheet_of = {r["plan_id"]: r["fact_sheet_name"] for r in csv.DictReader(f)}
     upgrades: list[Upgrade] = []
     workbook = openpyxl.load_workbook(tracker, read_only=True, data_only=True)
     try:
@@ -142,13 +148,14 @@ def _upgrades(tracker: Path, fact_sheets: Path) -> tuple[list[Upgrade], list[str
                 if not plan_id or not name:
                     continue
                 finish, year = _latest_finish(header, row)
-                low, high, page = costs.get(name, (None, None, None))
+                fact_sheet = name if name in costs else sheet_of.get(plan_id, "")
+                low, high, page = costs.get(fact_sheet, (None, None, None))
                 upgrades.append(
                     Upgrade(plan_id, name, _cells.clean(row[2]), finish, year, low, high, page)
                 )
     finally:
         workbook.close()
-    tracked = {u.name for u in upgrades}
+    tracked = {u.name for u in upgrades} | {sheet_of.get(u.plan_id) for u in upgrades}
     unread += [f"{name}: not in the upgrade tracker" for name in costs if name not in tracked]
     return upgrades, unread
 
