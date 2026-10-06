@@ -366,8 +366,8 @@ def write(name: str, rows: list[dict[str, str]]) -> None:
 
 KEEP = {
     "spellings.csv": ["station_key", "kind", "site", "voltage_kv", "other_end_site"],
-    # positions.csv is no longer drafted here: it now also holds federal-dataset and
-    # document positions, reviewed by hand (see places/README.md).
+    # positions.csv is no longer drafted here: it now also holds positions read off public
+    # documents, reviewed by hand (see places/README.md).
     "bottleneck_names.csv": ["bottleneck_list_name", "cost_file_name", "bottleneck"],
     "upgrade_places.csv": ["plan_id", "site", "voltage_kv"],
 }

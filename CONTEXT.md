@@ -103,7 +103,10 @@ from the same calculation as the Chance of Reaching Operation.
 **Realistic MW Ahead**:
 The MW waiting at a substation, with each waiting project counted only by its chance of
 still being built given how long it has already waited. A crowded substation full of old,
-stuck projects has far fewer realistic MW ahead than its raw total.
+stuck projects has far fewer realistic MW ahead than its raw total. Only projects that
+applied under the old rules are counted: the old-rules history can't give a chance for the
+2023 batch, so its waiting MW is always shown beside this number as its own figure, at full
+MW, labelled "chance not known". The two are never added together.
 _Avoid_: effective queue, adjusted MW
 
 **Saturation**:

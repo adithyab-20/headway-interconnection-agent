@@ -23,7 +23,8 @@ each California substation**, based on what happened to past projects there.
   yours. "Like yours" means the most specific comparison group, and the most local place,
   that still has enough past projects to trust. The user can make it more or less specific.
 - **Realistic MW ahead:** the MW waiting at a substation, with each waiting project counted
-  only by its chance of still being built.
+  only by its chance of still being built. Projects from the 2023 batch, which the history
+  can't speak for, are shown beside it as their own figure, never added in.
 - **Planned grid upgrades nearby** (paid by all electricity customers) and the area's
   **cost to add room** (the operator's estimate, in 2022 prices), each in its own labelled
   box and never mixed into the odds.
@@ -58,7 +59,9 @@ Each line is one test, written before the code that makes it pass.
 8. It refuses to give a figure beyond the history it actually has.
 9. Realistic MW ahead counts each waiting project by its chance of still being built, given
    how long it has waited. Projects that connect along a line count at both of the line's
-   ends, and nothing is counted twice in one number.
+   ends, and nothing is counted twice in one number. Waiting projects from the 2023 batch
+   are left out of it and given as a separate figure (their MW, labelled "chance not
+   known"), shown wherever realistic MW ahead is.
 10. Every number comes with the exact rows it was worked out from.
 11. Predictions made from past cut-off years are compared with what actually happened, and
     CI fails if that accuracy gets worse.
