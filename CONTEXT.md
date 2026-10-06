@@ -162,6 +162,12 @@ are never added together.
 The exact source rows a result was worked out from: the source, each row's `native_id`, and
 the values used. Every analysis function returns this together with its numbers.
 
+**Lookup**:
+One query the agent runs (`tool_call_id`), saved in a log with every row it returned. A
+number in a Factual Claim names the lookup it came from, and must use exactly the rows that
+lookup returned.
+_Avoid_: query (on its own), tool call
+
 **Assessment**:
 One complete answer the agent gives about a site: a set of claims, each checked, turned
 into readable text.

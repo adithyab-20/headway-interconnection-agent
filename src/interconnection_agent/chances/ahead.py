@@ -66,9 +66,16 @@ _PLACES_IN = {
 
 
 def realistic_mw_ahead(
-    conn: Conn, *, place: str | None = None, site: str | None = None, bottleneck: str | None = None
+    conn: Conn,
+    *,
+    place: str | None = None,
+    site: str | None = None,
+    bottleneck: str | None = None,
+    leave_out: frozenset[str] = frozenset(),
 ) -> MWAhead:
-    """Realistic MW ahead at one voltage section, at a whole site, or behind a bottleneck."""
+    """Realistic MW ahead at one voltage section, at a whole site, or behind a bottleneck.
+    ``leave_out`` names projects a person has left out (an Adjustment): they are neither
+    counted as waiting nor part of the history the chances come from."""
     given = {"place": place, "site": site, "bottleneck": bottleneck}
     chosen = [(kind, name) for kind, name in given.items() if name]
     if len(chosen) != 1:
@@ -83,12 +90,12 @@ def realistic_mw_ahead(
         "SELECT p.native_id, p.batch IS NOT DISTINCT FROM 'C15', p.mw_to_grid, p.q_date, "
         "  bool_or(pp.role = 'line_end') "
         "FROM caiso_projects p JOIN project_places pp USING (source, native_id) "
-        "WHERE p.status = 'Active' AND pp.place = ANY(%s) "
+        "WHERE p.status = 'Active' AND pp.place = ANY(%s) AND NOT (p.native_id = ANY(%s)) "
         "GROUP BY 1, 2, 3, 4 ORDER BY 1",
-        (places,),
+        (places, sorted(leave_out)),
     ).fetchall()
 
-    records = history(conn)
+    records = [r for r in history(conn) if r.past.native_id not in leave_out]
     by_id = {r.past.native_id: r for r in records}
     estimates: dict[ComparisonGroup, ChanceGivenWait] = {}
     old_rules: list[WaitingProject] = []

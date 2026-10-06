@@ -326,16 +326,18 @@ def odds_for(
     mw: float | None = None,
     place: str | None = None,
     use: ComparisonGroup | None = None,
+    leave_out: frozenset[str] = frozenset(),
 ) -> Odds:
     """The chance of being built within ``within_years``, and the typical wait, for the most
     specific comparison group with enough history. ``mw`` is the MW to grid; ``place`` a
     voltage section such as "Birds Landing 230 kV". ``use`` picks another group from the
-    ladder instead, even one with too few projects (it stays marked as such).
+    ladder instead, even one with too few projects (it stays marked as such). ``leave_out``
+    names projects a person has left out of the history (an Adjustment).
 
     Raises :class:`NotEnoughHistory` if no group of this project type (or the group picked)
     has been watched for ``within_years``.
     """
-    records = history(conn)
+    records = [r for r in history(conn) if r.past.native_id not in leave_out]
     ladder = comparison_ladder(records, conn, project_type, mw, place)
     usable = [use] if use else usable_groups(ladder)
     used = next((g for g in usable if g.longest_watched_years >= within_years), None)

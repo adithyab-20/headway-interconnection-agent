@@ -5,6 +5,7 @@ description = "Verified interconnection-risk assessment grounded in public ISO q
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=1.11.0",
     "openpyxl>=3.1.5",
     "psycopg[binary]>=3.2",
     "pypdf>=6.19.0",

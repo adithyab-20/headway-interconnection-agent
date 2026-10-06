@@ -57,8 +57,46 @@ Built so far:
   the cost to add room, and planned grid upgrades. 145 places now have 5 or more past outcomes
   to learn from, up from 15. Anything the reviewed tables don't recognise is reported.
 
-Not built yet: the numbers, the agent, the checking, and the map app. See the
+- **The numbers** (ticket "Chances, waits, and who's ahead"): the chance of being built
+  within N years and the typical wait for projects like yours, realistic MW ahead at each
+  substation, and a check of past predictions against what happened.
+
+- **The checked assessment** (ticket "The agent writes a checked assessment"): the model looks
+  things up and writes an assessment made only of Factual Claims and Judgements, following
+  the writing skill (`src/interconnection_agent/skills/writing-an-assessment/SKILL.md`).
+  Code checks every number before it's shown (see "What the checking proves" below). A
+  person can leave projects out (the numbers are worked out and checked again), approve,
+  reject or rewrite each Judgement, and finalise once every Judgement is decided. Every
+  change is logged. A plain request ("ignore projects stuck since 2019") becomes a proposed
+  change that applies only when a person confirms it.
+
+Not built yet: the map app, and saving assessments. See the
 [product spec](docs/specs/product-spec.md).
+
+## What the checking proves, and what it doesn't
+
+The model never writes the text a reader sees. It submits claims: a sentence with a slot for
+each number, and for each number the lookup it came from, how it was worked out, and the
+rows it used. Every lookup is logged with every row it returned. Before anything is shown,
+plain code (`interconnection_agent.assessment.check`) confirms, for every number:
+
+- it reproduces from the data, within a margin written down per unit (MW to the nearest 10
+  or 5%, years to one decimal place, percentages to the whole point, counts exactly);
+- it uses exactly the rows its lookup returned, so a number built from a convenient few of
+  them fails even when the arithmetic is right;
+- its rows are rows of the dataset it names, and its lookup is in the log;
+- the sentence holds no number outside its slots.
+
+A claim that fails isn't shown. A Judgement is never shown as checked, and can't state a
+number of its own. The tests feed the checker correct claims and deliberately broken copies
+(`tests/integration/test_number_check.py`); every broken one is caught.
+
+What it can't prove is that the lookup was the *right* one: the wrong substation or a missing
+filter gives numbers that check out perfectly about the wrong thing. Answer-key questions
+with hand-written SQL answers (`tests/e2e/test_answer_key.py`) check that the agent picks the
+right rows. They call the real model, so they run only when `ANTHROPIC_API_KEY` is set. What
+neither can judge is whether past projects are a fair comparison for this one: that's what
+the Judgements, and the person deciding on them, are for.
 
 ## Requirements
 
@@ -96,7 +134,7 @@ address works the same way there.
 
 ## Before the first model call: API key and spending cap
 
-Nothing calls the model yet, but the guards for when something does are already in place.
+The agent calls the model, and these guards apply to every call it makes.
 
 1. **Set a monthly spending cap in the Anthropic console first.** This is required, not
    optional. It is the one limit that holds even if the code has a bug, so it must exist
@@ -131,7 +169,7 @@ uv run pytest               # tests (needs Postgres running)
 src/interconnection_agent/        # the application code
 src/interconnection_agent/tests/  # fast tests for that code (no database)
 tests/integration/                # tests against the real Postgres
-tests/e2e/                        # whole-system tests (none yet)
+tests/e2e/                        # answer-key tests against the real model (need a key)
 data/                             # the saved source spreadsheets, and their credits
 docker-compose.yml                # the local Postgres
 .github/workflows/ci.yml          # CI: checks, tests, and the key scan
