@@ -1,0 +1,261 @@
+plan_id,site,voltage_kv
+2425-R-01,Alamitos,230
+09-R-03,Alberhill,500
+2223-P-17,Alberhill,500
+2526-R-02,Ames,115
+2425-R-02,Ames,115
+2425-R-02,Ames Distribution,115
+2122-R-01,Antelope,66
+2223-R-01,Antelope,500
+1314-R-13,Bakersfield,230
+2223-R-03,Barre,230
+2223-P-02,Beatty,230
+1011-R-01,Benton,60
+1920-R-01,Borden,230
+1920-R-01,Borden,70
+2223-P-03,Borden,230
+1718-R-03,Bullard,115
+2324-R-02,Camden,70
+1011-R-01,Cascade,115
+1011-R-01,Cascade,60
+2223-P-20,Chicarita,138
+1819-R-01,Christie,115
+1718-R-01,Coburn,60
+2122-P-03,Collinsville,230
+2122-P-03,Collinsville,500
+2324-P-03,Collinsville,500
+2324-P-01,Collinsville,230
+2122-P-03,Collinsville,230
+2122-P-03,Collinsville,500
+2324-P-03,Collinsville,500
+2223-P-04,Colorado River,500
+1314-E-01,Colorado River,500
+2122-R-03,Contra Costa,230
+2122-R-03,Contra Costa Pp,230
+2425-R-12,Coolwater,115
+2223-R-05,Coolwater,115
+2223-R-05,Coolwater,230
+2122-R-05,Coppermine,70
+2324-R-03,Cortina,60
+2425-R-05,Cortina,60
+2122-R-06,Cortina,115
+2122-R-06,Cortina,60
+2122-P-05,Cortina,230
+1819-R-02,Cottonwood,115
+1718-R-16,Cottonwood,115
+1718-R-16,Cottonwood,230
+2324-R-05,Crazy Horse Canyon,115
+2223-P-18,Del Amo,500
+1314-E-01,Delaney,500
+2122-P-05,Delevan,230
+2122-R-07,Devers,230
+2526-R-20,Devers,230
+2223-P-05,Devers,500
+2223-P-06,Devers,500
+2324-R-06,Diablo Canyon,230
+2425-R-14,Dixon Landing,115
+2425-P-01,Eagle Rock,115
+2425-R-11,Eagle Rock,60
+1819-E-01,East Marysville,115
+2324-R-07,Eldorado,230
+2324-R-08,Etiwanda,230
+2526-R-23,Etiwanda,230
+2223-P-15,Etiwanda,230
+2223-P-21,Etiwanda,230
+2324-P-04,Fern Road,500
+1819-R-08,Fern Road,500
+1819-R-08,Fern Road,500
+2324-P-04,Fern Road,500
+2425-P-01,Fulton,115
+2324-R-10,Gates,230
+1819-R-03,Gates,500
+1819-R-04,Gold Hill,115
+1819-R-04,Gold Hill,230
+2425-P-02,Helm,230
+2425-P-02,Helm,70
+2223-P-07,Henrietta,115
+2223-P-07,Henrietta,230
+1718-R-03,Herndon,115
+2526-P-01,Higgins,115
+2324-P-02,Humboldt,115
+2324-R-20,Imperial Valley,230
+2223-P-11,Imperial Valley,500
+1819-R-05,Jefferson,230
+2425-R-09,Jefferson,60
+2425-R-10,Julian Hinds,230
+1112-R-10,Kern Pp,115
+1314-R-13,Kern Pp,230
+1314-R-13,Kern Pp,230
+1011-R-12,Kern Pp,230
+2425-P-03,Kingsburg,115
+2425-R-17,Kirker,115
+2425-R-11,Konocti,60
+2425-R-12,Kramer,115
+2223-P-09,Kramer,230
+2223-P-09,Kramer,230
+2223-P-09,Kramer,115
+2223-P-09,Kramer,230
+2122-P-02,Laguna Bell,230
+2526-R-22,Laguna Bell,230
+1718-R-04,Lakeville,60
+1718-R-13,Lakeville,230
+2122-E-01,Las Aguilas,230
+1314-R-24,Las Pulgas,69
+2122-P-06,Lincoln,115
+1213-R-14,Lockeford,230
+2223-R-09,Los Banos,230
+2223-R-10,Los Banos,70
+2526-R-05,Los Esteros,230
+2122-R-12,Los Esteros,115
+1516-R-09,Lugo,500
+2526-R-19,Lugo,230
+2526-R-21,Lugo,500
+08-R-01,Lugo,500
+2223-P-09,Lugo,230
+2223-P-09,Lugo,500
+2223-P-09,Lugo,230
+2223-P-09,Lugo,230
+2526-P-04,Lugo,500
+2122-P-04,Manning,230
+2122-P-04,Manning,500
+2122-P-04,Manning,230
+2122-P-04,Manning,500
+2122-R-08,Manteca,115
+1819-E-01,Marysville,60
+2122-R-08,Melones,115
+2526-R-07,Metcalf,230
+2223-R-12,Metcalf,115
+2223-R-12,Metcalf,230
+2425-R-13,Metcalf,230
+2425-R-13,Metcalf,500
+2425-R-14,Metcalf,115
+2122-R-10,Metcalf,500
+2122-R-10,Metcalf,500
+2526-R-17,Metcalf,230
+2122-R-14,Metcalf,230
+2122-R-10,Metcalf,500
+1314-R-13,Midway,230
+1314-R-13,Midway,230
+2526-R-08,Midway,115
+1011-R-12,Midway,230
+1213-R-19,Midway,115
+2223-R-13,Miguel,230
+2223-R-13,Miguel,230
+2324-R-21,Miguel,230
+2324-R-12,Millbrae,60
+1718-R-07,Milpitas,115
+2324-R-13,Mira Loma,500
+2526-R-23,Mira Loma,230
+2223-R-14,Mira Loma,500
+2223-P-10,Mira Loma,500
+2425-R-10,Mirage,230
+2526-R-09,Monta Vista,60
+2526-R-10,Monta Vista,115
+2526-R-10,Monta Vista,230
+1920-R-04,Moraga,230
+2425-R-15,Moraga,115
+2425-R-15,Moraga,230
+1819-R-06,Moraga,115
+1314-R-17,Morgan Hill,115
+2122-E-01,Moss,230
+2122-E-01,Moss Landing,230
+2223-R-24,Napa,60
+2425-R-14,Newark,115
+2526-R-11,Newark,115
+2526-R-12,Newark,115
+2526-R-12,Newark,230
+1920-R-05,Newark,115
+1920-R-05,Newark,230
+1718-R-07,Newark,115
+2122-R-11,Newark,230
+2324-P-07,Newark,230
+2122-R-11,Newark,230
+2526-R-13,Nortech,115
+2122-R-12,Nortech,115
+2324-P-05,North Dublin,230
+2223-P-11,North Gila,500
+2223-P-08,North Of Songs,500
+2223-P-12,North Of Songs,500
+2223-P-08,North Of Songs,500
+1112-R-15,North Tower,115
+1819-R-03,Orchard,500
+1011-R-16,Oro Loma,70
+1011-R-16,Oro Loma,70
+1920-R-09,Oro Loma,115
+2425-R-02,Palo Alto,115
+2223-R-16,Panoche,115
+2223-R-16,Panoche,230
+1920-R-06,Pardee,230
+2223-P-01,Penasquitos,230
+2425-R-14,Piercy,115
+2223-R-17,Pittsburg,115
+07-R-02,Pittsburg,115
+07-R-02,Pittsburg,230
+2425-R-17,Pittsburg,115
+2324-R-18,Plainfield,60
+2223-P-04,Red Bluff,500
+2223-P-05,Red Bluff,500
+2324-R-14,Reedley,70
+2122-P-06,Rio Oso,115
+1112-R-21,Rio Oso,230
+2122-R-08,Ripon,115
+2122-R-08,Riverbank,115
+2223-P-09,Roadway,115
+1819-R-08,Round Mountain,500
+1819-R-08,Round Mountain,500
+2324-R-05,Salinas,115
+2425-R-06,Sampson,69
+2223-P-15,San Bernardino,230
+2223-P-16,San Bernardino,230
+2425-R-20,San Miguel,70
+1718-R-09,San Ysidro,69
+2223-R-19,Santa Rosa,115
+2526-R-15,Saratoga,230
+2223-P-18,Serrano,500
+2425-R-21,Serrano,230
+2223-R-20,Serrano,230
+2223-R-20,Serrano,500
+2425-R-22,Serrano,500
+2223-P-17,Serrano,500
+2425-P-01,Silverado,115
+1819-R-01,Sobrante,115
+1819-R-06,Sobrante,115
+2425-R-24,Sobrante,230
+2324-P-06,Sobrante,115
+2324-P-06,Sobrante,230
+2324-R-05,Soledad,115
+1314-R-24,Stuart,69
+2223-R-13,Suncrest,230
+2223-R-13,Suncrest,230
+2425-R-14,Swift,115
+2223-R-13,Sycamore Canyon,230
+2223-R-13,Sycamore Canyon,230
+2122-R-13,Table Mountain,230
+2122-R-13,Table Mountain,500
+1213-R-19,Temblor,115
+2324-P-07,Tesla,230
+2526-R-17,Tesla,230
+2223-R-23,Tesla,115
+2425-R-12,Tortilla,115
+2425-R-27,Tortilla,115
+2526-R-18,Trimble,115
+2223-R-24,Tulucay,60
+1718-R-13,Vaca Dixon,230
+2526-R-15,Vasona,230
+2122-R-14,Vasona,230
+2223-P-09,Victor,230
+2223-P-09,Victor,230
+2223-P-09,Victor,115
+2223-P-09,Victor,230
+2122-R-15,Victor,230
+1011-R-30,Vierra,115
+2324-P-05,Vineyard,230
+2223-P-16,Vista,230
+2223-P-21,Vista,230
+2526-R-01,Walnut,230
+2122-R-16,Weber,60
+2425-R-28,West Fresno,115
+2223-R-01,Whirlwind,500
+07-R-03,Wildlife,230
+1011-R-32,Wilson,115
+1920-R-09,Wilson,115

@@ -49,6 +49,14 @@ Built so far:
   and a CI check that fails if an API key is ever committed. These are in place before
   anything calls the model.
 
+- **Places, positions, and what's around them** (ticket "Load and organise the data"): one call,
+  `load_all`, loads both CAISO queue reports (including the 2023 batch), how far each project
+  got, estimated dates where a real one is missing, where each project connects (98.9% of
+  projects; projects on a line count at both ends), map positions from OpenStreetMap (69% of
+  waiting MW; the rest falls back to its county), the bottlenecks each place sits behind with
+  the cost to add room, and planned grid upgrades. 145 places now have 5 or more past outcomes
+  to learn from, up from 15. Anything the reviewed tables don't recognise is reported.
+
 Not built yet: the numbers, the agent, the checking, and the map app. See the
 [product spec](docs/specs/product-spec.md).
 
@@ -177,5 +185,7 @@ projects that appear in both. Any disagreement is reported for review by
 The `data/` folder holds saved copies of the public datasets this project loads: CAISO's
 Public Queue Report and LBNL's "Queued Up" file. They're used for educational and research
 purposes and aren't covered by this repository's software license. Each source's credit and
-terms are in [`data/README.md`](data/README.md). Neither CAISO, LBNL, nor GridTracker
+terms are in [`data/README.md`](data/README.md). Substation positions come from
+OpenStreetMap: © OpenStreetMap contributors, under the
+[Open Database License](https://www.openstreetmap.org/copyright). Neither CAISO, LBNL, nor GridTracker
 endorses this project.
