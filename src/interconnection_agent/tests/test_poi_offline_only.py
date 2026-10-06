@@ -1,4 +1,4 @@
-"""The runtime never imports the fuzzy matcher — a guard on Tier 1 determinism.
+"""The runtime never imports the fuzzy matcher, so the number check always sees the same rows.
 
 Fuzzy matching is allowed only in the offline proposal script. If any runtime module
 reached ``rapidfuzz`` (directly, or by importing the script), a probabilistic join could
@@ -23,6 +23,8 @@ def test_importing_the_runtime_does_not_import_rapidfuzz() -> None:
         "import interconnection_agent.poi; "
         "import interconnection_agent.ingest; "
         "import interconnection_agent.cli; "
+        "import interconnection_agent.places; "
+        "import interconnection_agent.load; "
         "assert 'rapidfuzz' not in sys.modules, "
         "'runtime code imported the offline fuzzy matcher'"
     )

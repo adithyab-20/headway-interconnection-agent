@@ -1,19 +1,22 @@
-# Rates are cohorted by queue vintage, never pooled across all years
+# Rates are worked out per queue-entry year, never over all years at once
 
-A pooled withdrawal rate over the whole table is biased low, because recent vintages
-dominate the row count and have not had time to resolve. LBNL's raw status counts give
-~63% withdrawn; the California Public Advocates report gives ~71% cumulative. That spread
-is a methodology difference, not a data discrepancy — and comparing the two directly would
-have made Phase 1's cross-validation flag a correct ingest as buggy.
+**The problem.** A dropout rate taken over the whole table at once comes out too low.
+Projects that joined in the last few years make up most of the rows, and most of them haven't
+had time to either drop out or get connected yet. For example, counting LBNL's statuses
+directly gives about 63% withdrawn, while the California Public Advocates report gives about
+71%. That gap comes from the two being worked out differently, not from bad data. Comparing
+them directly would have made the loader's cross-check report a correct load as broken.
 
-We group projects by `q_date` year and report, per vintage, `withdrawn / (withdrawn +
-operational)` — the resolved rate — alongside the count still unresolved. Headline figures
-come from vintages old enough to be mostly resolved, with the cutoff stated.
+**The decision.** Group projects by the year they joined the queue (the year of `q_date`,
+called the "vintage"). For each year, report `withdrawn / (withdrawn + operational)`, which
+only counts projects that have reached an outcome, together with how many are still waiting.
+Headline figures come from years old enough that most projects have reached an outcome, and
+the cut-off year is stated.
 
-## Consequences
+## What follows from this
 
-`get_historical_timeline` carries the mirror-image bias: it measures only projects that
-reached energization, so its median is the median *among successes*, not the expected wait
-for a project entering the queue today. The function returns the survivor share alongside
-the median so the caveat travels with the number instead of living in a README section
-nobody reads.
+`get_historical_timeline` has the opposite bias. It only measures projects that got
+connected, so its median is the typical wait *among the ones that made it*, not what a
+project joining today should expect. The function returns the share of projects that made
+it alongside the median, so the warning travels with the number instead of sitting in a
+README section nobody reads.

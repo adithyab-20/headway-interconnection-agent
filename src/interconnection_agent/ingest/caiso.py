@@ -48,6 +48,7 @@ import psycopg
 from interconnection_agent.ingest import _cells
 from interconnection_agent.ingest.report import DroppedRow, IngestReport, SheetReport
 from interconnection_agent.ingest.status import canonical_status
+from interconnection_agent.ingest.study_progress import furthest_step
 from interconnection_agent.poi import AliasTable, load_alias_table
 
 # The active sheet's name — the one the alias table was reviewed against, so its POI
@@ -73,6 +74,13 @@ NET_MW_TO_GRID = "Net MWs to Grid"
 PROPOSED_ONLINE_DATE = "Proposed On-line Date (as filed with IR)"
 ACTUAL_ONLINE_DATE = "Actual On-line Date"  # completed sheet: real energization date
 WITHDRAWN_DATE = "Withdrawn Date"  # withdrawn sheet: the date the request left the queue
+
+# How far the project got, its batch, and its deliverability (see ingest/study_progress.py).
+STUDY_PROCESS = "Study Process"
+FIRST_STUDY = "System Impact Study or Phase I Cluster Study"
+SECOND_STUDY = "Facilities Study (FAS) or Phase II Cluster Study"
+AGREEMENT_STATUS = "Interconnection Agreement Status"
+DELIVERABILITY = "Full Capacity, Partial or Energy Only (FC/P/EO)"
 
 # The up-to-three fuel/MW triples, by header. Type is read too (below) but not stored:
 # the canonical resource key is fuel, for cross-source comparability with LBNL.
@@ -130,11 +138,12 @@ _UPSERT = """
     INSERT INTO projects (
         source, native_id, status, q_date, proposed_online_date, actual_online_date,
         withdrawn_date, county, state, iso, study_region, raw_poi, normalized_poi,
-        poi_unmapped, utility
+        poi_unmapped, utility, batch, furthest_step, deliverability, agreement_status
     ) VALUES (
         'caiso_raw', %(native_id)s, %(status)s, %(q_date)s, %(proposed_online_date)s,
         %(actual_online_date)s, %(withdrawn_date)s, %(county)s, %(state)s, 'CAISO',
-        %(study_region)s, %(raw_poi)s, %(normalized_poi)s, %(poi_unmapped)s, %(utility)s
+        %(study_region)s, %(raw_poi)s, %(normalized_poi)s, %(poi_unmapped)s, %(utility)s,
+        %(batch)s, %(furthest_step)s, %(deliverability)s, %(agreement_status)s
     )
     ON CONFLICT (source, native_id) DO UPDATE SET
         status               = EXCLUDED.status,
@@ -148,7 +157,11 @@ _UPSERT = """
         raw_poi              = EXCLUDED.raw_poi,
         normalized_poi       = EXCLUDED.normalized_poi,
         poi_unmapped         = EXCLUDED.poi_unmapped,
-        utility              = EXCLUDED.utility
+        utility              = EXCLUDED.utility,
+        batch                = EXCLUDED.batch,
+        furthest_step        = EXCLUDED.furthest_step,
+        deliverability       = EXCLUDED.deliverability,
+        agreement_status     = EXCLUDED.agreement_status
 """
 
 _UPSERT_RESOURCE = """
@@ -217,6 +230,8 @@ def _ingest_sheet(
     mw_written = 0.0
     unmapped_mw = 0.0
     dropped: list[DroppedRow] = []
+    unknown_study_values: set[str] = set()
+    unknown_study_rows = 0
 
     for offset, row in enumerate(sheet.iter_rows(min_row=FIRST_DATA_ROW, values_only=True)):
         row_number = FIRST_DATA_ROW + offset
@@ -249,6 +264,15 @@ def _ingest_sheet(
         normalized_poi = alias_table.resolve(raw_poi)
         poi_unmapped = normalized_poi is None
         mw = _mw(cell(row, NET_MW_TO_GRID))
+        agreement = _cells.clean(cell(row, AGREEMENT_STATUS))
+        step, unknown = furthest_step(
+            _cells.clean(cell(row, FIRST_STUDY)) or "",
+            _cells.clean(cell(row, SECOND_STUDY)) or "",
+            agreement or "",
+        )
+        if unknown:
+            unknown_study_values.update(unknown)
+            unknown_study_rows += 1
 
         conn.execute(
             _UPSERT,
@@ -274,6 +298,10 @@ def _ingest_sheet(
                 "normalized_poi": normalized_poi,
                 "poi_unmapped": poi_unmapped,
                 "utility": _cells.clean(cell(row, UTILITY)),
+                "batch": _cells.clean(cell(row, STUDY_PROCESS)),
+                "furthest_step": step,
+                "deliverability": _cells.clean(cell(row, DELIVERABILITY)),
+                "agreement_status": agreement,
             },
         )
         rows_written += 1
@@ -301,4 +329,6 @@ def _ingest_sheet(
         unmapped_rows=unmapped_rows,
         mw_written=mw_written,
         unmapped_mw=unmapped_mw,
+        unrecognised_study_values=tuple(sorted(unknown_study_values)),
+        unrecognised_study_rows=unknown_study_rows,
     )

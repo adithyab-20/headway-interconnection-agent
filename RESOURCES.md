@@ -1,21 +1,26 @@
 # Interconnection Agent Resources
 
-## Knowledge
+## Reference documents
 
-- [Build specification](docs/specs/build-spec.md)
-  Authoritative product architecture, data sources, verification tiers, evaluation strategy, and build order. Use before planning implementation.
-- [Vertical-slice specification](docs/specs/vertical-slice.md)
-  Defines the first demoable milestone and its test seams. Use to decide whether a ticket belongs in the current scope.
-- [Domain vocabulary](CONTEXT.md)
-  Canonical meanings for POI, saturation, vintage, resolved withdrawal rate, and provenance. Use when naming schemas, functions, and outputs.
-- [ADR 0001](docs/adr/0001-two-column-location-hierarchy-and-per-source-views.md)
-  Explains the location hierarchy and why analysis must use source-specific views.
-- [ADR 0002](docs/adr/0002-rates-are-cohorted-by-vintage.md)
-  Explains vintage-cohorted withdrawal rates and the survivor bias in time-to-energization.
-- [ADR 0003](docs/adr/0003-claims-are-generated-structured-not-parsed-from-prose.md)
-  Defines structured claims, deterministic Tier 1 verification, trace completeness, and the verification boundary.
+- [Build plan](docs/specs/build-spec.md)
+  The full design: data sources, how each number gets checked, how the agent is tested, and
+  the order to build things in. Read before planning work.
+- [Plan for the first working version](docs/specs/vertical-slice.md)
+  What the first end-to-end version includes and where its tests attach. Use it to decide
+  whether a ticket belongs in the current scope.
+- [Word meanings](CONTEXT.md)
+  What substation, crowding (saturation), queue-entry year (vintage), resolved withdrawal
+  rate, and provenance mean here. Use when naming tables, functions, and outputs.
+- [Decision 0001](docs/adr/0001-two-column-location-hierarchy-and-per-source-views.md)
+  Why location is two columns, and why analysis must read each dataset through its own view.
+- [Decision 0002](docs/adr/0002-rates-are-cohorted-by-vintage.md)
+  Why rates are worked out per queue-entry year, and why wait times look better than reality.
+- [Decision 0003](docs/adr/0003-claims-are-generated-structured-not-parsed-from-prose.md)
+  Why the model returns structured claims, how each number is checked, the all-rows check,
+  and what the checks can't prove.
 
-## Wisdom (Communities)
+## People to ask
 
-- Project pull-request review and issue discussion
-  Use for challenging data mappings, expected-answer SQL, and domain assumptions before they become permanent interfaces.
+- Pull-request reviews and issue discussions on this repo
+  Use them to challenge data mappings, expected-answer SQL, and domain assumptions before they
+  become hard to change.

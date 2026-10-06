@@ -1,128 +1,191 @@
 # interconnection-agent
 
-An agent that produces an interconnection-risk assessment for a proposed generation
-project, in which **every factual claim is tied to the specific source rows it came from and
-checked by code before it reaches the reader.** It grounds each number in public ISO
-interconnection-queue data and states plainly which claims cannot be verified that way.
+Before anyone builds a solar farm, wind farm, or large battery, they have to ask the local
+grid operator for permission to connect it to the grid. Every operator keeps a public
+waiting list of these requests, called the **interconnection queue**. The queue says a lot
+about how risky a site is: how many projects are already waiting to connect at the same
+substation, how long similar projects took to get connected, and how many gave up along the
+way.
 
-The thesis is *verification, not automation*: the differentiator is that the report's numbers
-are provably derived from cited data, not that an LLM wrote a report. See `CONTEXT.md` for the
-domain vocabulary, `docs/adr/` for the governing decisions, and
-`docs/specs/vertical-slice.md` for the current build scope.
+This project is an AI agent that reads that public queue data and writes a short risk
+assessment for a proposed site. What makes it different: **every number in the assessment
+is linked to the exact rows of source data it came from, and ordinary code checks the number
+before anyone reads it.** If a number can't be reproduced from the data, it doesn't appear.
+Anything the code can't check is labelled as unchecked.
 
-> **Scope:** generation interconnection only — not load / data-center interconnection.
+The main idea is *checked answers, not just automated ones*. Plenty of tools can get a
+model to write a fluent report. The point here is that you can trace every figure back to
+the data and confirm it yourself.
 
-## Status
+> **Scope:** power plants connecting to the grid only. Not large electricity users like
+> data centers, which go through a different process.
 
-This is the project **skeleton** (issue #2): a Postgres brought up with Docker Compose, a
-pytest suite that runs against it, and green CI on every push and pull request. No
-domain-specific behavior exists yet — this is the harness every later ticket lands in.
+More detail:
+
+- [`CONTEXT.md`](CONTEXT.md): what the domain words mean (substation, queue-entry year, and
+  so on).
+- [`docs/adr/`](docs/adr/): short write-ups of the main design decisions and why they were
+  made.
+- [`docs/specs/product-spec.md`](docs/specs/product-spec.md): what the product does, as a
+  short list of behaviours.
+
+## Where it stands
+
+Built so far:
+
+- **Loading the data.** California's grid operator (CAISO) publishes its queue as a messy
+  spreadsheet: three tabs, headers on row 4, up to three fuel types per row, and substation
+  names typed by hand. A hand-written loader reads all three tabs into one database table.
+  A second loader reads Berkeley Lab's national queue dataset (LBNL), which covers the whole
+  country.
+- **Grouping substation names.** The same substation is spelled several ways in the CAISO
+  file. Spellings are grouped through a table a person has reviewed (see below), and any
+  name that isn't in the table is flagged, never guessed.
+- **Cross-checking the loader.** CAISO projects appear in both datasets. Tests work out the
+  share of projects that dropped out and the share that got connected, once from CAISO's
+  own file and once from LBNL's copy, and compare both with a published California Public
+  Advocates report. If the loader breaks, the numbers drift apart and the test fails.
+- **Spending and secret guards.** Limits on how much one assessment can spend on the model,
+  and a CI check that fails if an API key is ever committed. These are in place before
+  anything calls the model.
+
+- **Places, positions, and what's around them** (ticket "Load and organise the data"): one call,
+  `load_all`, loads both CAISO queue reports (including the 2023 batch), how far each project
+  got, estimated dates where a real one is missing, where each project connects (98.9% of
+  projects; projects on a line count at both ends), map positions from OpenStreetMap (69% of
+  waiting MW; the rest falls back to its county), the bottlenecks each place sits behind with
+  the cost to add room, and planned grid upgrades. 145 places now have 5 or more past outcomes
+  to learn from, up from 15. Anything the reviewed tables don't recognise is reported.
+
+Not built yet: the numbers, the agent, the checking, and the map app. See the
+[product spec](docs/specs/product-spec.md).
 
 ## Requirements
 
-- [Docker](https://www.docker.com/) (for the Postgres service)
-- [uv](https://docs.astral.sh/uv/) (Python dependency management; installs the right Python too)
+- [Docker](https://www.docker.com/) (runs the Postgres database)
+- [uv](https://docs.astral.sh/uv/) (installs Python and the project's dependencies)
 
-## Bring the stack up and run the tests
+## Start the database and run the tests
 
 ```bash
-# 1. Start Postgres (host port 5433 -> container 5432; see below).
+# 1. Start Postgres (on port 5433 of your machine; see below).
 docker compose up -d
 
-# 2. Install dependencies into a local virtualenv.
+# 2. Install dependencies into a local virtual environment.
 uv sync
 
-# 3. Run the test suite against that database.
+# 3. Run the tests against that database.
 uv run pytest
 ```
 
 When you're done:
 
 ```bash
-docker compose down          # stop Postgres, keep the data volume
-docker compose down -v       # ...or also remove the data volume
+docker compose down          # stop Postgres, keep its data
+docker compose down -v       # stop Postgres and delete its data
 ```
 
-### Database configuration
+### Database settings
 
-The application reads the Postgres DSN from the `DATABASE_URL` environment variable and falls
-back to the local Compose database when it is unset, so the steps above need no configuration.
-Copy `.env.example` to `.env` to override it.
+The code reads the database address from the `DATABASE_URL` environment variable. If it
+isn't set, it uses the local Docker database, so the steps above need no setup.
 
-The Compose service publishes Postgres on **host port 5433** (mapped to the container's 5432)
-so it does not collide with a Postgres you may already have installed locally on 5432. CI uses
-the same 5433 mapping, so the default DSN resolves identically there.
+Docker exposes Postgres on **port 5433** of your machine (not the usual 5432), so it doesn't
+clash with a Postgres you may already have installed. CI uses the same port, so the default
+address works the same way there.
+
+## Before the first model call: API key and spending cap
+
+Nothing calls the model yet, but the guards for when something does are already in place.
+
+1. **Set a monthly spending cap in the Anthropic console first.** This is required, not
+   optional. It is the one limit that holds even if the code has a bug, so it must exist
+   before any agent run.
+2. **Put the API key in `.env`, never in a committed file.** Copy `.env.example` to `.env`
+   and fill in `ANTHROPIC_API_KEY`. Git ignores `.env`, and CI scans every commit for
+   anything that looks like a key and fails the build if it finds one.
+3. **Per-assessment limits are enforced in code** (`interconnection_agent.budget`). One
+   assessment may make at most `AGENT_MAX_TURNS` model calls (default 10) and use at most
+   `AGENT_MAX_TOKENS_PER_ASSESSMENT` tokens in total (default 200,000). Each call may write
+   at most `AGENT_MAX_OUTPUT_TOKENS_PER_CALL` tokens (default 16,000). Going over any of these
+   stops the assessment with an error that names the limit. An answer the model could not
+   finish is also an error, not a shorter answer passed along as if it were complete.
+   A call's token count is only known once it returns, so the call that crosses the total
+   is still paid for: the total can go over by at most one call, and then everything stops.
 
 ## Developer checks
 
-The same checks CI runs on every push and pull request (see `.github/workflows/ci.yml`):
+The same checks CI runs on every push and pull request (see `.github/workflows/ci.yml`).
+CI also scans the full git history for leaked keys, which needs no local step.
 
 ```bash
 uv run ruff check           # lint
 uv run ruff format --check  # formatting
 uv run mypy                 # type check (strict)
-uv run pytest               # tests (needs Postgres up)
+uv run pytest               # tests (needs Postgres running)
 ```
 
 ## Layout
 
 ```
-src/interconnection_agent/        # application package
-src/interconnection_agent/tests/  # unit tests for this component (pure, no DB)
-tests/integration/                # integration tests (real Postgres via Compose)
-tests/e2e/                        # end-to-end tests (full-stack; none yet)
-data/                        # frozen source workbooks + third-party attribution
-docker-compose.yml           # local Postgres service
-.github/workflows/ci.yml     # push + pull_request CI
-docs/                        # ADRs, specs, agent docs
-CONTEXT.md                   # domain vocabulary
+src/interconnection_agent/        # the application code
+src/interconnection_agent/tests/  # fast tests for that code (no database)
+tests/integration/                # tests against the real Postgres
+tests/e2e/                        # whole-system tests (none yet)
+data/                             # the saved source spreadsheets, and their credits
+docker-compose.yml                # the local Postgres
+.github/workflows/ci.yml          # CI: checks, tests, and the key scan
+docs/                             # design decisions, plans, agent instructions
+CONTEXT.md                        # what the domain words mean
 ```
 
-Test layout convention (unit next to the code, integration/e2e under `tests/`) is
-documented in [`tests/README.md`](tests/README.md).
+Where tests go is explained in [`tests/README.md`](tests/README.md).
 
-## POI normalization & coverage
+## Grouping substation names
 
-CAISO's station field is free text: the same substation appears as "Whirlwind Substation
-230kV", "WHIRLWIND Substation 230 kV", and "Whirlwind Sub 230kV bus". Projects are grouped
-to a point of interconnection in two **deterministic** steps, so no probabilistic join ever
-runs beneath a verified claim:
+In CAISO's file, the substation (the "point of interconnection", or POI) is typed by hand.
+The same place appears as "Whirlwind Substation 230kV", "WHIRLWIND Substation 230 kV", and
+"Whirlwind Sub 230kV bus". To count projects per substation, those spellings have to be
+grouped. That happens in two steps, and neither involves guessing, because a guessed
+grouping could quietly change which rows a checked number is built from:
 
-1. **Normalizer** (`interconnection_agent.poi.normalize`) — collapses only *mechanical*
-   variation: unicode compatibility forms (NFKC), case, whitespace, the `230kV` / `230 kV`
-   spelling, and hyphen spacing. It deliberately keeps descriptors like "Substation",
-   "Line", and "Bus", and never merges voltage levels — a 230 kV bus and a 500 kV bus at
-   one site are different POIs.
-2. **Reviewed alias table** (`src/interconnection_agent/poi/aliases.csv`, versioned) — maps
-   each normalized key to a canonical POI name by **exact match**. This is where genuine
-   synonyms, typos ("Vota-South" → "Volta-South"), and suffix variants are grouped. A string
-   with no reviewed entry resolves to `normalized_poi = NULL`, `poi_unmapped = true` — it is
-   counted, never guessed.
+1. **Tidy up** (`interconnection_agent.poi.normalize`). This only removes differences that
+   don't change meaning: odd characters, upper versus lower case, extra spaces, `230kV`
+   versus `230 kV`, and spacing around hyphens. It keeps words like "Substation", "Line",
+   and "Bus", and never merges voltage levels. A 230 kV bus and a 500 kV bus at the same
+   site are different connection points.
+2. **Look up in a reviewed table** (`src/interconnection_agent/poi/aliases.csv`, in version
+   control). Each tidied name maps to one official name, by exact match only. This is where
+   real synonyms, typos ("Vota-South" → "Volta-South"), and different endings get grouped.
+   A name with no entry gets `normalized_poi = NULL` and `poi_unmapped = true`. It's counted,
+   never guessed.
 
-Fuzzy matching is confined to the offline proposal tool
-(`scripts/propose_poi_aliases.py`, `rapidfuzz`), which suggests candidate groups for human
-review and is **not importable by runtime code** (guarded by
-`test_poi_offline_only.py`).
+Fuzzy matching is only used by an offline helper script
+(`scripts/propose_poi_aliases.py`, using `rapidfuzz`) that suggests groupings for a person
+to review. The running program can't import it, and the test `test_poi_offline_only.py`
+fails if anyone tries.
 
-**Measured coverage (active sheet, report dated 07/24/2026):** of 270 active projects
-(76,287 MW), **2 projects / 1,100 MW — 1.44% of active-queue MW — are unmapped**, both
-because their POI is merely *conceptual* or *proposed* (no established substation, so no
-energized history to ground a saturation figure). That clears the project's stopping
-criterion of <2% of active-queue MW unmapped. Reproduce it with:
+**Measured coverage** (CAISO's waiting projects, report dated 07/24/2026): of 270 waiting
+projects (76,287 MW), **2 projects totalling 1,100 MW, or 1.44% of the MW waiting, have no
+match.** Both are because their substation is only proposed and doesn't exist yet, so there
+is no connection history there anyway. The target was under 2% of the MW waiting. To
+reproduce the number:
 
 ```bash
-# Needs Postgres up (see above); prints the coverage line as it ingests.
+# Needs Postgres running (see above); prints the coverage line as it loads.
 PYTHONPATH=src uv run python -m interconnection_agent.cli ingest data/publicqueuereport.xlsx
 ```
 
-The reviewed groupings are cross-checked against LBNL's independent `poi_name` for the
-overlapping CAISO projects; disagreements are reported for review by
+The reviewed groupings are also compared with the substation names in LBNL's dataset for the
+projects that appear in both. Any disagreement is reported for review by
 `tests/integration/test_poi_lbnl_crosscheck.py`.
 
-## Data & attribution
+## Data and credits
 
-The `data/` directory holds the frozen public datasets this project ingests — CAISO's
-Public Queue Report and LBNL's "Queued Up" file. They are used for educational and research
-purposes and fall outside this repository's software license; each source's credit and terms
-are recorded in [`data/README.md`](data/README.md). Neither CAISO, LBNL, nor GridTracker
+The `data/` folder holds saved copies of the public datasets this project loads: CAISO's
+Public Queue Report and LBNL's "Queued Up" file. They're used for educational and research
+purposes and aren't covered by this repository's software license. Each source's credit and
+terms are in [`data/README.md`](data/README.md). Substation positions come from
+OpenStreetMap: © OpenStreetMap contributors, under the
+[Open Database License](https://www.openstreetmap.org/copyright). Neither CAISO, LBNL, nor GridTracker
 endorses this project.
