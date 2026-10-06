@@ -6,7 +6,9 @@ here is applied through reviewed tables in this folder, by exact match only:
   * ``spellings.csv``       - each spelling of a connection point (tidied by
                               :func:`normalize_station`) -> a site and voltage, or for a
                               project on a line, the line's two end sites.
-  * ``positions.csv``       - each site -> its OpenStreetMap substation and coordinates.
+  * ``positions.csv``       - each site -> its coordinates and what they come from: a
+                              substation OpenStreetMap names, or a public document (see the
+                              README).
   * ``bottleneck_names.csv``- each bottleneck as the bottleneck list names it -> the name
                               the cost file uses, and a short name.
   * ``upgrade_places.csv``  - each planned upgrade -> the places it's at.
@@ -123,7 +125,8 @@ def apply_places(conn: Conn, sources: Sources) -> dict[str, list[str]]:
         pos = positions.get(site)
         conn.execute(
             "INSERT INTO places (place, site, voltage_kv, county, state, latitude, longitude, "
-            "positioned_by, osm_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            "positioned_by, position_source, osm_id) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             (
                 place,
                 site,
@@ -132,8 +135,9 @@ def apply_places(conn: Conn, sources: Sources) -> dict[str, list[str]]:
                 state or None,
                 float(pos["latitude"]) if pos else None,
                 float(pos["longitude"]) if pos else None,
-                "openstreetmap" if pos else "county",
-                pos["osm_id"] if pos else None,
+                pos["positioned_by"] if pos else "county",
+                pos["source"] if pos else None,
+                (pos["osm_id"] or None) if pos else None,
             ),
         )
     for native_id, place, role in links:

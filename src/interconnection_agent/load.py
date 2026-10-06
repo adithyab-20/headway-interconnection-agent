@@ -120,7 +120,7 @@ def _share_of_waiting_mw_placed(conn: Conn) -> float:
     row = conn.execute(
         "SELECT sum(r.mw) FILTER (WHERE EXISTS (SELECT 1 FROM project_places pp JOIN places pl "
         "  USING (place) WHERE pp.source = p.source AND pp.native_id = p.native_id "
-        "  AND pl.positioned_by = 'openstreetmap')), sum(r.mw) "
+        "  AND pl.positioned_by <> 'county')), sum(r.mw) "
         "FROM caiso_projects p JOIN project_resources r USING (source, native_id) "
         "WHERE p.status = 'Active'"
     ).fetchone()

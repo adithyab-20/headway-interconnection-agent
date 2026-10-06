@@ -83,10 +83,10 @@ plan_id,site,voltage_kv
 1819-R-05,Jefferson,230
 2425-R-09,Jefferson,60
 2425-R-10,Julian Hinds,230
-1112-R-10,Kern Pp,115
-1314-R-13,Kern Pp,230
-1314-R-13,Kern Pp,230
-1011-R-12,Kern Pp,230
+1112-R-10,Kern,115
+1314-R-13,Kern,230
+1314-R-13,Kern,230
+1011-R-12,Kern,230
 2425-P-03,Kingsburg,115
 2425-R-17,Kirker,115
 2425-R-11,Konocti,60

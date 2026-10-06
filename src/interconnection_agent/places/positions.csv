@@ -1,363 +1,373 @@
-site,osm_id,latitude,longitude,osm_name,osm_date,osm_county,project_county
-Bahia,way/33068219,38.0808738,-122.1374133,Bahia Substation,2026-10-06,Solano,Napa
-Baker,way/80105953,35.2788987,-116.0744455,Baker Substation,2026-10-06,San Bernardino,Riverside
-Cabrillo,way/508412939,34.6432014,-120.4372204,Cabrillo Substation,2026-10-06,Santa Barbara,Santa Barbara
-Charleston,way/1255472012,36.1576361,-115.2500218,Charleston Substation,2026-10-06,Clark,Nye
-Control,relation/12202159,37.3360126,-118.4815393,Control Substation,2026-10-06,Inyo,Churchill
-Cottonwood,way/93128755,40.3979023,-122.2642981,Cottonwood Substation,2026-10-06,Shasta,Shasta
-Davis,way/32547487,38.5451944,-121.7340935,Davis Substation,2026-10-06,Yolo,Yolo
-Delta,way/36322454,37.7988385,-121.6201356,Delta Switching Station,2026-10-06,Alameda,Contra Costa
-Diablo Canyon,way/24400937,35.2161759,-120.8472939,Diablo Canyon,2026-10-06,San Luis Obispo,San Luis Obispo
-Dixon Landing,way/120342208,37.45755,-121.921329,Dixon Landing Substation,2026-10-06,Alameda,San Mateo
-Evergreen,way/38653255,37.3031783,-121.8408334,Evergreen Substation,2026-10-06,Santa Clara,Santa Clara
-Fulton,way/170490300,38.4977484,-122.7605687,Fulton Substation,2026-10-06,Sonoma,Lake
-Glenn,way/181693250,39.7778665,-122.1426369,Glenn Substation,2026-10-06,Glenn,Butte
-Goleta,way/133585863,34.4686423,-119.8843266,Goleta Substation,2026-10-06,Santa Barbara,Ventura
-Gorman,way/63908845,34.7904804,-118.827152,Gorman Substation,2026-10-06,Los Angeles,Kern
-Grant,way/33111585,37.671444,-122.1595919,Grant Substation,2026-10-06,Alameda,Alameda
-Green Valley,way/24397698,36.9520512,-121.7604186,Green Valley Substation,2026-10-06,Santa Cruz,Santa Cruz
-Harry Allen,way/71837876,36.4274003,-114.9069319,Harry Allen Substation,2026-10-06,Clark,Lincoln
-Innovation,way/606500067,36.5822326,-115.9473218,Innovation Substation,2026-10-06,Nye,Clark/Nye
-Inyokern,way/164758876,35.6526475,-117.7958919,Inyokern Substation,2026-10-06,Kern,Inyo
-Las Positas,way/865190320,37.7005872,-121.7334824,Las Positas Substation,2026-10-06,Alameda,San Mateo
-Lockeford,way/151287400,38.1177245,-121.160115,Lockeford Substation,2026-10-06,San Joaquin,Calaveras
-Logan Creek,way/181693225,39.5395079,-122.2630176,Logan Creek Substation,2026-10-06,Glenn,Colusa
-Lone Tree,way/1155654407,37.9461825,-121.7597517,Lone Tree Substation,2026-10-06,Contra Costa,Contra Costa
-Magunden,way/168525615,35.3611831,-118.9227967,Magunden Substation,2026-10-06,Kern,Kern
-Mckee,way/95912441,37.3661783,-121.843497,McKee Substation,2026-10-06,Santa Clara,San Mateo
-Mesa,way/182102249,35.0083488,-120.4530998,Mesa Substation,2026-10-06,San Luis Obispo,San Luis Obispo
-Midway,way/24333232,35.4029429,-119.4522985,Midway Substation,2026-10-06,Kern,Kern
-Mira Loma,way/77339440,34.0080322,-117.5642244,Mira Loma Substation,2026-10-06,San Bernardino,San Bernardino
-Mission,way/119718927,32.7838747,-117.137179,Mission Substation,2026-10-06,San Diego,San Diego
-Oakland C,way/47386641,37.7973777,-122.2807519,Oakland C Substation,2026-10-06,Alameda,Alameda
-Oleum,way/92513782,38.0444117,-122.2570319,Oleum Substation,2026-10-06,Contra Costa,Contra Costa
-Olinda,way/79440943,33.9462399,-117.9221717,Olinda Substation,2026-10-06,Los Angeles,Los Angeles
-Paradise,way/1256348450,39.7606558,-121.61888,Paradise Substation,2026-10-06,Butte,Butte
-Pease,way/885906120,39.1698803,-121.6610022,Pease Substation,2026-10-06,Sutter,Yuba
-Pleasant Grove,way/37121892,38.8221004,-121.3065142,Pleasant Grove Substation,2026-10-06,Placer,Placer
-Potrero,relation/14391219,37.7568233,-122.3860796,Potrero Switchyard,2026-10-06,San Francisco,San Francisco
-Rancho Seco,way/32943234,38.3442084,-121.1238678,Rancho Seco Substation,2026-10-06,Sacramento,San Joaquin
-Red Bluff,way/507591114,33.6988312,-115.3128761,Red Bluff Substation,2026-10-06,Riverside,Riverside
-Riverbank,way/1272093749,37.8564378,-120.9122468,Riverbank Switching Station,2026-10-06,Stanislaus,San Joaquin
-San Mateo,way/501515905,33.4094774,-117.5906855,San Mateo Substation,2026-10-06,Orange,Orange
-Serrano,way/64161681,33.8289323,-117.7897166,Serrano Substation,2026-10-06,Orange,San Bernardino
-Sf Airport,way/26787794,37.626276,-122.403481,SF Airport,2026-10-06,San Mateo,San Francisco
-Talega,way/116440984,33.4532061,-117.5714849,Talega Substation,2026-10-06,Orange,San Diego
-Tassajara,way/66376509,37.8000395,-121.9076359,Tassajara Substation,2026-10-06,Contra Costa,Alameda
-Tesla,way/23837624,37.7120521,-121.5647373,Tesla Substation,2026-10-06,Alameda,San Joaquin
-Tracy,way/613571074,37.7488257,-121.4159518,Tracy Substation,2026-10-06,San Joaquin,San Joaquin
-Trinity,way/711541435,40.7180012,-122.9343909,Trinity Substation,2026-10-06,Trinity,Shasta/Trinity
-Tulare,way/199049644,36.21337,-119.3303801,Tulare Substation,2026-10-06,Tulare,Kings
-Vaca Dixon,relation/12204895,38.4034895,-121.9202262,Vaca Dixon Substation,2026-10-06,Solano,Glenn
-Vista,way/33604800,34.0406913,-117.3206273,Vista Substation,2026-10-06,San Bernardino,San Bernardino
-Walnut,way/384800363,34.0081672,-117.9499642,Walnut Substation,2026-10-06,Los Angeles,Los Angeles
-Warnerville,way/79248632,37.7417051,-120.8023645,Warnerville Substation,2026-10-06,Stanislaus,San Joaquin
-Westwood,way/1421948094,40.2998877,-121.0015104,Westwood Substation,2026-10-06,Lassen,Lassen
-Airways,way/1244213586,36.7780639,-119.6742071,Airways Substation,2026-10-06,Fresno,
-Alhambra,way/137840355,33.5233888,-112.1361538,Alhambra Substation,2026-10-06,Maricopa,
-Almaden,way/42330936,37.2600109,-121.8900095,Almaden Substation,2026-10-06,Santa Clara,
-Alpine,way/245417237,32.8277373,-116.7899038,Alpine Substation,2026-10-06,San Diego,San Diego
-Alto,way/33046902,37.8984659,-122.5247928,Alto Substation,2026-10-06,Marin,
-Ames,way/4630372,37.4178138,-122.0671333,Ames Substation,2026-10-06,Santa Clara,
-Antelope,way/88776835,34.6858079,-118.2981161,Antelope Substation,2026-10-06,Los Angeles,Los Angeles
-Apple Hill,way/407071702,38.7395774,-120.6771808,Apple Hill Substation,2026-10-06,El Dorado,El Dorado
-Applied Materials,way/188689669,37.3771474,-122.006367,Applied Materials Substation,2026-10-06,Santa Clara,
-Artesian,way/567612415,36.1744348,-115.1153053,Artesian Substation,2026-10-06,Clark,
-Atascadero,way/328033894,35.4654985,-120.6714647,Atascadero Substation,2026-10-06,San Luis Obispo,
-Atlantic,way/30410527,38.7635707,-121.264042,Atlantic Substation,2026-10-06,Placer,Placer
-Atwater,way/79176968,37.3599247,-120.6153156,Atwater Substation,2026-10-06,Merced,
-Avocado,way/1485094947,33.3845762,-117.2369944,Avocado Substation,2026-10-06,San Diego,San Diego
-B,way/182084288,38.5719479,-121.4829736,Station B,2026-10-06,Sacramento,
-Bailey,way/64130145,34.7766122,-118.7746647,Bailey Substation,2026-10-06,Los Angeles,Los Angeles
-Bair,way/30637327,37.4976451,-122.2141085,Bair Substation,2026-10-06,San Mateo,San Mateo
-Barre,way/65596865,33.808726,-117.9827195,Barre Substation,2026-10-06,Orange,
-Basilone,way/844837079,33.3874614,-117.5824449,Basilone Substation,2026-10-06,San Diego,
-Bay Boulevard,way/935670738,32.6081616,-117.0945795,Bay Boulevard Substation,2026-10-06,San Diego,San Diego
-Bay Meadows,way/30831608,37.5516381,-122.2925879,Bay Meadows Substation,2026-10-06,San Mateo,
-Bellevue,way/532629908,38.3788375,-122.7125989,Bellevue Substation,2026-10-06,Sonoma,
-Bellota,way/884225176,38.0157488,-121.0138807,Bellota Substation,2026-10-06,San Joaquin,San Joaquin
-Birds Landing,way/24064448,38.1247013,-121.8301278,Birds Landing Switching Station,2026-10-06,Solano,Solano
-Blythe,way/166649166,33.6112925,-114.6802861,Blythe Substation,2026-10-06,Riverside,Riverside
-Bogue,way/86573554,39.0959089,-121.6239833,Bogue Substation,2026-10-06,Sutter,Sutter
-Bolinas,way/973121627,37.9411985,-122.7062054,Bolinas Sub,2026-10-06,Marin,
-Brentwood,way/92633578,37.919021,-121.6767952,Brentwood Substation,2026-10-06,Contra Costa,
-Britton,way/52098545,37.3744687,-122.0163991,Britton Substation,2026-10-06,Santa Clara,
-Camp Evers,way/37723084,37.0418309,-122.0252619,Camp Evers Substation,2026-10-06,Santa Cruz,
-Cannon,way/905266210,40.733146,-111.9115882,Cannon Substation,2026-10-06,Salt Lake,
-Capistrano,way/30050587,33.5126117,-117.66628,Capistrano Substation,2026-10-06,Orange,Orange
-Carberry,way/689408573,40.8592127,-121.7529606,Carberry Switching Station,2026-10-06,Shasta,Shasta
-Carlton Hills,way/167005125,32.8549207,-117.0119855,Carlton Hills Substation,2026-10-06,San Diego,San Diego
-Caruthers,way/1527996414,36.5321389,-119.8816492,Caruthers Substation,2026-10-06,Fresno,Fresno
-Castro Valley,way/103260059,37.6913316,-122.0611153,Castro Valley Substation,2026-10-06,Alameda,
-Cayetano,way/1006624965,37.7385208,-121.7712233,Cayetano Substation,2026-10-06,Alameda,Alameda
-Cayucos,way/328028425,35.448736,-120.8703178,Cayucos,2026-10-06,San Luis Obispo,
-Center,way/66158393,33.9288306,-118.1057084,Center Substation,2026-10-06,Los Angeles,
-Charca,way/176726311,35.6081967,-119.3252475,Charca Substation,2026-10-06,Kern,
-Chevmain,way/394895304,33.9035195,-118.3978913,Chevmain Substation,2026-10-06,Los Angeles,
-Chino,way/33605206,33.998587,-117.6785183,Chino Substation,2026-10-06,San Bernardino,San Bernardino
-Christie,way/35479377,38.0027466,-122.2082843,Christie Substation,2026-10-06,Contra Costa,Contra Costa
-Cielo Azul,way/1504635963,33.5907167,-113.5453823,Cielo Azul Switchyard,2026-10-06,La Paz,La Paz
-Clairemont,way/167029619,32.8258058,-117.1836658,Clairemont Substation,2026-10-06,San Diego,
-Clayton,way/35763387,37.9443397,-121.969202,Clayton Substation,2026-10-06,Contra Costa,
-Colorado River,way/402225518,33.5806241,-114.8172191,Colorado River Substation,2026-10-06,Riverside,Riverside
-Contra Costa,way/35798740,37.9993561,-121.7824183,Contra Costa Substation,2026-10-06,Contra Costa,Contra Costa
-Contra Costa Power Plant,way/35799514,38.015231,-121.7621701,Contra Costa Power Plant Substation,2026-10-06,Contra Costa,Contra Costa
-Cooley Landing,way/48203963,37.4737395,-122.1279853,Cooley Landing Substation,2026-10-06,San Mateo,San Mateo
-Coppermine,way/169516713,36.8958053,-119.664547,Coppermine Substation,2026-10-06,Fresno,
-Corcoran,way/828024039,36.109471,-119.5576041,Corcoran Substation,2026-10-06,Kings,Kings
-Coronado,way/104746911,34.5769346,-109.2774288,Coronado Substation,2026-10-06,Apache,
-Cortina,way/24388861,39.1206016,-122.2231973,Cortina Substation,2026-10-06,Colusa,Colusa
-Cotati,way/253731890,38.3095848,-122.7316423,Cotati Substation,2026-10-06,Sonoma,
-Cottle,way/79249627,37.7725291,-120.8264774,Cottle Substation,2026-10-06,Stanislaus,Stanislaus
-Coyote,way/93678748,37.2214424,-121.7466027,Coyote Switching Station,2026-10-06,Santa Clara,
-Creelman,way/245417242,33.0180671,-116.8530464,Creelman Substation,2026-10-06,San Diego,San Diego
-Crows Landing,way/1484070421,37.6091235,-120.9928555,Crows Landing Substation,2026-10-06,Stanislaus,Stanislaus
-Del Amo,way/32223005,33.8481378,-118.0974269,Del Amo Substation,2026-10-06,Los Angeles,
-Del Monte,way/151801695,36.5982643,-121.8531289,Del Monte Substation,2026-10-06,Monterey,
-Delaney,way/542734205,33.4810553,-113.0343202,Delaney Substation,2026-10-06,Maricopa,Maricopa
-Delevan,way/1359675934,39.3682089,-122.2694681,Delevan Substation,2026-10-06,Colusa,Colusa
-Devers,way/61430467,33.9379937,-116.5766239,Devers Substation,2026-10-06,Riverside,Riverside
-Dixon,way/1094966789,38.4449851,-121.8262386,Dixon Substation,2026-10-06,Solano,Solano
-Dos Amigos,way/93238392,36.9252276,-120.8298244,Dos Amigos Substation,2026-10-06,Merced,Merced
-Dumbarton,way/59470569,37.5570702,-122.0578829,Dumbarton Substation,2026-10-06,Alameda,Alameda
-Eagle Mountain,relation/12202188,33.8104972,-115.4527258,Eagle Mountain Substation,2026-10-06,Riverside,Riverside
-East Grand,way/25797771,37.6533808,-122.4030565,East Grand Substation,2026-10-06,San Mateo,
-East Marysville,way/86803024,39.1634541,-121.5611959,East Marysville Substation,2026-10-06,Yuba,
-East Nicolaus,way/86463530,38.9097437,-121.5424907,East Nicolaus Substation,2026-10-06,Sutter,Sutter
-Eastgate,way/119718456,32.8848282,-117.200837,Eastgate Substation,2026-10-06,San Diego,San Diego
-Eastshore,way/33111643,37.6248148,-122.1170695,Eastshore Substation,2026-10-06,Alameda,Alameda
-Edenvale,way/23823577,37.2446077,-121.795775,Edenvale,2026-10-06,Santa Clara,
-Edes,way/181389084,37.738557,-122.1937797,Edes Substation,2026-10-06,Alameda,
-Eight Mile,way/24064886,38.058747,-121.3768414,Eight Mile Substation,2026-10-06,San Joaquin,
-El Cajon,way/245301741,32.795407,-116.9723728,El Cajon Substation,2026-10-06,San Diego,San Diego
-El Cerrito G,way/43951315,37.9162218,-122.3025375,El Cerrito G Substation,2026-10-06,Contra Costa,
-El Patio,way/117401235,37.2916636,-121.9356896,El Patio Substation,2026-10-06,Santa Clara,
-Eldorado,way/62315137,35.7973353,-115.0084794,Eldorado Substation,2026-10-06,Clark,Clark
-Elk,way/1426769638,39.1293206,-123.7117919,Elk Substation,2026-10-06,Mendocino,Mendocino
-Ellis,way/62333225,33.6852045,-117.9431126,Ellis Substation,2026-10-06,Orange,Orange
-Escondido,way/99650319,33.1257327,-117.1167373,Escondido Substation,2026-10-06,San Diego,San Diego
-Estrella,way/61961946,33.6875019,-117.8285735,Estrella Substation,2026-10-06,Orange,
-Fink,way/1465315898,37.4104545,-121.1725447,Fink Switching Station,2026-10-06,Stanislaus,Stanislaus
-Fmc,way/120359075,37.3472911,-121.921986,FMC Substation,2026-10-06,Santa Clara,Santa Clara
-French Camp,way/1493622955,37.8820813,-121.2904274,French Camp Substation,2026-10-06,San Joaquin,
-Friars,way/119718926,32.7717391,-117.1644077,Friars Substation,2026-10-06,San Diego,San Diego
-Garnet,way/99625445,33.9010413,-116.5440926,Garnet Substation,2026-10-06,Riverside,
-Gates,way/93251033,36.1413374,-120.1256622,Gates Substation,2026-10-06,Fresno,Fresno
-Genesee,way/167029631,32.8795875,-117.2135966,Genesee Substation,2026-10-06,San Diego,
-Glenwood,way/114438565,37.4571649,-122.1869329,Glenwood Substation,2026-10-06,San Mateo,
-Gold Hill,way/32050965,38.6575814,-121.1368126,Gold Hill Substation,2026-10-06,Sacramento,Sacramento
-Gould,way/31173635,34.2214825,-118.1871012,Gould Substation,2026-10-06,Los Angeles,Los Angeles
-Grand Island,way/405561526,38.2315267,-121.5903858,Grand Island Substation,2026-10-06,Sacramento,
-Greenleaf,way/86576021,39.0524925,-121.6919536,Greenleaf Substation,2026-10-06,Sutter,Sutter
-Half Moon Bay,way/1039239470,37.4689833,-122.4302864,Half Moon Bay Substation,2026-10-06,San Mateo,San Mateo
-Hanford,relation/14217235,36.3235784,-119.6488609,Hanford Substation,2026-10-06,Kings,Kings
-Harborgen,way/389174036,33.778822,-118.2273435,HarborGen Substation,2026-10-06,Los Angeles,Los Angeles
-Harquahala,way/91182233,33.4774196,-113.1135048,Harquahala Substation,2026-10-06,Maricopa,Maricopa
-Harris,way/82005353,35.143955,-114.0868115,Harris Substation,2026-10-06,Mohave,
-Henrietta,way/182604562,36.2421264,-119.9028971,Henrietta Substation,2026-10-06,Kings,Kings
-Herndon,way/164289720,36.8446681,-119.922563,Herndon Substation,2026-10-06,Fresno,Fresno
-Hicks,way/112568707,37.2336481,-121.9007517,Hicks Substation,2026-10-06,Santa Clara,
-Higgins,way/125280729,39.043888,-121.0906728,Higgins Substation,2026-10-06,Nevada,
-Hillsdale Junction,way/737372047,37.5250772,-122.3563049,Hillsdale Junction,2026-10-06,San Mateo,San Mateo
-Hinson,way/65411731,33.8190324,-118.2223341,Hinson Substation,2026-10-06,Los Angeles,Los Angeles
-Hollister,way/91534418,36.8627977,-121.4062132,Hollister Substation,2026-10-06,San Benito,San Benito
-Honey Lake,way/1296448097,40.3682671,-120.2648492,Honey Lake Substation,2026-10-06,Lassen,Lassen
-Hoodoo Wash,way/206961851,32.9538809,-113.4886922,Hoodoo Wash Switchyard,2026-10-06,Yuma,Yuma
-Ignacio,way/33046461,38.0767942,-122.5403588,Ignacio Substation,2026-10-06,Marin,Marin
-Imperial Valley,way/52183964,32.7179069,-115.7155553,Imperial Valley Substation,2026-10-06,Imperial,Imperial
-Ivanpah,way/233812416,35.5444422,-115.4687507,Ivanpah Substation,2026-10-06,San Bernardino,San Bernardino
-Jamacha,way/97576454,32.7440926,-116.9573439,Jamacha Substation,2026-10-06,San Diego,San Diego
-Jameson,way/35921570,38.2054582,-122.1479338,Jameson Substation,2026-10-06,Solano,Solano
-Japanese Mesa,way/934956976,33.374287,-117.5548397,Japanese Mesa Substation,2026-10-06,San Diego,
-Jarvis,way/112452159,37.59529,-122.0176363,Jarvis Substation,2026-10-06,Alameda,
-Johanna,way/61961948,33.7132628,-117.8526051,Johanna Substation,2026-10-06,Orange,Orange
-Julian Hinds,relation/12202178,33.7050285,-115.6266673,Julian Hinds Substation,2026-10-06,Riverside,Riverside
-Kasson,way/152357677,37.7457866,-121.3413843,Kasson Substation,2026-10-06,San Joaquin,San Joaquin
-Kelso,relation/15617525,37.7974253,-121.6032072,Kelso Substation,2026-10-06,Alameda,Alameda
-Kirker,way/35735111,38.0208157,-121.9059353,Kirker Substation,2026-10-06,Contra Costa,
-Kramer,way/141726016,34.9896952,-117.5421983,Kramer Substation,2026-10-06,San Bernardino,San Bernardino
-La Cienega,relation/11351566,34.0006667,-118.3784687,La Cienega Substation,2026-10-06,Los Angeles,Los Angeles
-La Fresa,way/74839063,33.8688713,-118.3329363,La Fresa Substation,2026-10-06,Los Angeles,
-La Jolla,way/935140048,32.8401079,-117.2753524,La Jolla Substation,2026-10-06,San Diego,
-Laguna Bell,way/78797580,33.975758,-118.1478598,Laguna Bell Substation,2026-10-06,Los Angeles,Los Angeles
-Laguna Niguel,way/501515906,33.4949278,-117.7029399,Laguna Niguel Substation,2026-10-06,Orange,
-Lakeville,way/29426718,38.2508462,-122.5810974,Lakeville Substation,2026-10-06,Sonoma,Sonoma
-Lakewood,way/35763516,37.9086401,-122.0573841,Lakewood Substation,2026-10-06,Contra Costa,
-Lambie,way/35912596,38.2214947,-121.8669216,Lambie Substation,2026-10-06,Solano,Solano
-Lammers,way/152390122,37.713103,-121.4778009,Lammers Substation,2026-10-06,San Joaquin,San Joaquin
-Las Aguilas,way/1058284417,36.6319342,-120.8786523,Las Aguilas Switching Station,2026-10-06,San Benito,
-Las Pulgas,way/240585981,37.462898,-122.2278663,Las Pulgas Substation,2026-10-06,San Mateo,
-Lawrence,way/392311411,37.3273332,-121.9961505,Lawrence Substation,2026-10-06,Santa Clara,
-Lerdo,way/1295086785,35.5002365,-119.1519574,Lerdo Sub,2026-10-06,Kern,Kern
-Lighthipe,way/66157642,33.8802903,-118.1751865,Lighthipe Substation,2026-10-06,Los Angeles,
-Lilac,way/733742943,33.2533269,-117.0858841,Lilac Substation,2026-10-06,San Diego,San Diego
-Live Oak,way/86292411,34.121121,-117.7319349,Live Oak Substation,2026-10-06,Los Angeles,
-Livermore,way/24283011,37.6934358,-121.6951878,Livermore Substation,2026-10-06,Alameda,
-Llagas,way/109355539,37.0072605,-121.5573635,Llagas Substation,2026-10-06,Santa Clara,Santa Clara
-Los Banos,way/23988495,37.0530047,-121.0205078,Los Banos Substation,2026-10-06,Merced,Merced
-Los Coches,way/167005126,32.8597308,-116.8992272,Los Coches Substation,2026-10-06,San Diego,San Diego
-Los Esteros,way/39017429,37.4272373,-121.9328297,Los Esteros Substation,2026-10-06,Santa Clara,Santa Clara
-Louise,way/1024994823,37.8082866,-121.288073,Louise Substation,2026-10-06,San Joaquin,San Joaquin
-Loveland,way/245778829,32.7969521,-116.7922452,Loveland Substation,2026-10-06,San Diego,San Diego
-Lugo,way/86369466,34.3658218,-117.3693963,Lugo Substation,2026-10-06,San Bernardino,San Bernardino
-Mandalay,way/37692542,34.2077559,-119.2468823,Mandalay Switchyard,2026-10-06,Ventura,Ventura
-Manteca,way/152353500,37.8009471,-121.2242723,Manteca Substation,2026-10-06,San Joaquin,San Joaquin
-Margarita,way/30995423,33.5497273,-117.6280692,Margarita Substation,2026-10-06,Orange,Orange
-Martin,way/29399992,37.7037524,-122.4094087,Martin Substation,2026-10-06,San Mateo,San Mateo
-Mccall,way/182604563,36.6108289,-119.6395996,McCall Substation,2026-10-06,Fresno,Fresno
-Mead,way/79734755,35.9273963,-114.8338237,Mead Substation,2026-10-06,Clark,Clark
-Meadow Lane,way/65501703,37.963166,-122.0522357,Meadow Lane Substation,2026-10-06,Contra Costa,
-Melones,way/181630666,37.9462693,-120.5276918,Melones Substation,2026-10-06,Tuolumne,Tuolumne
-Merchant,way/79671040,35.7900276,-114.9942489,Merchant Substation,2026-10-06,Clark,Clark
-Mesa Heights,way/247795420,32.8295316,-117.1573513,Mesa Heights Substation,2026-10-06,San Diego,San Diego
-Mesa Rim,way/771716879,32.9049184,-117.1731632,Mesa Rim Substation,2026-10-06,San Diego,
-Metcalf,way/23805620,37.2255899,-121.7439528,Metcalf Substation,2026-10-06,Santa Clara,Santa Clara
-Miguel,relation/12331797,32.6790263,-116.9838422,Miguel Substation,2026-10-06,San Diego,San Diego
-Millbrae,way/24606412,37.6056261,-122.3915473,Millbrae Substation,2026-10-06,San Mateo,San Mateo
-Milpitas,way/120347589,37.415405,-121.8884658,Milpitas Substation,2026-10-06,Santa Clara,Santa Clara
-Mira Sorrento,way/230740532,32.8927483,-117.2060045,Mira Sorrento Substation,2026-10-06,San Diego,
-Mirage,way/61430458,33.8183451,-116.3695726,Mirage Substation,2026-10-06,Riverside,Riverside
-Miramar,way/105232646,32.8940473,-117.1355952,Miramar Substation,2026-10-06,San Diego,San Diego
-Mohave,relation/12201885,35.1470784,-114.597151,Mohave Substation,2026-10-06,Clark,Clark
-Monserate,way/1347239766,33.3559044,-117.1122858,Monserate,2026-10-06,San Diego,San Diego
-Monta Vista,way/27925546,37.3261316,-122.0754437,Monta Vista Substation,2026-10-06,Santa Clara,Santa Clara
-Montague,way/688096231,37.4033888,-121.9059343,Montague Substation,2026-10-06,Santa Clara,
-Moorpark,way/27340751,34.2811367,-118.9030822,Moorpark Substation,2026-10-06,Ventura,Ventura
-Moraga,way/33108052,37.8477991,-122.1611735,Moraga Substation,2026-10-06,Contra Costa,Contra Costa
-Morgan Hill,way/61558067,37.1267953,-121.6593936,Morgan Hill Substation,2026-10-06,Santa Clara,Santa Clara
-Morro Bay,way/93420676,35.3738781,-120.8555879,Morro Bay,2026-10-06,San Luis Obispo,San Luis Obispo
-Murray,way/245778832,32.7908216,-117.0231281,Murray Substation,2026-10-06,San Diego,
-Narrows,way/1376883612,33.1371821,-116.2944821,Narrows Substation,2026-10-06,San Diego,
-National City,way/247807059,32.6730729,-117.1073613,National City Substation,2026-10-06,San Diego,
-Newark,way/28875096,37.5008218,-121.9865669,Newark Substation,2026-10-06,Alameda,Alameda
-Newman,way/1464397566,37.3155776,-121.0148952,Newman Substation,2026-10-06,Stanislaus,Stanislaus
-Nortech,way/539148054,37.4205581,-121.9599446,Nortech Substation,2026-10-06,Santa Clara,
-North City West,way/26587310,32.9587616,-117.2206664,North City West Substation,2026-10-06,San Diego,
-North Dublin,way/1006618935,37.7447316,-121.857841,North Dublin Substation,2026-10-06,Contra Costa,
-North Gila,way/90966380,32.7456924,-114.4912811,North Gila Substation,2026-10-06,Yuma,Yuma
-North Tower,way/59450840,38.0662071,-122.1963036,North Tower Substation,2026-10-06,Solano,
-Notre Dame,way/873098676,39.7302615,-121.796306,Notre Dame Substation,2026-10-06,Butte,
-Oakland D,way/125686119,37.8374161,-122.2635201,Oakland D Substation,2026-10-06,Alameda,
-Oakland J,way/540298861,37.7630288,-122.2144359,Oakland J Substation,2026-10-06,Alameda,Alameda
-Oakland L,way/91164872,37.8103041,-122.2715752,Oakland L Substation,2026-10-06,Alameda,
-Oakland X,way/112306422,37.8053861,-122.2312754,Oakland X Substation,2026-10-06,Alameda,
-Oceano,way/328033899,35.101535,-120.5810329,Oceano,2026-10-06,San Luis Obispo,
-Old Town,way/119718455,32.7660854,-117.1923901,Old Town Substation,2026-10-06,San Diego,San Diego
-Orchard,way/1194038329,32.6275061,-114.5357074,Orchard Substation,2026-10-06,Yuma,
-Otay,way/246538205,32.5953414,-117.0577002,Otay Substation,2026-10-06,San Diego,San Diego
-Pacific Beach,way/246532420,32.7992354,-117.240247,Pacific Beach Substation,2026-10-06,San Diego,
-Pacifica,way/1280081494,37.5948646,-122.4888897,Pacifica Substation,2026-10-06,San Mateo,
-Padre Flat,way/1058324264,37.0186152,-120.975924,Padre Flat Substation,2026-10-06,Merced,
-Pahrump,way/188301755,36.197074,-115.9689413,Pahrump Substation,2026-10-06,Nye,
-Palermo,way/150562248,39.4542547,-121.5178277,Palermo Substation,2026-10-06,Butte,Butte
-Palomar Airport,way/167143651,33.1228402,-117.2879008,Palomar Airport Substation,2026-10-06,San Diego,
-Panoche,way/93288988,36.6523145,-120.5815969,Panoche Substation,2026-10-06,Fresno,Fresno
-Pardee,way/91834998,34.4397943,-118.5826225,Pardee Substation,2026-10-06,Los Angeles,Los Angeles
-Paso Robles,way/170833620,35.6156318,-120.6795071,Paso Robles,2026-10-06,San Luis Obispo,
-Pastoria,way/168525650,34.9351833,-118.8429736,Pastoria Substation,2026-10-06,Kern,Kern
-Paul Sweet,way/42637019,36.9923448,-121.982231,Paul Sweet Substation,2026-10-06,Santa Cruz,
-Peabody,way/36250573,38.2854584,-121.9705143,Peabody Substation,2026-10-06,Solano,
-Petaluma A,way/195463430,38.2341942,-122.6362627,Petaluma A Substation,2026-10-06,Sonoma,
-Pico,way/167242261,33.4568298,-117.589184,Pico Substation,2026-10-06,Orange,
-Piercy,way/119409662,37.2689282,-121.7873391,Piercy Substation,2026-10-06,Santa Clara,Santa Clara
-Pisgah,way/62235860,34.7816824,-116.3846956,Pisgah Switchyard,2026-10-06,San Bernardino,San Bernardino
-Pittsburg,way/35732660,38.0369134,-121.8959532,Pittsburg Substation,2026-10-06,Contra Costa,Contra Costa
-Placer,way/98111153,38.9013375,-121.0878295,Placer Substation,2026-10-06,Placer,
-Plainfield,way/394806112,38.6191848,-121.7942781,Plainfield Substation,2026-10-06,Yolo,Yolo
-Point Loma,way/85586689,32.7414519,-117.2334812,Point Loma Substation,2026-10-06,San Diego,San Diego
-Poway,way/242195549,32.978924,-117.0316446,Poway Substation,2026-10-06,San Diego,
-Primm,way/551396627,35.6409768,-115.349316,Primm Substation,2026-10-06,Clark,Clark
-Proctor Valley,way/25720848,32.6650617,-116.9867618,Proctor Valley Substation,2026-10-06,San Diego,
-Pueblo,way/897175428,31.5474843,-110.2411137,Pueblo Substation,2026-10-06,Cochise,
-Putah Creek,way/34229001,38.5230579,-121.9944302,Putah Creek Substation,2026-10-06,Yolo,
-Quinto,way/552653455,37.119984,-121.0689671,Quinto Substation,2026-10-06,Merced,Merced
-Rancho Carmel,way/31809170,32.9937908,-117.0776605,Rancho Carmel Substation,2026-10-06,San Diego,
-Rancho Mission Viejo,way/501515904,33.5263975,-117.598729,Rancho Mission Viejo Substation,2026-10-06,Orange,Orange
-Rancho Vista,way/77452171,34.087978,-117.5337016,Rancho Vista Substation,2026-10-06,San Bernardino,San Bernardino
-Randall,way/332222407,34.1136574,-117.4541834,Randall Substation,2026-10-06,San Bernardino,
-Ravenswood,way/25793704,37.4928765,-122.137873,Ravenswood Substation,2026-10-06,San Mateo,
-Rector,way/169402989,36.3038123,-119.2451574,Rector Substation,2026-10-06,Tulare,Tulare
-Redondo,way/560590098,32.6852624,-114.4950303,Redondo Substation,2026-10-06,Yuma,
-Richmond R,way/37623989,37.9259849,-122.3695955,Richmond R,2026-10-06,Contra Costa,
-Rio Hondo,way/86094474,34.1050306,-117.980363,Rio Hondo Substation,2026-10-06,Los Angeles,Los Angeles
-Rio Oso,way/86463615,38.9351998,-121.4667925,Rio Oso Substation,2026-10-06,Sutter,Sutter
-Ripon,way/837863258,37.7555913,-121.146377,Ripon Substation,2026-10-06,San Joaquin,San Joaquin
-Rob Roy,way/55143820,36.9791983,-121.8672269,Rob Roy Substation,2026-10-06,Santa Cruz,
-Rose Canyon,way/67264544,32.8444239,-117.2370217,Rose Canyon Substation,2026-10-06,San Diego,
-Rossmoor,way/606129587,37.8646646,-122.0804497,Rossmoor Substation,2026-10-06,Contra Costa,
-Round Mountain,way/93128718,40.8079932,-121.935934,Round Mountain Substation,2026-10-06,Shasta,Shasta
-Salado,way/94600663,37.4217214,-121.1474784,Salado Substation,2026-10-06,Stanislaus,Stanislaus
-Salinas,way/24397013,36.6820576,-121.6514791,Salinas Substation,2026-10-06,Monterey,
-San Benito,way/1552705228,36.8689179,-121.5493618,San Benito Substation,2026-10-06,San Benito,San Benito
-San Bernardino,way/181492780,34.0799529,-117.2389874,San Bernardino Substation,2026-10-06,San Bernardino,San Bernardino
-San Leandro U,way/35656716,37.7105291,-122.1486694,San Leandro U Substation,2026-10-06,Alameda,
-San Luis Rey,way/105825880,33.2112992,-117.3345198,San Luis Rey Substation,2026-10-06,San Diego,San Diego
-San Marcos,way/168216625,34.4519857,-119.7614899,San Marcos Substation,2026-10-06,Santa Barbara,
-San Ramon,way/66376512,37.744673,-121.9364756,San Ramon Substation,2026-10-06,Contra Costa,
-Sanger,way/182622208,36.7083453,-119.6112851,Sanger Substation,2026-10-06,Fresno,Fresno
-Santa Clara,way/40309253,34.3021917,-119.1854388,Santa Clara Substation,2026-10-06,Ventura,Ventura
-Santa Teresa,way/1059210744,37.2386068,-121.7907606,Santa Teresa Substation,2026-10-06,Santa Clara,Santa Clara
-Santiago,way/29175070,33.6649231,-117.7685585,Santiago Substation,2026-10-06,Orange,Orange
-Saratoga,way/31369697,37.2809465,-122.0153775,Saratoga Substation,2026-10-06,Santa Clara,
-Schulte,way/1266650815,37.710439,-121.4899411,Schulte Switching Station,2026-10-06,San Joaquin,San Joaquin
-Scripps,way/243125942,32.9111127,-117.1126304,Scripps Substation,2026-10-06,San Diego,San Diego
-Semitropic,way/761043373,35.6008203,-119.437539,Semitropic Substation,2026-10-06,Kern,Kern
-Serramonte,way/38159840,37.6509286,-122.4541665,Serramonte Substation,2026-10-06,San Mateo,
-Shadowridge,way/167143659,33.1414668,-117.238851,Shadowridge Substation,2026-10-06,San Diego,San Diego
-Shingle Springs,way/180839419,38.6592948,-120.9472318,Shingle Springs Substation,2026-10-06,El Dorado,El Dorado
-Silverado,way/1357563547,38.4998097,-122.4591906,Silverado Substation,2026-10-06,Napa,
-Sloan Canyon,way/893296457,35.8336156,-115.0115455,Sloan Canyon Switchyard,2026-10-06,Clark,Clark
-Sneath Lane,way/24314687,37.6219397,-122.4467361,Sneath Lane Substation,2026-10-06,San Mateo,
-Sobrante,way/33106247,37.9054592,-122.2082408,Sobrante Substation,2026-10-06,Contra Costa,Contra Costa
-Soledad,way/1273559791,36.4301332,-121.3325147,Soledad Substation,2026-10-06,Monterey,Monterey
-Spring Valley,way/245946710,32.7390773,-117.0027506,Spring Valley Substation,2026-10-06,San Diego,San Diego
-Springville,way/169514309,36.1079723,-118.9381572,Springville Substation,2026-10-06,Tulare,Tulare
-Stagg,way/38311176,37.9922986,-121.3485086,Stagg Substation,2026-10-06,San Joaquin,San Joaquin
-Stelling,way/396269147,37.3360204,-122.0431687,Stelling Substation,2026-10-06,Santa Clara,
-Streamview,way/245784881,32.7456082,-117.0785884,Streamview Substation,2026-10-06,San Diego,
-Suisun,way/106610038,38.2451302,-122.0412616,Suisun Substation,2026-10-06,Solano,
-Suncrest,way/407016872,32.8087648,-116.68306,Suncrest Substation,2026-10-06,San Diego,San Diego
-Sunnyside,way/676714269,33.8530413,-118.1666446,Sunnyside Substation,2026-10-06,Los Angeles,
-Sweetwater,way/247795421,32.6583162,-117.0916893,Sweetwater Substation,2026-10-06,San Diego,
-Swift,way/119408726,37.3224752,-121.7970091,Swift Substation,2026-10-06,Santa Clara,
-Sycamore Canyon,way/99645329,32.9172568,-117.0309422,Sycamore Canyon Substation,2026-10-06,San Diego,San Diego
-Sycamore Creek,way/132230747,39.7686966,-121.8241031,Sycamore Creek Substation,2026-10-06,Butte,
-Table Mountain,way/30755899,39.5551324,-121.6451687,Table Mountain Substation,2026-10-06,Butte,Butte
-Tesoro,way/403208540,38.0181619,-122.061375,Tesoro Substation,2026-10-06,Contra Costa,
-Thousandaire,way/830711017,36.132452,-115.9499389,Thousandaire Substation,2026-10-06,Nye,Nye
-Tidewater,way/35640786,38.0197579,-122.0618121,Tidewater Substation,2026-10-06,Contra Costa,
-Torrey Pines,way/280922418,32.898679,-117.2400452,Torrey Pines Substation,2026-10-06,San Diego,
-Trabuco,way/455875595,33.5628795,-117.673544,Trabuco Substation,2026-10-06,Orange,Orange
-Trimble,way/120353461,37.3819522,-121.9271433,Trimble Substation,2026-10-06,Santa Clara,Santa Clara
-Tulucay,way/33292212,38.2478308,-122.2679071,Tulucay Substation,2026-10-06,Napa,Napa
-Vacaville,way/59271566,38.3564548,-121.9806245,Vacaville Substation,2026-10-06,Solano,
-Valley Home,way/152340796,37.8563362,-120.9442136,Valley Home Substation,2026-10-06,San Joaquin,
-Valley Nitrogen,way/1492309742,36.549599,-120.1113287,Valley Nitrogen,2026-10-06,Fresno,Fresno
-Vasona,way/114958126,37.2538677,-121.9662167,Vasona Substation,2026-10-06,Santa Clara,
-Vestal,way/169403015,35.8412308,-119.0846351,Vestal Substation,2026-10-06,Tulare,Tulare
-Victorville,relation/12204669,34.5642973,-117.3198626,Victorville Substation,2026-10-06,San Bernardino,San Bernardino
-Viejo,way/59238979,33.666879,-117.6424464,Viejo Substation,2026-10-06,Orange,Orange
-Vierra,way/1024994836,37.7978669,-121.2741906,Vierra Substation,2026-10-06,San Joaquin,San Joaquin
-Villa Park,way/61960845,33.8149647,-117.8341037,Villa Park Substation,2026-10-06,Orange,Orange
-Vincent,way/30567721,34.4859441,-118.1196772,Vincent Substation,2026-10-06,Los Angeles,Los Angeles
-Vineyard,way/66413933,37.6697116,-121.8544544,Vineyard Substation,2026-10-06,Alameda,
-Waukena,way/828024040,36.1386226,-119.5764766,Waukena Substation,2026-10-06,Kings,Kings
-West Sacramento,way/199461285,38.5894875,-121.5449731,West Sacramento Substation,2026-10-06,Yolo,
-Wheeler Ridge,way/253747134,35.0890917,-118.975825,Wheeler Ridge Substation,2026-10-06,Kern,Kern
-Whirlwind,way/386364447,34.8578451,-118.4373291,Whirlwind Substation,2026-10-06,Kern,Kern
-Wilson,way/79176953,37.2925967,-120.4075244,Wilson Substation,2026-10-06,Merced,Merced
-Windhub,way/99599964,35.0349893,-118.2808562,Windhub Substation,2026-10-06,Kern,Kern
-Wolfe,way/116534901,37.3344053,-122.0205664,Wolfe Substation,2026-10-06,Santa Clara,
-Woodland,way/36730100,38.6784701,-121.7600433,Woodland Substation,2026-10-06,Yolo,Yolo
-Woodward,way/179415242,36.8962778,-119.751018,Woodward Substation,2026-10-06,Fresno,Fresno
-Wyandotte,way/151116308,39.4915666,-121.5409382,Wyandotte Substation,2026-10-06,Butte,
-Valley,way/61601149,33.7395005,-117.1564367,Valley Substation,2026-10-06,Riverside,Riverside
-Gamebird,way/439012890,36.161969,-115.8994445,Gamebird Switchard,2026-10-06,Nye,Nye
-Vista (Nye County),way/302045339,36.3172993,-116.010797,Vista Substation,2026-10-06,Nye,Nye
-Mesa (Los Angeles County),way/66209607,34.0365975,-118.1116208,Mesa Substation,2026-10-06,Los Angeles,Los Angeles
-Eagle Rock,way/183206679,38.8289511,-122.8101652,Eagle Rock Substation,2026-10-06,Sonoma,Mendocino
-Eagle Rock (Los Angeles County),way/39515681,34.1508286,-118.1843149,Eagle Rock Switchyard,2026-10-06,Los Angeles,Los Angeles
-Kearny,relation/13791347,32.8330901,-117.134041,Kearny Substation,2026-10-06,San Diego,San Diego
-Martell,way/1276250545,38.3691227,-120.7967676,Martell Substation,2026-10-06,Amador,Amador
-San Jose B,way/24168995,37.3409379,-121.9014665,San Jose Substation B,2026-10-06,Santa Clara,
-Westley,way/32707508,37.5160275,-121.2307996,Westley Substation,2026-10-06,Stanislaus,Stanislaus
+site,positioned_by,latitude,longitude,source,osm_id,osm_name,point_county,project_county
+Airways,openstreetmap,36.7780639,-119.6742071,"OpenStreetMap way/1244213586, data of 2026-10-06",way/1244213586,Airways Substation,Fresno,
+Alhambra,openstreetmap,33.5233888,-112.1361538,"OpenStreetMap way/137840355, data of 2026-10-06",way/137840355,Alhambra Substation,Maricopa,
+Almaden,openstreetmap,37.2600109,-121.8900095,"OpenStreetMap way/42330936, data of 2026-10-06",way/42330936,Almaden Substation,Santa Clara,
+Alpine,openstreetmap,32.8277373,-116.7899038,"OpenStreetMap way/245417237, data of 2026-10-06",way/245417237,Alpine Substation,San Diego,San Diego
+Alto,openstreetmap,37.8984659,-122.5247928,"OpenStreetMap way/33046902, data of 2026-10-06",way/33046902,Alto Substation,Marin,
+Ames,openstreetmap,37.4178138,-122.0671333,"OpenStreetMap way/4630372, data of 2026-10-06",way/4630372,Ames Substation,Santa Clara,
+Antelope,openstreetmap,34.6858079,-118.2981161,"OpenStreetMap way/88776835, data of 2026-10-06",way/88776835,Antelope Substation,Los Angeles,Los Angeles
+Apple Hill,openstreetmap,38.7395774,-120.6771808,"OpenStreetMap way/407071702, data of 2026-10-06",way/407071702,Apple Hill Substation,El Dorado,El Dorado
+Applied Materials,openstreetmap,37.3771474,-122.006367,"OpenStreetMap way/188689669, data of 2026-10-06",way/188689669,Applied Materials Substation,Santa Clara,
+Artesian,openstreetmap,36.1744348,-115.1153053,"OpenStreetMap way/567612415, data of 2026-10-06",way/567612415,Artesian Substation,Clark,
+Atascadero,openstreetmap,35.4654985,-120.6714647,"OpenStreetMap way/328033894, data of 2026-10-06",way/328033894,Atascadero Substation,San Luis Obispo,
+Atlantic,openstreetmap,38.7635707,-121.264042,"OpenStreetMap way/30410527, data of 2026-10-06",way/30410527,Atlantic Substation,Placer,Placer
+Atwater,openstreetmap,37.3599247,-120.6153156,"OpenStreetMap way/79176968, data of 2026-10-06",way/79176968,Atwater Substation,Merced,
+Avocado,openstreetmap,33.3845762,-117.2369944,"OpenStreetMap way/1485094947, data of 2026-10-06",way/1485094947,Avocado Substation,San Diego,San Diego
+B,openstreetmap,38.5719479,-121.4829736,"OpenStreetMap way/182084288, data of 2026-10-06",way/182084288,Station B,Sacramento,
+Bahia,openstreetmap,38.0808738,-122.1374133,"OpenStreetMap way/33068219, data of 2026-10-06",way/33068219,Bahia Substation,Solano,Napa
+Bailey,openstreetmap,34.7766122,-118.7746647,"OpenStreetMap way/64130145, data of 2026-10-06",way/64130145,Bailey Substation,Los Angeles,Los Angeles
+Bair,openstreetmap,37.4976451,-122.2141085,"OpenStreetMap way/30637327, data of 2026-10-06",way/30637327,Bair Substation,San Mateo,San Mateo
+Baker,openstreetmap,35.2788987,-116.0744455,"OpenStreetMap way/80105953, data of 2026-10-06",way/80105953,Baker Substation,San Bernardino,Riverside
+Barre,openstreetmap,33.808726,-117.9827195,"OpenStreetMap way/65596865, data of 2026-10-06",way/65596865,Barre Substation,Orange,
+Basilone,openstreetmap,33.3874614,-117.5824449,"OpenStreetMap way/844837079, data of 2026-10-06",way/844837079,Basilone Substation,San Diego,
+Bay Boulevard,openstreetmap,32.6081616,-117.0945795,"OpenStreetMap way/935670738, data of 2026-10-06",way/935670738,Bay Boulevard Substation,San Diego,San Diego
+Bay Meadows,openstreetmap,37.5516381,-122.2925879,"OpenStreetMap way/30831608, data of 2026-10-06",way/30831608,Bay Meadows Substation,San Mateo,
+Bellevue,openstreetmap,38.3788375,-122.7125989,"OpenStreetMap way/532629908, data of 2026-10-06",way/532629908,Bellevue Substation,Sonoma,
+Bellota,openstreetmap,38.0157488,-121.0138807,"OpenStreetMap way/884225176, data of 2026-10-06",way/884225176,Bellota Substation,San Joaquin,San Joaquin
+Birds Landing,openstreetmap,38.1247013,-121.8301278,"OpenStreetMap way/24064448, data of 2026-10-06",way/24064448,Birds Landing Switching Station,Solano,Solano
+Bitterwater,document,35.1246944,-119.2984139,"CAISO notice ""PG&E information on POI availability for Cluster 16"": Bitterwater Sw Sta 230 kV latitude 35°7'28.90""N, longitude 119°17'54.29""W; OpenStreetMap way/1560175208 is the substation drawn 10 m away",way/1560175208,,Kern,Kern
+Blythe,openstreetmap,33.6112925,-114.6802861,"OpenStreetMap way/166649166, data of 2026-10-06",way/166649166,Blythe Substation,Riverside,Riverside
+Bogue,openstreetmap,39.0959089,-121.6239833,"OpenStreetMap way/86573554, data of 2026-10-06",way/86573554,Bogue Substation,Sutter,Sutter
+Bolinas,openstreetmap,37.9411985,-122.7062054,"OpenStreetMap way/973121627, data of 2026-10-06",way/973121627,Bolinas Sub,Marin,
+Brentwood,openstreetmap,37.919021,-121.6767952,"OpenStreetMap way/92633578, data of 2026-10-06",way/92633578,Brentwood Substation,Contra Costa,
+Britton,openstreetmap,37.3744687,-122.0163991,"OpenStreetMap way/52098545, data of 2026-10-06",way/52098545,Britton Substation,Santa Clara,
+Cabrillo,openstreetmap,34.6432014,-120.4372204,"OpenStreetMap way/508412939, data of 2026-10-06",way/508412939,Cabrillo Substation,Santa Barbara,Santa Barbara
+Calcite,document,34.5470775,-116.9496063,"San Bernardino County, Calcite Substation Project air-quality worksheet (Ord Mountain Solar EIR appendix C2): location 34.5470775, -116.9496063",,,San Bernardino,San Bernardino
+Camp Evers,openstreetmap,37.0418309,-122.0252619,"OpenStreetMap way/37723084, data of 2026-10-06",way/37723084,Camp Evers Substation,Santa Cruz,
+Cannon,openstreetmap,40.733146,-111.9115882,"OpenStreetMap way/905266210, data of 2026-10-06",way/905266210,Cannon Substation,Salt Lake,
+Capistrano,openstreetmap,33.5126117,-117.66628,"OpenStreetMap way/30050587, data of 2026-10-06",way/30050587,Capistrano Substation,Orange,Orange
+Carberry,openstreetmap,40.8592127,-121.7529606,"OpenStreetMap way/689408573, data of 2026-10-06",way/689408573,Carberry Switching Station,Shasta,Shasta
+Carlton Hills,openstreetmap,32.8549207,-117.0119855,"OpenStreetMap way/167005125, data of 2026-10-06",way/167005125,Carlton Hills Substation,San Diego,San Diego
+Caruthers,openstreetmap,36.5321389,-119.8816492,"OpenStreetMap way/1527996414, data of 2026-10-06",way/1527996414,Caruthers Substation,Fresno,Fresno
+Castro Valley,openstreetmap,37.6913316,-122.0611153,"OpenStreetMap way/103260059, data of 2026-10-06",way/103260059,Castro Valley Substation,Alameda,
+Cayetano,openstreetmap,37.7385208,-121.7712233,"OpenStreetMap way/1006624965, data of 2026-10-06",way/1006624965,Cayetano Substation,Alameda,Alameda
+Cayucos,openstreetmap,35.448736,-120.8703178,"OpenStreetMap way/328028425, data of 2026-10-06",way/328028425,Cayucos,San Luis Obispo,
+Center,openstreetmap,33.9288306,-118.1057084,"OpenStreetMap way/66158393, data of 2026-10-06",way/66158393,Center Substation,Los Angeles,
+Charca,openstreetmap,35.6081967,-119.3252475,"OpenStreetMap way/176726311, data of 2026-10-06",way/176726311,Charca Substation,Kern,
+Charleston,openstreetmap,36.1576361,-115.2500218,"OpenStreetMap way/1255472012, data of 2026-10-06",way/1255472012,Charleston Substation,Clark,Nye
+Chevmain,openstreetmap,33.9035195,-118.3978913,"OpenStreetMap way/394895304, data of 2026-10-06",way/394895304,Chevmain Substation,Los Angeles,
+Chino,openstreetmap,33.998587,-117.6785183,"OpenStreetMap way/33605206, data of 2026-10-06",way/33605206,Chino Substation,San Bernardino,San Bernardino
+Christie,openstreetmap,38.0027466,-122.2082843,"OpenStreetMap way/35479377, data of 2026-10-06",way/35479377,Christie Substation,Contra Costa,Contra Costa
+Cielo Azul,openstreetmap,33.5907167,-113.5453823,"OpenStreetMap way/1504635963, data of 2026-10-06",way/1504635963,Cielo Azul Switchyard,La Paz,La Paz
+Clairemont,openstreetmap,32.8258058,-117.1836658,"OpenStreetMap way/167029619, data of 2026-10-06",way/167029619,Clairemont Substation,San Diego,
+Clayton,openstreetmap,37.9443397,-121.969202,"OpenStreetMap way/35763387, data of 2026-10-06",way/35763387,Clayton Substation,Contra Costa,
+Colorado River,openstreetmap,33.5806241,-114.8172191,"OpenStreetMap way/402225518, data of 2026-10-06",way/402225518,Colorado River Substation,Riverside,Riverside
+Contra Costa,openstreetmap,37.9993561,-121.7824183,"OpenStreetMap way/35798740, data of 2026-10-06",way/35798740,Contra Costa Substation,Contra Costa,Contra Costa
+Contra Costa Power Plant,openstreetmap,38.015231,-121.7621701,"OpenStreetMap way/35799514, data of 2026-10-06",way/35799514,Contra Costa Power Plant Substation,Contra Costa,Contra Costa
+Contra Costa Pp,openstreetmap,38.015231,-121.7621701,"OpenStreetMap way/35799514, data of 2026-10-06",way/35799514,Contra Costa Power Plant Substation,Contra Costa,Contra Costa
+Control,openstreetmap,37.3360126,-118.4815393,"OpenStreetMap relation/12202159, data of 2026-10-06",relation/12202159,Control Substation,Inyo,Churchill
+Cooley Landing,openstreetmap,37.4737395,-122.1279853,"OpenStreetMap way/48203963, data of 2026-10-06",way/48203963,Cooley Landing Substation,San Mateo,San Mateo
+Coppermine,openstreetmap,36.8958053,-119.664547,"OpenStreetMap way/169516713, data of 2026-10-06",way/169516713,Coppermine Substation,Fresno,
+Corcoran,openstreetmap,36.109471,-119.5576041,"OpenStreetMap way/828024039, data of 2026-10-06",way/828024039,Corcoran Substation,Kings,Kings
+Coronado,openstreetmap,34.5769346,-109.2774288,"OpenStreetMap way/104746911, data of 2026-10-06",way/104746911,Coronado Substation,Apache,
+Cortina,openstreetmap,39.1206016,-122.2231973,"OpenStreetMap way/24388861, data of 2026-10-06",way/24388861,Cortina Substation,Colusa,Colusa
+Cotati,openstreetmap,38.3095848,-122.7316423,"OpenStreetMap way/253731890, data of 2026-10-06",way/253731890,Cotati Substation,Sonoma,
+Cottle,openstreetmap,37.7725291,-120.8264774,"OpenStreetMap way/79249627, data of 2026-10-06",way/79249627,Cottle Substation,Stanislaus,Stanislaus
+Cottonwood,openstreetmap,40.3979023,-122.2642981,"OpenStreetMap way/93128755, data of 2026-10-06",way/93128755,Cottonwood Substation,Shasta,Shasta
+Coyote,openstreetmap,37.2214424,-121.7466027,"OpenStreetMap way/93678748, data of 2026-10-06",way/93678748,Coyote Switching Station,Santa Clara,
+Creelman,openstreetmap,33.0180671,-116.8530464,"OpenStreetMap way/245417242, data of 2026-10-06",way/245417242,Creelman Substation,San Diego,San Diego
+Davis,openstreetmap,38.5451944,-121.7340935,"OpenStreetMap way/32547487, data of 2026-10-06",way/32547487,Davis Substation,Yolo,Yolo
+Del Amo,openstreetmap,33.8481378,-118.0974269,"OpenStreetMap way/32223005, data of 2026-10-06",way/32223005,Del Amo Substation,Los Angeles,
+Del Monte,openstreetmap,36.5982643,-121.8531289,"OpenStreetMap way/151801695, data of 2026-10-06",way/151801695,Del Monte Substation,Monterey,
+Delaney,openstreetmap,33.4810553,-113.0343202,"OpenStreetMap way/542734205, data of 2026-10-06",way/542734205,Delaney Substation,Maricopa,Maricopa
+Delevan,openstreetmap,39.3682089,-122.2694681,"OpenStreetMap way/1359675934, data of 2026-10-06",way/1359675934,Delevan Substation,Colusa,Colusa
+Delta,openstreetmap,37.7988385,-121.6201356,"OpenStreetMap way/36322454, data of 2026-10-06",way/36322454,Delta Switching Station,Alameda,Contra Costa
+Devers,openstreetmap,33.9379937,-116.5766239,"OpenStreetMap way/61430467, data of 2026-10-06",way/61430467,Devers Substation,Riverside,Riverside
+Diablo Canyon,openstreetmap,35.2161759,-120.8472939,"OpenStreetMap way/24400937, data of 2026-10-06",way/24400937,Diablo Canyon,San Luis Obispo,San Luis Obispo
+Dixon,openstreetmap,38.4449851,-121.8262386,"OpenStreetMap way/1094966789, data of 2026-10-06",way/1094966789,Dixon Substation,Solano,Solano
+Dixon Landing,openstreetmap,37.45755,-121.921329,"OpenStreetMap way/120342208, data of 2026-10-06",way/120342208,Dixon Landing Substation,Alameda,San Mateo
+Dos Amigos,openstreetmap,36.9252276,-120.8298244,"OpenStreetMap way/93238392, data of 2026-10-06",way/93238392,Dos Amigos Substation,Merced,Merced
+Dry Lake,planned,35.7539278,-119.7446306,"CAISO notice ""PG&E information on POI availability for Cluster 16"": proposed Dry Lake 500 kV Sw Sta latitude 35°45'14.14""N, longitude 119°44'40.67""W; not yet built, nothing drawn there",,,Kern,Kings
+Dumbarton,openstreetmap,37.5570702,-122.0578829,"OpenStreetMap way/59470569, data of 2026-10-06",way/59470569,Dumbarton Substation,Alameda,Alameda
+Eagle Mountain,openstreetmap,33.8104972,-115.4527258,"OpenStreetMap relation/12202188, data of 2026-10-06",relation/12202188,Eagle Mountain Substation,Riverside,Riverside
+Eagle Rock,openstreetmap,38.8289511,-122.8101652,"OpenStreetMap way/183206679, data of 2026-10-06",way/183206679,Eagle Rock Substation,Sonoma,Mendocino
+Eagle Rock (Los Angeles County),openstreetmap,34.1508286,-118.1843149,"OpenStreetMap way/39515681, data of 2026-10-06",way/39515681,Eagle Rock Switchyard,Los Angeles,Los Angeles
+East Grand,openstreetmap,37.6533808,-122.4030565,"OpenStreetMap way/25797771, data of 2026-10-06",way/25797771,East Grand Substation,San Mateo,
+East Marysville,openstreetmap,39.1634541,-121.5611959,"OpenStreetMap way/86803024, data of 2026-10-06",way/86803024,East Marysville Substation,Yuba,
+East Nicolaus,openstreetmap,38.9097437,-121.5424907,"OpenStreetMap way/86463530, data of 2026-10-06",way/86463530,East Nicolaus Substation,Sutter,Sutter
+Eastgate,openstreetmap,32.8848282,-117.200837,"OpenStreetMap way/119718456, data of 2026-10-06",way/119718456,Eastgate Substation,San Diego,San Diego
+Eastshore,openstreetmap,37.6248148,-122.1170695,"OpenStreetMap way/33111643, data of 2026-10-06",way/33111643,Eastshore Substation,Alameda,Alameda
+Edenvale,openstreetmap,37.2446077,-121.795775,"OpenStreetMap way/23823577, data of 2026-10-06",way/23823577,Edenvale,Santa Clara,
+Edes,openstreetmap,37.738557,-122.1937797,"OpenStreetMap way/181389084, data of 2026-10-06",way/181389084,Edes Substation,Alameda,
+Eight Mile,openstreetmap,38.058747,-121.3768414,"OpenStreetMap way/24064886, data of 2026-10-06",way/24064886,Eight Mile Substation,San Joaquin,
+El Cajon,openstreetmap,32.795407,-116.9723728,"OpenStreetMap way/245301741, data of 2026-10-06",way/245301741,El Cajon Substation,San Diego,San Diego
+El Cerrito G,openstreetmap,37.9162218,-122.3025375,"OpenStreetMap way/43951315, data of 2026-10-06",way/43951315,El Cerrito G Substation,Contra Costa,
+El Patio,openstreetmap,37.2916636,-121.9356896,"OpenStreetMap way/117401235, data of 2026-10-06",way/117401235,El Patio Substation,Santa Clara,
+Eldorado,openstreetmap,35.7973353,-115.0084794,"OpenStreetMap way/62315137, data of 2026-10-06",way/62315137,Eldorado Substation,Clark,Clark
+Elk,openstreetmap,39.1293206,-123.7117919,"OpenStreetMap way/1426769638, data of 2026-10-06",way/1426769638,Elk Substation,Mendocino,Mendocino
+Ellis,openstreetmap,33.6852045,-117.9431126,"OpenStreetMap way/62333225, data of 2026-10-06",way/62333225,Ellis Substation,Orange,Orange
+Escondido,openstreetmap,33.1257327,-117.1167373,"OpenStreetMap way/99650319, data of 2026-10-06",way/99650319,Escondido Substation,San Diego,San Diego
+Estrella,openstreetmap,33.6875019,-117.8285735,"OpenStreetMap way/61961946, data of 2026-10-06",way/61961946,Estrella Substation,Orange,
+Evergreen,openstreetmap,37.3031783,-121.8408334,"OpenStreetMap way/38653255, data of 2026-10-06",way/38653255,Evergreen Substation,Santa Clara,Santa Clara
+Fink,openstreetmap,37.4104545,-121.1725447,"OpenStreetMap way/1465315898, data of 2026-10-06",way/1465315898,Fink Switching Station,Stanislaus,Stanislaus
+Fmc,openstreetmap,37.3472911,-121.921986,"OpenStreetMap way/120359075, data of 2026-10-06",way/120359075,FMC Substation,Santa Clara,Santa Clara
+French Camp,openstreetmap,37.8820813,-121.2904274,"OpenStreetMap way/1493622955, data of 2026-10-06",way/1493622955,French Camp Substation,San Joaquin,
+Friars,openstreetmap,32.7717391,-117.1644077,"OpenStreetMap way/119718926, data of 2026-10-06",way/119718926,Friars Substation,San Diego,San Diego
+Fulton,openstreetmap,38.4977484,-122.7605687,"OpenStreetMap way/170490300, data of 2026-10-06",way/170490300,Fulton Substation,Sonoma,Lake
+Gamebird,openstreetmap,36.161969,-115.8994445,"OpenStreetMap way/439012890, data of 2026-10-06",way/439012890,Gamebird Switchard,Nye,Nye
+Garnet,openstreetmap,33.9010413,-116.5440926,"OpenStreetMap way/99625445, data of 2026-10-06",way/99625445,Garnet Substation,Riverside,
+Gates,openstreetmap,36.1413374,-120.1256622,"OpenStreetMap way/93251033, data of 2026-10-06",way/93251033,Gates Substation,Fresno,Fresno
+Genesee,openstreetmap,32.8795875,-117.2135966,"OpenStreetMap way/167029631, data of 2026-10-06",way/167029631,Genesee Substation,San Diego,
+Glenn,openstreetmap,39.7778665,-122.1426369,"OpenStreetMap way/181693250, data of 2026-10-06",way/181693250,Glenn Substation,Glenn,Butte
+Glenwood,openstreetmap,37.4571649,-122.1869329,"OpenStreetMap way/114438565, data of 2026-10-06",way/114438565,Glenwood Substation,San Mateo,
+Gold Hill,openstreetmap,38.6575814,-121.1368126,"OpenStreetMap way/32050965, data of 2026-10-06",way/32050965,Gold Hill Substation,Sacramento,Sacramento
+Goleta,openstreetmap,34.4686423,-119.8843266,"OpenStreetMap way/133585863, data of 2026-10-06",way/133585863,Goleta Substation,Santa Barbara,Ventura
+Gorman,openstreetmap,34.7904804,-118.827152,"OpenStreetMap way/63908845, data of 2026-10-06",way/63908845,Gorman Substation,Los Angeles,Kern
+Gould,openstreetmap,34.2214825,-118.1871012,"OpenStreetMap way/31173635, data of 2026-10-06",way/31173635,Gould Substation,Los Angeles,Los Angeles
+Grand Island,openstreetmap,38.2315267,-121.5903858,"OpenStreetMap way/405561526, data of 2026-10-06",way/405561526,Grand Island Substation,Sacramento,
+Grant,openstreetmap,37.671444,-122.1595919,"OpenStreetMap way/33111585, data of 2026-10-06",way/33111585,Grant Substation,Alameda,Alameda
+Green Valley,openstreetmap,36.9520512,-121.7604186,"OpenStreetMap way/24397698, data of 2026-10-06",way/24397698,Green Valley Substation,Santa Cruz,Santa Cruz
+Greenleaf,openstreetmap,39.0524925,-121.6919536,"OpenStreetMap way/86576021, data of 2026-10-06",way/86576021,Greenleaf Substation,Sutter,Sutter
+Half Moon Bay,openstreetmap,37.4689833,-122.4302864,"OpenStreetMap way/1039239470, data of 2026-10-06",way/1039239470,Half Moon Bay Substation,San Mateo,San Mateo
+Hanford,openstreetmap,36.3235784,-119.6488609,"OpenStreetMap relation/14217235, data of 2026-10-06",relation/14217235,Hanford Substation,Kings,Kings
+Harborgen,openstreetmap,33.778822,-118.2273435,"OpenStreetMap way/389174036, data of 2026-10-06",way/389174036,HarborGen Substation,Los Angeles,Los Angeles
+Harlan,planned,36.4234750,-120.4073222,"CAISO notice ""PG&E information on POI availability for Cluster 16"": Harlan Sw Sta 500 kV latitude 36°25'24.51""N, longitude 120°24'26.36""W; not yet built, nothing drawn there",,,Fresno,Fresno
+Harquahala,openstreetmap,33.4774196,-113.1135048,"OpenStreetMap way/91182233, data of 2026-10-06",way/91182233,Harquahala Substation,Maricopa,Maricopa
+Harris,openstreetmap,35.143955,-114.0868115,"OpenStreetMap way/82005353, data of 2026-10-06",way/82005353,Harris Substation,Mohave,
+Harry Allen,openstreetmap,36.4274003,-114.9069319,"OpenStreetMap way/71837876, data of 2026-10-06",way/71837876,Harry Allen Substation,Clark,Lincoln
+Hassayampa,openstreetmap,33.3458,-112.852,"OpenStreetMap way/91154325, data of 2026-10-06",way/91154325,Hassayampa Switch Yard,Maricopa,Hyder;Maricopa;Yuma
+Henrietta,openstreetmap,36.2421264,-119.9028971,"OpenStreetMap way/182604562, data of 2026-10-06",way/182604562,Henrietta Substation,Kings,Kings
+Herndon,openstreetmap,36.8446681,-119.922563,"OpenStreetMap way/164289720, data of 2026-10-06",way/164289720,Herndon Substation,Fresno,Fresno
+Hicks,openstreetmap,37.2336481,-121.9007517,"OpenStreetMap way/112568707, data of 2026-10-06",way/112568707,Hicks Substation,Santa Clara,
+Higgins,openstreetmap,39.043888,-121.0906728,"OpenStreetMap way/125280729, data of 2026-10-06",way/125280729,Higgins Substation,Nevada,
+Hillsdale Junction,openstreetmap,37.5250772,-122.3563049,"OpenStreetMap way/737372047, data of 2026-10-06",way/737372047,Hillsdale Junction,San Mateo,San Mateo
+Hinson,openstreetmap,33.8190324,-118.2223341,"OpenStreetMap way/65411731, data of 2026-10-06",way/65411731,Hinson Substation,Los Angeles,Los Angeles
+Hollister,openstreetmap,36.8627977,-121.4062132,"OpenStreetMap way/91534418, data of 2026-10-06",way/91534418,Hollister Substation,San Benito,San Benito
+Honey Lake,openstreetmap,40.3682671,-120.2648492,"OpenStreetMap way/1296448097, data of 2026-10-06",way/1296448097,Honey Lake Substation,Lassen,Lassen
+Hoodoo Wash,openstreetmap,32.9538809,-113.4886922,"OpenStreetMap way/206961851, data of 2026-10-06",way/206961851,Hoodoo Wash Switchyard,Yuma,Yuma
+Ignacio,openstreetmap,38.0767942,-122.5403588,"OpenStreetMap way/33046461, data of 2026-10-06",way/33046461,Ignacio Substation,Marin,Marin
+Imperial Valley,openstreetmap,32.7179069,-115.7155553,"OpenStreetMap way/52183964, data of 2026-10-06",way/52183964,Imperial Valley Substation,Imperial,Imperial
+Innovation,openstreetmap,36.5822326,-115.9473218,"OpenStreetMap way/606500067, data of 2026-10-06",way/606500067,Innovation Substation,Nye,Clark/Nye
+Inyokern,openstreetmap,35.6526475,-117.7958919,"OpenStreetMap way/164758876, data of 2026-10-06",way/164758876,Inyokern Substation,Kern,Inyo
+Ivanpah,openstreetmap,35.5444422,-115.4687507,"OpenStreetMap way/233812416, data of 2026-10-06",way/233812416,Ivanpah Substation,San Bernardino,San Bernardino
+Jamacha,openstreetmap,32.7440926,-116.9573439,"OpenStreetMap way/97576454, data of 2026-10-06",way/97576454,Jamacha Substation,San Diego,San Diego
+Jameson,openstreetmap,38.2054582,-122.1479338,"OpenStreetMap way/35921570, data of 2026-10-06",way/35921570,Jameson Substation,Solano,Solano
+Japanese Mesa,openstreetmap,33.374287,-117.5548397,"OpenStreetMap way/934956976, data of 2026-10-06",way/934956976,Japanese Mesa Substation,San Diego,
+Jarvis,openstreetmap,37.59529,-122.0176363,"OpenStreetMap way/112452159, data of 2026-10-06",way/112452159,Jarvis Substation,Alameda,
+Johanna,openstreetmap,33.7132628,-117.8526051,"OpenStreetMap way/61961948, data of 2026-10-06",way/61961948,Johanna Substation,Orange,Orange
+Julian Hinds,openstreetmap,33.7050285,-115.6266673,"OpenStreetMap relation/12202178, data of 2026-10-06",relation/12202178,Julian Hinds Substation,Riverside,Riverside
+Kasson,openstreetmap,37.7457866,-121.3413843,"OpenStreetMap way/152357677, data of 2026-10-06",way/152357677,Kasson Substation,San Joaquin,San Joaquin
+Kearny,openstreetmap,32.8330901,-117.134041,"OpenStreetMap relation/13791347, data of 2026-10-06",relation/13791347,Kearny Substation,San Diego,San Diego
+Kelso,openstreetmap,37.7974253,-121.6032072,"OpenStreetMap relation/15617525, data of 2026-10-06",relation/15617525,Kelso Substation,Alameda,Alameda
+Kirker,openstreetmap,38.0208157,-121.9059353,"OpenStreetMap way/35735111, data of 2026-10-06",way/35735111,Kirker Substation,Contra Costa,
+Kramer,openstreetmap,34.9896952,-117.5421983,"OpenStreetMap way/141726016, data of 2026-10-06",way/141726016,Kramer Substation,San Bernardino,San Bernardino
+La Cienega,openstreetmap,34.0006667,-118.3784687,"OpenStreetMap relation/11351566, data of 2026-10-06",relation/11351566,La Cienega Substation,Los Angeles,Los Angeles
+La Fresa,openstreetmap,33.8688713,-118.3329363,"OpenStreetMap way/74839063, data of 2026-10-06",way/74839063,La Fresa Substation,Los Angeles,
+La Jolla,openstreetmap,32.8401079,-117.2753524,"OpenStreetMap way/935140048, data of 2026-10-06",way/935140048,La Jolla Substation,San Diego,
+Laguna Bell,openstreetmap,33.975758,-118.1478598,"OpenStreetMap way/78797580, data of 2026-10-06",way/78797580,Laguna Bell Substation,Los Angeles,Los Angeles
+Laguna Niguel,openstreetmap,33.4949278,-117.7029399,"OpenStreetMap way/501515906, data of 2026-10-06",way/501515906,Laguna Niguel Substation,Orange,
+Lakeville,openstreetmap,38.2508462,-122.5810974,"OpenStreetMap way/29426718, data of 2026-10-06",way/29426718,Lakeville Substation,Sonoma,Sonoma
+Lakewood,openstreetmap,37.9086401,-122.0573841,"OpenStreetMap way/35763516, data of 2026-10-06",way/35763516,Lakewood Substation,Contra Costa,
+Lambie,openstreetmap,38.2214947,-121.8669216,"OpenStreetMap way/35912596, data of 2026-10-06",way/35912596,Lambie Substation,Solano,Solano
+Lammers,openstreetmap,37.713103,-121.4778009,"OpenStreetMap way/152390122, data of 2026-10-06",way/152390122,Lammers Substation,San Joaquin,San Joaquin
+Las Aguilas,openstreetmap,36.6319342,-120.8786523,"OpenStreetMap way/1058284417, data of 2026-10-06",way/1058284417,Las Aguilas Switching Station,San Benito,
+Las Positas,openstreetmap,37.7005872,-121.7334824,"OpenStreetMap way/865190320, data of 2026-10-06",way/865190320,Las Positas Substation,Alameda,San Mateo
+Las Pulgas,openstreetmap,37.462898,-122.2278663,"OpenStreetMap way/240585981, data of 2026-10-06",way/240585981,Las Pulgas Substation,San Mateo,
+Lawrence,openstreetmap,37.3273332,-121.9961505,"OpenStreetMap way/392311411, data of 2026-10-06",way/392311411,Lawrence Substation,Santa Clara,
+Lerdo,openstreetmap,35.5002365,-119.1519574,"OpenStreetMap way/1295086785, data of 2026-10-06",way/1295086785,Lerdo Sub,Kern,Kern
+Lighthipe,openstreetmap,33.8802903,-118.1751865,"OpenStreetMap way/66157642, data of 2026-10-06",way/66157642,Lighthipe Substation,Los Angeles,
+Lilac,openstreetmap,33.2533269,-117.0858841,"OpenStreetMap way/733742943, data of 2026-10-06",way/733742943,Lilac Substation,San Diego,San Diego
+Live Oak,openstreetmap,34.121121,-117.7319349,"OpenStreetMap way/86292411, data of 2026-10-06",way/86292411,Live Oak Substation,Los Angeles,
+Livermore,openstreetmap,37.6934358,-121.6951878,"OpenStreetMap way/24283011, data of 2026-10-06",way/24283011,Livermore Substation,Alameda,
+Llagas,openstreetmap,37.0072605,-121.5573635,"OpenStreetMap way/109355539, data of 2026-10-06",way/109355539,Llagas Substation,Santa Clara,Santa Clara
+Lockeford,openstreetmap,38.1177245,-121.160115,"OpenStreetMap way/151287400, data of 2026-10-06",way/151287400,Lockeford Substation,San Joaquin,Calaveras
+Logan Creek,openstreetmap,39.5395079,-122.2630176,"OpenStreetMap way/181693225, data of 2026-10-06",way/181693225,Logan Creek Substation,Glenn,Colusa
+Lone Tree,openstreetmap,37.9461825,-121.7597517,"OpenStreetMap way/1155654407, data of 2026-10-06",way/1155654407,Lone Tree Substation,Contra Costa,Contra Costa
+Los Banos,openstreetmap,37.0530047,-121.0205078,"OpenStreetMap way/23988495, data of 2026-10-06",way/23988495,Los Banos Substation,Merced,Merced
+Los Coches,openstreetmap,32.8597308,-116.8992272,"OpenStreetMap way/167005126, data of 2026-10-06",way/167005126,Los Coches Substation,San Diego,San Diego
+Los Esteros,openstreetmap,37.4272373,-121.9328297,"OpenStreetMap way/39017429, data of 2026-10-06",way/39017429,Los Esteros Substation,Santa Clara,Santa Clara
+Louise,openstreetmap,37.8082866,-121.288073,"OpenStreetMap way/1024994823, data of 2026-10-06",way/1024994823,Louise Substation,San Joaquin,San Joaquin
+Loveland,openstreetmap,32.7969521,-116.7922452,"OpenStreetMap way/245778829, data of 2026-10-06",way/245778829,Loveland Substation,San Diego,San Diego
+Lugo,openstreetmap,34.3658218,-117.3693963,"OpenStreetMap way/86369466, data of 2026-10-06",way/86369466,Lugo Substation,San Bernardino,San Bernardino
+Magunden,openstreetmap,35.3611831,-118.9227967,"OpenStreetMap way/168525615, data of 2026-10-06",way/168525615,Magunden Substation,Kern,Kern
+Mandalay,openstreetmap,34.2077559,-119.2468823,"OpenStreetMap way/37692542, data of 2026-10-06",way/37692542,Mandalay Switchyard,Ventura,Ventura
+Manning,planned,36.6002778,-120.6050000,"CPUC, Manning 500/230 kV Substation Project, CEQAnet filing 2025030618: 36°36'1""N 120°36'18""W, Fresno County; not yet built, nothing drawn there",,,Fresno,Fresno
+Manteca,openstreetmap,37.8009471,-121.2242723,"OpenStreetMap way/152353500, data of 2026-10-06",way/152353500,Manteca Substation,San Joaquin,San Joaquin
+Margarita,openstreetmap,33.5497273,-117.6280692,"OpenStreetMap way/30995423, data of 2026-10-06",way/30995423,Margarita Substation,Orange,Orange
+Martell,openstreetmap,38.3691227,-120.7967676,"OpenStreetMap way/1276250545, data of 2026-10-06",way/1276250545,Martell Substation,Amador,Amador
+Martin,openstreetmap,37.7037524,-122.4094087,"OpenStreetMap way/29399992, data of 2026-10-06",way/29399992,Martin Substation,San Mateo,San Mateo
+Mccall,openstreetmap,36.6108289,-119.6395996,"OpenStreetMap way/182604563, data of 2026-10-06",way/182604563,McCall Substation,Fresno,Fresno
+Mckee,openstreetmap,37.3661783,-121.843497,"OpenStreetMap way/95912441, data of 2026-10-06",way/95912441,McKee Substation,Santa Clara,San Mateo
+Mead,openstreetmap,35.9273963,-114.8338237,"OpenStreetMap way/79734755, data of 2026-10-06",way/79734755,Mead Substation,Clark,Clark
+Meadow Lane,openstreetmap,37.963166,-122.0522357,"OpenStreetMap way/65501703, data of 2026-10-06",way/65501703,Meadow Lane Substation,Contra Costa,
+Melones,openstreetmap,37.9462693,-120.5276918,"OpenStreetMap way/181630666, data of 2026-10-06",way/181630666,Melones Substation,Tuolumne,Tuolumne
+Merchant,openstreetmap,35.7900276,-114.9942489,"OpenStreetMap way/79671040, data of 2026-10-06",way/79671040,Merchant Substation,Clark,Clark
+Mesa,openstreetmap,35.0083488,-120.4530998,"OpenStreetMap way/182102249, data of 2026-10-06",way/182102249,Mesa Substation,San Luis Obispo,San Luis Obispo
+Mesa (Los Angeles County),openstreetmap,34.0365975,-118.1116208,"OpenStreetMap way/66209607, data of 2026-10-06",way/66209607,Mesa Substation,Los Angeles,Los Angeles
+Mesa Heights,openstreetmap,32.8295316,-117.1573513,"OpenStreetMap way/247795420, data of 2026-10-06",way/247795420,Mesa Heights Substation,San Diego,San Diego
+Mesa Rim,openstreetmap,32.9049184,-117.1731632,"OpenStreetMap way/771716879, data of 2026-10-06",way/771716879,Mesa Rim Substation,San Diego,
+Metcalf,openstreetmap,37.2255899,-121.7439528,"OpenStreetMap way/23805620, data of 2026-10-06",way/23805620,Metcalf Substation,Santa Clara,Santa Clara
+Midway,openstreetmap,35.4029429,-119.4522985,"OpenStreetMap way/24333232, data of 2026-10-06",way/24333232,Midway Substation,Kern,Kern
+Miguel,openstreetmap,32.6790263,-116.9838422,"OpenStreetMap relation/12331797, data of 2026-10-06",relation/12331797,Miguel Substation,San Diego,San Diego
+Millbrae,openstreetmap,37.6056261,-122.3915473,"OpenStreetMap way/24606412, data of 2026-10-06",way/24606412,Millbrae Substation,San Mateo,San Mateo
+Milpitas,openstreetmap,37.415405,-121.8884658,"OpenStreetMap way/120347589, data of 2026-10-06",way/120347589,Milpitas Substation,Santa Clara,Santa Clara
+Mira Loma,openstreetmap,34.0080322,-117.5642244,"OpenStreetMap way/77339440, data of 2026-10-06",way/77339440,Mira Loma Substation,San Bernardino,San Bernardino
+Mira Sorrento,openstreetmap,32.8927483,-117.2060045,"OpenStreetMap way/230740532, data of 2026-10-06",way/230740532,Mira Sorrento Substation,San Diego,
+Mirage,openstreetmap,33.8183451,-116.3695726,"OpenStreetMap way/61430458, data of 2026-10-06",way/61430458,Mirage Substation,Riverside,Riverside
+Miramar,openstreetmap,32.8940473,-117.1355952,"OpenStreetMap way/105232646, data of 2026-10-06",way/105232646,Miramar Substation,San Diego,San Diego
+Mission,openstreetmap,32.7838747,-117.137179,"OpenStreetMap way/119718927, data of 2026-10-06",way/119718927,Mission Substation,San Diego,San Diego
+Mohave,openstreetmap,35.1470784,-114.597151,"OpenStreetMap relation/12201885, data of 2026-10-06",relation/12201885,Mohave Substation,Clark,Clark
+Monta Vista,openstreetmap,37.3261316,-122.0754437,"OpenStreetMap way/27925546, data of 2026-10-06",way/27925546,Monta Vista Substation,Santa Clara,Santa Clara
+Montague,openstreetmap,37.4033888,-121.9059343,"OpenStreetMap way/688096231, data of 2026-10-06",way/688096231,Montague Substation,Santa Clara,
+Moorpark,openstreetmap,34.2811367,-118.9030822,"OpenStreetMap way/27340751, data of 2026-10-06",way/27340751,Moorpark Substation,Ventura,Ventura
+Moraga,openstreetmap,37.8477991,-122.1611735,"OpenStreetMap way/33108052, data of 2026-10-06",way/33108052,Moraga Substation,Contra Costa,Contra Costa
+Morgan Hill,openstreetmap,37.1267953,-121.6593936,"OpenStreetMap way/61558067, data of 2026-10-06",way/61558067,Morgan Hill Substation,Santa Clara,Santa Clara
+Morro Bay,openstreetmap,35.3738781,-120.8555879,"OpenStreetMap way/93420676, data of 2026-10-06",way/93420676,Morro Bay,San Luis Obispo,San Luis Obispo
+Murray,openstreetmap,32.7908216,-117.0231281,"OpenStreetMap way/245778832, data of 2026-10-06",way/245778832,Murray Substation,San Diego,
+Mustang,document,36.2322862,-119.9191856,"PG&E Advice Letter 4525-E (Mustang Switching Station, 2014): a 5-acre 230 kV switching station north of the existing tower line, looping the Gates-Gregg and Gates-McCall 230 kV lines; OpenStreetMap way/761054051 is the one substation both lines loop into",way/761054051,,Kings,Kings
+Narrows,openstreetmap,33.1371821,-116.2944821,"OpenStreetMap way/1376883612, data of 2026-10-06",way/1376883612,Narrows Substation,San Diego,
+National City,openstreetmap,32.6730729,-117.1073613,"OpenStreetMap way/247807059, data of 2026-10-06",way/247807059,National City Substation,San Diego,
+Newark,openstreetmap,37.5008218,-121.9865669,"OpenStreetMap way/28875096, data of 2026-10-06",way/28875096,Newark Substation,Alameda,Alameda
+Newman,openstreetmap,37.3155776,-121.0148952,"OpenStreetMap way/1464397566, data of 2026-10-06",way/1464397566,Newman Substation,Stanislaus,Stanislaus
+Nortech,openstreetmap,37.4205581,-121.9599446,"OpenStreetMap way/539148054, data of 2026-10-06",way/539148054,Nortech Substation,Santa Clara,
+North City West,openstreetmap,32.9587616,-117.2206664,"OpenStreetMap way/26587310, data of 2026-10-06",way/26587310,North City West Substation,San Diego,
+North Dublin,openstreetmap,37.7447316,-121.857841,"OpenStreetMap way/1006618935, data of 2026-10-06",way/1006618935,North Dublin Substation,Contra Costa,
+North Gila,openstreetmap,32.7456924,-114.4912811,"OpenStreetMap way/90966380, data of 2026-10-06",way/90966380,North Gila Substation,Yuma,Yuma
+North Tower,openstreetmap,38.0662071,-122.1963036,"OpenStreetMap way/59450840, data of 2026-10-06",way/59450840,North Tower Substation,Solano,
+Notre Dame,openstreetmap,39.7302615,-121.796306,"OpenStreetMap way/873098676, data of 2026-10-06",way/873098676,Notre Dame Substation,Butte,
+Oakland C,openstreetmap,37.7973777,-122.2807519,"OpenStreetMap way/47386641, data of 2026-10-06",way/47386641,Oakland C Substation,Alameda,Alameda
+Oakland D,openstreetmap,37.8374161,-122.2635201,"OpenStreetMap way/125686119, data of 2026-10-06",way/125686119,Oakland D Substation,Alameda,
+Oakland J,openstreetmap,37.7630288,-122.2144359,"OpenStreetMap way/540298861, data of 2026-10-06",way/540298861,Oakland J Substation,Alameda,Alameda
+Oakland L,openstreetmap,37.8103041,-122.2715752,"OpenStreetMap way/91164872, data of 2026-10-06",way/91164872,Oakland L Substation,Alameda,
+Oakland X,openstreetmap,37.8053861,-122.2312754,"OpenStreetMap way/112306422, data of 2026-10-06",way/112306422,Oakland X Substation,Alameda,
+Oceano,openstreetmap,35.101535,-120.5810329,"OpenStreetMap way/328033899, data of 2026-10-06",way/328033899,Oceano,San Luis Obispo,
+Ocotillo,document,32.74341,-116.04256,Ocotillo Express Wind EIS/EIR (State Clearinghouse 2010121055): switchyard on the Sunrise Powerlink just east of the San Diego/Imperial county line; the only 500 kV substation there in OpenStreetMap,way/414876259,,Imperial,Imperial;San Diego
+Old Town,openstreetmap,32.7660854,-117.1923901,"OpenStreetMap way/119718455, data of 2026-10-06",way/119718455,Old Town Substation,San Diego,San Diego
+Oleum,openstreetmap,38.0444117,-122.2570319,"OpenStreetMap way/92513782, data of 2026-10-06",way/92513782,Oleum Substation,Contra Costa,Contra Costa
+Olinda,openstreetmap,33.9462399,-117.9221717,"OpenStreetMap way/79440943, data of 2026-10-06",way/79440943,Olinda Substation,Los Angeles,Los Angeles
+Orchard,openstreetmap,32.6275061,-114.5357074,"OpenStreetMap way/1194038329, data of 2026-10-06",way/1194038329,Orchard Substation,Yuma,
+Otay,openstreetmap,32.5953414,-117.0577002,"OpenStreetMap way/246538205, data of 2026-10-06",way/246538205,Otay Substation,San Diego,San Diego
+Pacific Beach,openstreetmap,32.7992354,-117.240247,"OpenStreetMap way/246532420, data of 2026-10-06",way/246532420,Pacific Beach Substation,San Diego,
+Pacifica,openstreetmap,37.5948646,-122.4888897,"OpenStreetMap way/1280081494, data of 2026-10-06",way/1280081494,Pacifica Substation,San Mateo,
+Padre Flat,openstreetmap,37.0186152,-120.975924,"OpenStreetMap way/1058324264, data of 2026-10-06",way/1058324264,Padre Flat Substation,Merced,
+Pahrump,openstreetmap,36.197074,-115.9689413,"OpenStreetMap way/188301755, data of 2026-10-06",way/188301755,Pahrump Substation,Nye,
+Palermo,openstreetmap,39.4542547,-121.5178277,"OpenStreetMap way/150562248, data of 2026-10-06",way/150562248,Palermo Substation,Butte,Butte
+Palo Verde,openstreetmap,33.3849,-112.8591,"OpenStreetMap way/91154343, data of 2026-10-06",way/91154343,Palo Verde Generating Switchyard,Maricopa,La Paz;Maricopa;Riverside;Yuma
+Palomar Airport,openstreetmap,33.1228402,-117.2879008,"OpenStreetMap way/167143651, data of 2026-10-06",way/167143651,Palomar Airport Substation,San Diego,
+Panoche,openstreetmap,36.6523145,-120.5815969,"OpenStreetMap way/93288988, data of 2026-10-06",way/93288988,Panoche Substation,Fresno,Fresno
+Paradise,openstreetmap,39.7606558,-121.61888,"OpenStreetMap way/1256348450, data of 2026-10-06",way/1256348450,Paradise Substation,Butte,Butte
+Pardee,openstreetmap,34.4397943,-118.5826225,"OpenStreetMap way/91834998, data of 2026-10-06",way/91834998,Pardee Substation,Los Angeles,Los Angeles
+Paso Robles,openstreetmap,35.6156318,-120.6795071,"OpenStreetMap way/170833620, data of 2026-10-06",way/170833620,Paso Robles,San Luis Obispo,
+Pastoria,openstreetmap,34.9351833,-118.8429736,"OpenStreetMap way/168525650, data of 2026-10-06",way/168525650,Pastoria Substation,Kern,Kern
+Paul Sweet,openstreetmap,36.9923448,-121.982231,"OpenStreetMap way/42637019, data of 2026-10-06",way/42637019,Paul Sweet Substation,Santa Cruz,
+Peabody,openstreetmap,38.2854584,-121.9705143,"OpenStreetMap way/36250573, data of 2026-10-06",way/36250573,Peabody Substation,Solano,
+Pease,openstreetmap,39.1698803,-121.6610022,"OpenStreetMap way/885906120, data of 2026-10-06",way/885906120,Pease Substation,Sutter,Yuba
+Petaluma A,openstreetmap,38.2341942,-122.6362627,"OpenStreetMap way/195463430, data of 2026-10-06",way/195463430,Petaluma A Substation,Sonoma,
+Pico,openstreetmap,33.4568298,-117.589184,"OpenStreetMap way/167242261, data of 2026-10-06",way/167242261,Pico Substation,Orange,
+Piercy,openstreetmap,37.2689282,-121.7873391,"OpenStreetMap way/119409662, data of 2026-10-06",way/119409662,Piercy Substation,Santa Clara,Santa Clara
+Pisgah,openstreetmap,34.7816824,-116.3846956,"OpenStreetMap way/62235860, data of 2026-10-06",way/62235860,Pisgah Switchyard,San Bernardino,San Bernardino
+Pittsburg,openstreetmap,38.0369134,-121.8959532,"OpenStreetMap way/35732660, data of 2026-10-06",way/35732660,Pittsburg Substation,Contra Costa,Contra Costa
+Placer,openstreetmap,38.9013375,-121.0878295,"OpenStreetMap way/98111153, data of 2026-10-06",way/98111153,Placer Substation,Placer,
+Plainfield,openstreetmap,38.6191848,-121.7942781,"OpenStreetMap way/394806112, data of 2026-10-06",way/394806112,Plainfield Substation,Yolo,Yolo
+Pleasant Grove,openstreetmap,38.8221004,-121.3065142,"OpenStreetMap way/37121892, data of 2026-10-06",way/37121892,Pleasant Grove Substation,Placer,Placer
+Point Loma,openstreetmap,32.7414519,-117.2334812,"OpenStreetMap way/85586689, data of 2026-10-06",way/85586689,Point Loma Substation,San Diego,San Diego
+Potrero,openstreetmap,37.7568233,-122.3860796,"OpenStreetMap relation/14391219, data of 2026-10-06",relation/14391219,Potrero Switchyard,San Francisco,San Francisco
+Poway,openstreetmap,32.978924,-117.0316446,"OpenStreetMap way/242195549, data of 2026-10-06",way/242195549,Poway Substation,San Diego,
+Primm,openstreetmap,35.6409768,-115.349316,"OpenStreetMap way/551396627, data of 2026-10-06",way/551396627,Primm Substation,Clark,Clark
+Proctor Valley,openstreetmap,32.6650617,-116.9867618,"OpenStreetMap way/25720848, data of 2026-10-06",way/25720848,Proctor Valley Substation,San Diego,
+Pueblo,openstreetmap,31.5474843,-110.2411137,"OpenStreetMap way/897175428, data of 2026-10-06",way/897175428,Pueblo Substation,Cochise,
+Putah Creek,openstreetmap,38.5230579,-121.9944302,"OpenStreetMap way/34229001, data of 2026-10-06",way/34229001,Putah Creek Substation,Yolo,
+Quinto,openstreetmap,37.119984,-121.0689671,"OpenStreetMap way/552653455, data of 2026-10-06",way/552653455,Quinto Substation,Merced,Merced
+Rancho Carmel,openstreetmap,32.9937908,-117.0776605,"OpenStreetMap way/31809170, data of 2026-10-06",way/31809170,Rancho Carmel Substation,San Diego,
+Rancho Mission Viejo,openstreetmap,33.5263975,-117.598729,"OpenStreetMap way/501515904, data of 2026-10-06",way/501515904,Rancho Mission Viejo Substation,Orange,Orange
+Rancho Seco,openstreetmap,38.3442084,-121.1238678,"OpenStreetMap way/32943234, data of 2026-10-06",way/32943234,Rancho Seco Substation,Sacramento,San Joaquin
+Rancho Vista,openstreetmap,34.087978,-117.5337016,"OpenStreetMap way/77452171, data of 2026-10-06",way/77452171,Rancho Vista Substation,San Bernardino,San Bernardino
+Randall,openstreetmap,34.1136574,-117.4541834,"OpenStreetMap way/332222407, data of 2026-10-06",way/332222407,Randall Substation,San Bernardino,
+Ravenswood,openstreetmap,37.4928765,-122.137873,"OpenStreetMap way/25793704, data of 2026-10-06",way/25793704,Ravenswood Substation,San Mateo,
+Rector,openstreetmap,36.3038123,-119.2451574,"OpenStreetMap way/169402989, data of 2026-10-06",way/169402989,Rector Substation,Tulare,Tulare
+Red Bluff,openstreetmap,33.6988312,-115.3128761,"OpenStreetMap way/507591114, data of 2026-10-06",way/507591114,Red Bluff Substation,Riverside,Riverside
+Redondo,openstreetmap,32.6852624,-114.4950303,"OpenStreetMap way/560590098, data of 2026-10-06",way/560590098,Redondo Substation,Yuma,
+Richmond R,openstreetmap,37.9259849,-122.3695955,"OpenStreetMap way/37623989, data of 2026-10-06",way/37623989,Richmond R,Contra Costa,
+Rio Hondo,openstreetmap,34.1050306,-117.980363,"OpenStreetMap way/86094474, data of 2026-10-06",way/86094474,Rio Hondo Substation,Los Angeles,Los Angeles
+Rio Oso,openstreetmap,38.9351998,-121.4667925,"OpenStreetMap way/86463615, data of 2026-10-06",way/86463615,Rio Oso Substation,Sutter,Sutter
+Ripon,openstreetmap,37.7555913,-121.146377,"OpenStreetMap way/837863258, data of 2026-10-06",way/837863258,Ripon Substation,San Joaquin,San Joaquin
+Riverbank,openstreetmap,37.8564378,-120.9122468,"OpenStreetMap way/1272093749, data of 2026-10-06",way/1272093749,Riverbank Switching Station,Stanislaus,San Joaquin
+Rob Roy,openstreetmap,36.9791983,-121.8672269,"OpenStreetMap way/55143820, data of 2026-10-06",way/55143820,Rob Roy Substation,Santa Cruz,
+Rose Canyon,openstreetmap,32.8444239,-117.2370217,"OpenStreetMap way/67264544, data of 2026-10-06",way/67264544,Rose Canyon Substation,San Diego,
+Rossmoor,openstreetmap,37.8646646,-122.0804497,"OpenStreetMap way/606129587, data of 2026-10-06",way/606129587,Rossmoor Substation,Contra Costa,
+Round Mountain,openstreetmap,40.8079932,-121.935934,"OpenStreetMap way/93128718, data of 2026-10-06",way/93128718,Round Mountain Substation,Shasta,Shasta
+Salado,openstreetmap,37.4217214,-121.1474784,"OpenStreetMap way/94600663, data of 2026-10-06",way/94600663,Salado Substation,Stanislaus,Stanislaus
+Salinas,openstreetmap,36.6820576,-121.6514791,"OpenStreetMap way/24397013, data of 2026-10-06",way/24397013,Salinas Substation,Monterey,
+San Benito,openstreetmap,36.8689179,-121.5493618,"OpenStreetMap way/1552705228, data of 2026-10-06",way/1552705228,San Benito Substation,San Benito,San Benito
+San Bernardino,openstreetmap,34.0799529,-117.2389874,"OpenStreetMap way/181492780, data of 2026-10-06",way/181492780,San Bernardino Substation,San Bernardino,San Bernardino
+San Jose B,openstreetmap,37.3409379,-121.9014665,"OpenStreetMap way/24168995, data of 2026-10-06",way/24168995,San Jose Substation B,Santa Clara,
+San Leandro U,openstreetmap,37.7105291,-122.1486694,"OpenStreetMap way/35656716, data of 2026-10-06",way/35656716,San Leandro U Substation,Alameda,
+San Luis Rey,openstreetmap,33.2112992,-117.3345198,"OpenStreetMap way/105825880, data of 2026-10-06",way/105825880,San Luis Rey Substation,San Diego,San Diego
+San Marcos,openstreetmap,34.4519857,-119.7614899,"OpenStreetMap way/168216625, data of 2026-10-06",way/168216625,San Marcos Substation,Santa Barbara,
+San Mateo,openstreetmap,33.4094774,-117.5906855,"OpenStreetMap way/501515905, data of 2026-10-06",way/501515905,San Mateo Substation,Orange,Orange
+San Ramon,openstreetmap,37.744673,-121.9364756,"OpenStreetMap way/66376512, data of 2026-10-06",way/66376512,San Ramon Substation,Contra Costa,
+Sanger,openstreetmap,36.7083453,-119.6112851,"OpenStreetMap way/182622208, data of 2026-10-06",way/182622208,Sanger Substation,Fresno,Fresno
+Santa Clara,openstreetmap,34.3021917,-119.1854388,"OpenStreetMap way/40309253, data of 2026-10-06",way/40309253,Santa Clara Substation,Ventura,Ventura
+Santa Teresa,openstreetmap,37.2386068,-121.7907606,"OpenStreetMap way/1059210744, data of 2026-10-06",way/1059210744,Santa Teresa Substation,Santa Clara,Santa Clara
+Santiago,openstreetmap,33.6649231,-117.7685585,"OpenStreetMap way/29175070, data of 2026-10-06",way/29175070,Santiago Substation,Orange,Orange
+Saratoga,openstreetmap,37.2809465,-122.0153775,"OpenStreetMap way/31369697, data of 2026-10-06",way/31369697,Saratoga Substation,Santa Clara,
+Schulte,openstreetmap,37.710439,-121.4899411,"OpenStreetMap way/1266650815, data of 2026-10-06",way/1266650815,Schulte Switching Station,San Joaquin,San Joaquin
+Scripps,openstreetmap,32.9111127,-117.1126304,"OpenStreetMap way/243125942, data of 2026-10-06",way/243125942,Scripps Substation,San Diego,San Diego
+Semitropic,openstreetmap,35.6008203,-119.437539,"OpenStreetMap way/761043373, data of 2026-10-06",way/761043373,Semitropic Substation,Kern,Kern
+Serramonte,openstreetmap,37.6509286,-122.4541665,"OpenStreetMap way/38159840, data of 2026-10-06",way/38159840,Serramonte Substation,San Mateo,
+Serrano,openstreetmap,33.8289323,-117.7897166,"OpenStreetMap way/64161681, data of 2026-10-06",way/64161681,Serrano Substation,Orange,San Bernardino
+Sf Airport,openstreetmap,37.626276,-122.403481,"OpenStreetMap way/26787794, data of 2026-10-06",way/26787794,SF Airport,San Mateo,San Francisco
+Shadowridge,openstreetmap,33.1414668,-117.238851,"OpenStreetMap way/167143659, data of 2026-10-06",way/167143659,Shadowridge Substation,San Diego,San Diego
+Shingle Springs,openstreetmap,38.6592948,-120.9472318,"OpenStreetMap way/180839419, data of 2026-10-06",way/180839419,Shingle Springs Substation,El Dorado,El Dorado
+Silverado,openstreetmap,38.4998097,-122.4591906,"OpenStreetMap way/1357563547, data of 2026-10-06",way/1357563547,Silverado Substation,Napa,
+Sloan Canyon,openstreetmap,35.8336156,-115.0115455,"OpenStreetMap way/893296457, data of 2026-10-06",way/893296457,Sloan Canyon Switchyard,Clark,Clark
+Sneath Lane,openstreetmap,37.6219397,-122.4467361,"OpenStreetMap way/24314687, data of 2026-10-06",way/24314687,Sneath Lane Substation,San Mateo,
+Sobrante,openstreetmap,37.9054592,-122.2082408,"OpenStreetMap way/33106247, data of 2026-10-06",way/33106247,Sobrante Substation,Contra Costa,Contra Costa
+Soledad,openstreetmap,36.4301332,-121.3325147,"OpenStreetMap way/1273559791, data of 2026-10-06",way/1273559791,Soledad Substation,Monterey,Monterey
+Spring Valley,openstreetmap,32.7390773,-117.0027506,"OpenStreetMap way/245946710, data of 2026-10-06",way/245946710,Spring Valley Substation,San Diego,San Diego
+Springville,openstreetmap,36.1079723,-118.9381572,"OpenStreetMap way/169514309, data of 2026-10-06",way/169514309,Springville Substation,Tulare,Tulare
+Stagg,openstreetmap,37.9922986,-121.3485086,"OpenStreetMap way/38311176, data of 2026-10-06",way/38311176,Stagg Substation,San Joaquin,San Joaquin
+Stelling,openstreetmap,37.3360204,-122.0431687,"OpenStreetMap way/396269147, data of 2026-10-06",way/396269147,Stelling Substation,Santa Clara,
+Streamview,openstreetmap,32.7456082,-117.0785884,"OpenStreetMap way/245784881, data of 2026-10-06",way/245784881,Streamview Substation,San Diego,
+Suisun,openstreetmap,38.2451302,-122.0412616,"OpenStreetMap way/106610038, data of 2026-10-06",way/106610038,Suisun Substation,Solano,
+Suncrest,openstreetmap,32.8087648,-116.68306,"OpenStreetMap way/407016872, data of 2026-10-06",way/407016872,Suncrest Substation,San Diego,San Diego
+Sunnyside,openstreetmap,33.8530413,-118.1666446,"OpenStreetMap way/676714269, data of 2026-10-06",way/676714269,Sunnyside Substation,Los Angeles,
+Sweetwater,openstreetmap,32.6583162,-117.0916893,"OpenStreetMap way/247795421, data of 2026-10-06",way/247795421,Sweetwater Substation,San Diego,
+Swift,openstreetmap,37.3224752,-121.7970091,"OpenStreetMap way/119408726, data of 2026-10-06",way/119408726,Swift Substation,Santa Clara,
+Sycamore Canyon,openstreetmap,32.9172568,-117.0309422,"OpenStreetMap way/99645329, data of 2026-10-06",way/99645329,Sycamore Canyon Substation,San Diego,San Diego
+Sycamore Creek,openstreetmap,39.7686966,-121.8241031,"OpenStreetMap way/132230747, data of 2026-10-06",way/132230747,Sycamore Creek Substation,Butte,
+Table Mountain,openstreetmap,39.5551324,-121.6451687,"OpenStreetMap way/30755899, data of 2026-10-06",way/30755899,Table Mountain Substation,Butte,Butte
+Talega,openstreetmap,33.4532061,-117.5714849,"OpenStreetMap way/116440984, data of 2026-10-06",way/116440984,Talega Substation,Orange,San Diego
+Tassajara,openstreetmap,37.8000395,-121.9076359,"OpenStreetMap way/66376509, data of 2026-10-06",way/66376509,Tassajara Substation,Contra Costa,Alameda
+Tesla,openstreetmap,37.7120521,-121.5647373,"OpenStreetMap way/23837624, data of 2026-10-06",way/23837624,Tesla Substation,Alameda,San Joaquin
+Tesoro,openstreetmap,38.0181619,-122.061375,"OpenStreetMap way/403208540, data of 2026-10-06",way/403208540,Tesoro Substation,Contra Costa,
+Thousandaire,openstreetmap,36.132452,-115.9499389,"OpenStreetMap way/830711017, data of 2026-10-06",way/830711017,Thousandaire Substation,Nye,Nye
+Tidewater,openstreetmap,38.0197579,-122.0618121,"OpenStreetMap way/35640786, data of 2026-10-06",way/35640786,Tidewater Substation,Contra Costa,
+Torrey Pines,openstreetmap,32.898679,-117.2400452,"OpenStreetMap way/280922418, data of 2026-10-06",way/280922418,Torrey Pines Substation,San Diego,
+Trabuco,openstreetmap,33.5628795,-117.673544,"OpenStreetMap way/455875595, data of 2026-10-06",way/455875595,Trabuco Substation,Orange,Orange
+Tracy,openstreetmap,37.7488257,-121.4159518,"OpenStreetMap way/613571074, data of 2026-10-06",way/613571074,Tracy Substation,San Joaquin,San Joaquin
+Tranquility,document,36.5919749,-120.4029374,"PG&E Advice Letter 4523-E (Tranquillity Switching Station, 2014): a 6-acre 230 kV switching station looping the Helm-Panoche and Kearney-Panoche 230 kV lines; OpenStreetMap way/597046169 is the one 6.5-acre 230 kV substation both lines end at",way/597046169,,Fresno,Fresno
+Trimble,openstreetmap,37.3819522,-121.9271433,"OpenStreetMap way/120353461, data of 2026-10-06",way/120353461,Trimble Substation,Santa Clara,Santa Clara
+Trinity,openstreetmap,40.7180012,-122.9343909,"OpenStreetMap way/711541435, data of 2026-10-06",way/711541435,Trinity Substation,Trinity,Shasta/Trinity
+Trout Canyon,document,36.0676800,-115.7781100,"BLM, Mosey Solar Project plan of development N-101055 (2024): GridLiance's Trout Canyon Substation is at the intersection of SR-160 and Tecopa Road; OpenStreetMap way/1227863687 is the one 230 kV substation there, 1.1 km from that junction",way/1227863687,,Clark,Clark
+Tulare,openstreetmap,36.21337,-119.3303801,"OpenStreetMap way/199049644, data of 2026-10-06",way/199049644,Tulare Substation,Tulare,Kings
+Tulucay,openstreetmap,38.2478308,-122.2679071,"OpenStreetMap way/33292212, data of 2026-10-06",way/33292212,Tulucay Substation,Napa,Napa
+Vaca Dixon,openstreetmap,38.4034895,-121.9202262,"OpenStreetMap relation/12204895, data of 2026-10-06",relation/12204895,Vaca Dixon Substation,Solano,Glenn
+Vacaville,openstreetmap,38.3564548,-121.9806245,"OpenStreetMap way/59271566, data of 2026-10-06",way/59271566,Vacaville Substation,Solano,
+Valley,openstreetmap,33.7395005,-117.1564367,"OpenStreetMap way/61601149, data of 2026-10-06",way/61601149,Valley Substation,Riverside,Riverside
+Valley Home,openstreetmap,37.8563362,-120.9442136,"OpenStreetMap way/152340796, data of 2026-10-06",way/152340796,Valley Home Substation,San Joaquin,
+Valley Nitrogen,openstreetmap,36.549599,-120.1113287,"OpenStreetMap way/1492309742, data of 2026-10-06",way/1492309742,Valley Nitrogen,Fresno,Fresno
+Vasona,openstreetmap,37.2538677,-121.9662167,"OpenStreetMap way/114958126, data of 2026-10-06",way/114958126,Vasona Substation,Santa Clara,
+Vestal,openstreetmap,35.8412308,-119.0846351,"OpenStreetMap way/169403015, data of 2026-10-06",way/169403015,Vestal Substation,Tulare,Tulare
+Victorville,openstreetmap,34.5642973,-117.3198626,"OpenStreetMap relation/12204669, data of 2026-10-06",relation/12204669,Victorville Substation,San Bernardino,San Bernardino
+Viejo,openstreetmap,33.666879,-117.6424464,"OpenStreetMap way/59238979, data of 2026-10-06",way/59238979,Viejo Substation,Orange,Orange
+Vierra,openstreetmap,37.7978669,-121.2741906,"OpenStreetMap way/1024994836, data of 2026-10-06",way/1024994836,Vierra Substation,San Joaquin,San Joaquin
+Villa Park,openstreetmap,33.8149647,-117.8341037,"OpenStreetMap way/61960845, data of 2026-10-06",way/61960845,Villa Park Substation,Orange,Orange
+Vincent,openstreetmap,34.4859441,-118.1196772,"OpenStreetMap way/30567721, data of 2026-10-06",way/30567721,Vincent Substation,Los Angeles,Los Angeles
+Vineyard,openstreetmap,37.6697116,-121.8544544,"OpenStreetMap way/66413933, data of 2026-10-06",way/66413933,Vineyard Substation,Alameda,
+Vista,openstreetmap,34.0406913,-117.3206273,"OpenStreetMap way/33604800, data of 2026-10-06",way/33604800,Vista Substation,San Bernardino,San Bernardino
+Vista (Nye County),openstreetmap,36.3172993,-116.010797,"OpenStreetMap way/302045339, data of 2026-10-06",way/302045339,Vista Substation,Nye,Nye
+Walnut,openstreetmap,34.0081672,-117.9499642,"OpenStreetMap way/384800363, data of 2026-10-06",way/384800363,Walnut Substation,Los Angeles,Los Angeles
+Warnerville,openstreetmap,37.7417051,-120.8023645,"OpenStreetMap way/79248632, data of 2026-10-06",way/79248632,Warnerville Substation,Stanislaus,San Joaquin
+Waukena,openstreetmap,36.1386226,-119.5764766,"OpenStreetMap way/828024040, data of 2026-10-06",way/828024040,Waukena Substation,Kings,Kings
+West Sacramento,openstreetmap,38.5894875,-121.5449731,"OpenStreetMap way/199461285, data of 2026-10-06",way/199461285,West Sacramento Substation,Yolo,
+Westley,openstreetmap,37.5160275,-121.2307996,"OpenStreetMap way/32707508, data of 2026-10-06",way/32707508,Westley Substation,Stanislaus,Stanislaus
+Westwood,openstreetmap,40.2998877,-121.0015104,"OpenStreetMap way/1421948094, data of 2026-10-06",way/1421948094,Westwood Substation,Lassen,Lassen
+Wheeler Ridge,openstreetmap,35.0890917,-118.975825,"OpenStreetMap way/253747134, data of 2026-10-06",way/253747134,Wheeler Ridge Substation,Kern,Kern
+Whirlwind,openstreetmap,34.8578451,-118.4373291,"OpenStreetMap way/386364447, data of 2026-10-06",way/386364447,Whirlwind Substation,Kern,Kern
+Wilson,openstreetmap,37.2925967,-120.4075244,"OpenStreetMap way/79176953, data of 2026-10-06",way/79176953,Wilson Substation,Merced,Merced
+Windhub,openstreetmap,35.0349893,-118.2808562,"OpenStreetMap way/99599964, data of 2026-10-06",way/99599964,Windhub Substation,Kern,Kern
+Wolfe,openstreetmap,37.3344053,-122.0205664,"OpenStreetMap way/116534901, data of 2026-10-06",way/116534901,Wolfe Substation,Santa Clara,
+Woodland,openstreetmap,38.6784701,-121.7600433,"OpenStreetMap way/36730100, data of 2026-10-06",way/36730100,Woodland Substation,Yolo,Yolo
+Woodward,openstreetmap,36.8962778,-119.751018,"OpenStreetMap way/179415242, data of 2026-10-06",way/179415242,Woodward Substation,Fresno,Fresno
+Wyandotte,openstreetmap,39.4915666,-121.5409382,"OpenStreetMap way/151116308, data of 2026-10-06",way/151116308,Wyandotte Substation,Butte,

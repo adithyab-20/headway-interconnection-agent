@@ -211,6 +211,10 @@ def county_of(lat: float, lon: float) -> str:
 
 
 def propose_positions(conn, spellings: list[dict[str, str]]) -> list[dict[str, str]]:  # type: ignore[no-untyped-def]
+    """Draft a position for every site, in the shape of the committed table, so the draft can
+    be compared against it row by row. A position outside the projects' own county is always
+    left for the reviewer: a neighbouring county is fine, the other side of the state is not.
+    Positions read off public documents are added by hand, never drafted."""
     osm = json.loads(OSM.read_text())
     stamp = osm["osm3s"]["timestamp_osm_base"][:10]
     named: dict[str, list[dict[str, object]]] = defaultdict(list)
@@ -229,39 +233,58 @@ def propose_positions(conn, spellings: list[dict[str, str]]) -> list[dict[str, s
     sites = sorted({r["site"] for r in spellings} | {r["other_end_site"] for r in spellings} - {""})
     rows = []
     for site in sites:
-        candidates = named.get(site, [])
-        if not candidates:
-            continue
         ours = counties[site].most_common(1)[0][0] if counties[site] else ""
-        located = []
-        for cand in candidates[:6]:
-            lat = cand.get("lat") or cand.get("center", {}).get("lat")  # type: ignore[union-attr]
-            lon = cand.get("lon") or cand.get("center", {}).get("lon")  # type: ignore[union-attr]
-            located.append((cand, lat, lon, county_of(lat, lon).removesuffix(" County")))  # type: ignore[arg-type]
-        same = [c for c in located if ours and c[3].lower() == ours.lower()]
-        e, lat, lon, osm_county = (same or located)[0]
-        doubts = []
-        if len(candidates) > 1:
-            doubts.append(f"{len(candidates)} OpenStreetMap substations share this name")
-        if ours and osm_county and ours.lower() != osm_county.lower():
-            doubts.append(f"OpenStreetMap county {osm_county}, projects say {ours}")
-        rows.append(
-            {
-                "site": site,
-                "osm_id": f"{e['type']}/{e['id']}",
-                "latitude": str(lat),
-                "longitude": str(lon),
-                "osm_name": e["tags"]["name"],
-                "osm_date": stamp,  # type: ignore[index]
-                "osm_county": osm_county,
-                "project_county": ours,
-                "doubts": "; ".join(doubts),
-                "confidence": "unsure" if doubts else "sure",
-                # Namesakes with none in the projects' county: no position (county fallback).
-                "approve": "no" if len(candidates) > 1 and not same else "yes",
-            }
-        )
+        candidates = named.get(site, [])
+        drafted = _from_openstreetmap(site, candidates, ours, stamp) if candidates else None
+        if drafted:
+            rows.append(drafted)
     return sorted(rows, key=lambda r: (r["confidence"] != "unsure", r["site"]))
+
+
+def _row(site: str, by: str, lat: str, lon: str, source: str, doubts: list[str], **rest: str):  # type: ignore[no-untyped-def]
+    return {
+        "site": site,
+        "positioned_by": by,
+        "latitude": lat,
+        "longitude": lon,
+        "source": source,
+        "osm_id": "",
+        "osm_name": "",
+        **rest,
+        "doubts": "; ".join(doubts),
+        "confidence": "unsure" if doubts else "sure",
+        "approve": "no" if doubts else "yes",
+    }
+
+
+def _from_openstreetmap(  # type: ignore[no-untyped-def]
+    site: str, candidates: list[dict[str, object]], ours: str, stamp: str
+):
+    located = []
+    for cand in candidates[:6]:
+        lat = cand.get("lat") or cand.get("center", {}).get("lat")  # type: ignore[union-attr]
+        lon = cand.get("lon") or cand.get("center", {}).get("lon")  # type: ignore[union-attr]
+        located.append((cand, lat, lon, county_of(lat, lon).removesuffix(" County")))  # type: ignore[arg-type]
+    same = [c for c in located if ours and c[3].lower() == ours.lower()]
+    e, lat, lon, point_county = (same or located)[0]
+    doubts = []
+    if len(candidates) > 1:
+        doubts.append(f"{len(candidates)} OpenStreetMap substations share this name")
+    if ours and point_county and ours.lower() != point_county.lower():
+        doubts.append(f"OpenStreetMap county {point_county}, projects say {ours}")
+    osm_id = f"{e['type']}/{e['id']}"
+    return _row(
+        site,
+        "openstreetmap",
+        str(lat),
+        str(lon),
+        f"OpenStreetMap {osm_id}, data of {stamp}",
+        doubts,
+        osm_id=osm_id,
+        osm_name=str(e["tags"]["name"]),  # type: ignore[index]
+        point_county=point_county,
+        project_county=ours,
+    )
 
 
 def propose_bottleneck_names() -> list[dict[str, str]]:
@@ -343,23 +366,15 @@ def write(name: str, rows: list[dict[str, str]]) -> None:
 
 KEEP = {
     "spellings.csv": ["station_key", "kind", "site", "voltage_kv", "other_end_site"],
-    "positions.csv": [
-        "site",
-        "osm_id",
-        "latitude",
-        "longitude",
-        "osm_name",
-        "osm_date",
-        "osm_county",
-        "project_county",
-    ],
+    # positions.csv is no longer drafted here: it now also holds federal-dataset and
+    # document positions, reviewed by hand (see places/README.md).
     "bottleneck_names.csv": ["bottleneck_list_name", "cost_file_name", "bottleneck"],
     "upgrade_places.csv": ["plan_id", "site", "voltage_kv"],
 }
 
 
 def apply() -> None:
-    for name, fields in KEEP.items():
+    for name, fields in KEEP.items():  # review/positions.csv is for reference only
         with (REVIEW / name).open(newline="") as f:
             approved = [r for r in csv.DictReader(f) if r["approve"].strip().lower() == "yes"]
         with (TABLES / name).open("w", newline="") as f:

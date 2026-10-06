@@ -9,6 +9,10 @@ never from the code under test.
 from __future__ import annotations
 
 import datetime
+import functools
+import json
+import math
+import re
 import statistics
 from collections.abc import Iterator
 from decimal import Decimal
@@ -55,6 +59,35 @@ def places_of(conn: Conn, native_id: str) -> set[tuple[object, ...]]:
             (native_id,),
         ).fetchall()
     )
+
+
+def _km(lat_a: float, lon_a: float, lat_b: float, lon_b: float) -> float:
+    rad = math.pi / 180
+    x = (lon_b - lon_a) * rad * math.cos((lat_a + lat_b) / 2 * rad)
+    return 6371 * math.hypot(x, (lat_b - lat_a) * rad)
+
+
+@functools.cache
+def _osm_points() -> dict[str, tuple[float, float]]:
+    elements = json.loads((DATA / "osm_substations_ca_nv_az.json").read_text())["elements"]
+    middles = [(f"{e['type']}/{e['id']}", e.get("center") or e) for e in elements]
+    return {osm_id: (m["lat"], m["lon"]) for osm_id, m in middles}
+
+
+def _cites_its_dataset(positioned_by: str, source: str, lat: float, lon: float) -> bool:
+    """A point is traceable when the OpenStreetMap shape it names is in the committed copy,
+    at the same spot. A point read off a document can only name the document."""
+    shape = re.search(r"(node|way|relation)/\d+", source)
+    if positioned_by == "openstreetmap":
+        point = _osm_points().get(shape.group(0)) if shape else None
+    elif positioned_by in ("document", "planned"):
+        # A document names the place in words; where it also pins down a shape on the map,
+        # the point has to be that shape.
+        point = _osm_points().get(shape.group(0)) if shape else (lat, lon)
+        return len(source) > 20 and point is not None and _km(lat, lon, *point) < 1
+    else:
+        return False
+    return point is not None and _km(lat, lon, *point) < 1
 
 
 def test_loading_gives_every_project_its_facts_and_place_and_reloading_changes_nothing(
@@ -208,22 +241,48 @@ def test_each_substation_gets_a_map_position_or_falls_back_to_its_county(
     lat, lon = one(conn, "SELECT latitude, longitude FROM places WHERE place LIKE 'Mesa%%500 kV'")
     assert 33.9 < num(lat) < 34.2 and -118.3 < num(lon) < -118.0
 
-    # Trout Canyon isn't in OpenStreetMap: it falls back to its county, with no point.
+    # Manning 500 kV isn't built yet; the CPUC's filing for it says where it will go, and the
+    # point says so. Every point says where it came from.
+    lat, lon, by, source = one(
+        conn,
+        "SELECT latitude, longitude, positioned_by, position_source FROM places "
+        "WHERE site = 'Manning' AND voltage_kv = 500",
+    )
+    assert by == "planned" and "CPUC" in str(source)
+    assert 36.5 < num(lat) < 36.7 and -120.7 < num(lon) < -120.5  # Fresno County
     assert one(
         conn,
-        "SELECT positioned_by, county, latitude FROM places WHERE site = 'Trout Canyon'",
-    ) == ("county", "Clark", None)
+        "SELECT count(*) FROM places WHERE positioned_by <> 'county' AND position_source IS NULL",
+    ) == (0,)
+
+    # Every point traces back to a row in a public dataset committed here, at the same spot.
+    untraceable = [
+        (site, by, source)
+        for site, by, source, lat, lon in conn.execute(
+            "SELECT site, positioned_by, position_source, latitude, longitude FROM places "
+            "WHERE positioned_by <> 'county'"
+        ).fetchall()
+        if not _cites_its_dataset(str(by), str(source), num(lat), num(lon))
+    ]
+    assert untraceable == []
+
+    # No public document says where the proposed Lee Lake substation would go, and nothing is
+    # drawn there. Rather than guess, it falls back to its county, with no point.
+    assert one(
+        conn,
+        "SELECT positioned_by, county, latitude FROM places WHERE site = 'Lee Lake'",
+    ) == ("county", "Riverside", None)
 
     placed, waiting = one(
         conn,
         "SELECT sum(r.mw) FILTER (WHERE EXISTS (SELECT 1 FROM project_places pp JOIN places pl "
         "  USING (place) WHERE pp.source = p.source AND pp.native_id = p.native_id "
-        "  AND pl.positioned_by = 'openstreetmap')), sum(r.mw) "
+        "  AND pl.positioned_by <> 'county')), sum(r.mw) "
         "FROM caiso_projects p JOIN project_resources r USING (source, native_id) "
         "WHERE p.status = 'Active'",
     )
     assert report.share_of_waiting_mw_placed == pytest.approx(num(placed) / num(waiting))
-    assert 0.5 < report.share_of_waiting_mw_placed < 0.85
+    assert 0.85 < report.share_of_waiting_mw_placed <= 1
 
 
 def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(

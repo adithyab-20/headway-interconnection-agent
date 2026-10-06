@@ -35,8 +35,10 @@ SELECT p.*,
 FROM projects p WHERE p.source = 'lbnl';
 
 -- A place is one voltage section of a substation site, e.g. "Birds Landing 230 kV".
--- Position comes from OpenStreetMap through a reviewed match, else the place falls back
--- to its county (positioned_by = 'county', no coordinates).
+-- Position comes through a reviewed match from, in order of preference: a substation
+-- OpenStreetMap names ('openstreetmap'), or a public document locating it ('document', or
+-- 'planned' for a substation not built yet). Otherwise the place falls back to its county
+-- ('county', no coordinates).
 CREATE TABLE places (
     place         text PRIMARY KEY,
     site          text NOT NULL,
@@ -45,10 +47,10 @@ CREATE TABLE places (
     state         text,
     latitude      double precision,
     longitude     double precision,
-    positioned_by text NOT NULL CHECK (positioned_by IN ('openstreetmap', 'county')),
-    osm_id        text,
-    osm_date      date,
-    osm_county    text   -- county the OpenStreetMap point falls in, checked at review
+    positioned_by text NOT NULL
+        CHECK (positioned_by IN ('openstreetmap', 'document', 'planned', 'county')),
+    position_source text,  -- what positioned it, to cite: dataset and id, or document link
+    osm_id        text     -- the OpenStreetMap substation at the point, when there is one
 );
 
 -- Where each project connects. 'at' = at the place; 'line_end' = partway along a line,
