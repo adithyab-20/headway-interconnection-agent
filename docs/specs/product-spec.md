@@ -41,8 +41,9 @@ Each line is one test, written before the code that makes it pass.
 2. Anything the reviewed tables don't recognise (a substation spelling, a study-progress
    value, a place) is reported, never guessed.
 3. A project missing its outcome date gets an estimated date, clearly marked as estimated.
-4. Each substation gets its map position from OpenStreetMap, or falls back to its county.
-   The share of waiting MW placed on the map is reported.
+4. Each substation gets its map position from OpenStreetMap or a cited public document
+   (marked "planned" if it isn't built yet), or falls back to its county. Every point names
+   its source, and the share of waiting MW placed on the map is reported.
 5. Planned upgrades and each area's cost to add room are attached to substations through
    reviewed tables.
 

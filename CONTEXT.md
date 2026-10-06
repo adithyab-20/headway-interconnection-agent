@@ -31,6 +31,40 @@ The substation or power line where a project physically connects to the grid. St
 grouped).
 _Avoid_: interconnection point, station, tie-in
 
+**Site**:
+One substation, under the single name all its spellings are grouped to ("Birds Landing").
+Two unrelated substations that share a name are kept as two sites, the second named with its
+county ("Mesa (Los Angeles County)").
+_Avoid_: station, location
+
+**Place**:
+One voltage section of a site ("Birds Landing 230 kV"): what a project is linked to, and the
+unit history is counted at. A project partway along a power line is linked to the places at
+both ends of the line.
+_Avoid_: node, bus
+
+**Map Position**:
+A site's point on the map, and what it comes from (`positioned_by`): a substation
+OpenStreetMap names, or a cited public document. A site with neither falls back to its
+county and has no point. Never guessed. See `docs/adr/0004-where-map-points-come-from.md`.
+_Avoid_: location, coordinates (on their own)
+
+**Planned Substation**:
+A substation the operator or a utility has approved but not yet built. It can have a map
+position, taken from the filing that says where it will go, always shown as planned.
+_Avoid_: future substation, proposed substation
+
+**Bottleneck**:
+An overloaded power line or transformer that limits how much new generation the places
+behind it can add, from CAISO's list. Its **Room Left** is the MW still available behind it;
+its cost to add room is the price of the next upgrade per kW it adds.
+_Avoid_: constraint, deliverability constraint
+
+**Planned Upgrade**:
+A grid upgrade the operator has approved, with its expected finish date and cost range, linked
+to the places it's at. Paid by all electricity customers, never by the projects nearby.
+_Avoid_: network upgrade, transmission project
+
 ### Project lifecycle
 
 **Project**:
@@ -80,6 +114,18 @@ doesn't have the detail.
 **Withdrawal**:
 A project leaving the queue without ever being connected. This is the most common outcome:
 most projects in the queue drop out.
+
+**Batch**:
+The group of requests the operator took in and studied together (`batch`), for example the
+2023 batch (`C15`). That batch entered under the new rules, so it's kept out of the
+old-rules history and reported as a fact of its own.
+_Avoid_: cluster, window
+
+**Furthest Step**:
+How far a project got through the operator's process before it was built, withdrew or is
+now: no study done, first study done, second study done, or agreement signed
+(`furthest_step`).
+_Avoid_: phase, stage
 
 **Vintage**:
 The year a project joined the queue (the year of `q_date`). Every rate is worked out per
