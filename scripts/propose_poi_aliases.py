@@ -25,6 +25,7 @@ import csv
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TextIO
 
 import openpyxl
 from rapidfuzz import fuzz
@@ -88,10 +89,10 @@ def read_active_stations(workbook_path: Path) -> list[Station]:
             if raw is None or not str(raw).strip():
                 continue
             mw = row[col[NET_MW_HEADER]]
-            key = normalize_station(raw)
+            key = normalize_station(str(raw))
             station = by_key.setdefault(key, Station(raw=str(raw).strip(), key=key))
             station.n += 1
-            station.mw += float(mw) if mw is not None else 0.0
+            station.mw += float(mw) if isinstance(mw, (int, float)) else 0.0
         return sorted(by_key.values(), key=lambda s: -s.mw)
     finally:
         workbook.close()
@@ -110,7 +111,7 @@ def cluster(stations: list[Station], threshold: float = SIMILARITY_THRESHOLD) ->
     return sorted(groups, key=lambda g: -g.mw)
 
 
-def write_proposal(groups: list[Group], out: object) -> None:
+def write_proposal(groups: list[Group], out: TextIO) -> None:
     writer = csv.writer(out)
     writer.writerow(["group_id", "station", "normalized_key", "n", "mw", "proposed_canonical"])
     for group_id, group in enumerate(groups, start=1):

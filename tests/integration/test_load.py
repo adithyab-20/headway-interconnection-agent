@@ -8,6 +8,7 @@ never from the code under test.
 
 from __future__ import annotations
 
+import csv
 import datetime
 import functools
 import json
@@ -24,6 +25,8 @@ import pytest
 
 from interconnection_agent.db import connect
 from interconnection_agent.load import LoadReport, load_all
+from interconnection_agent.poi import normalize_station
+from interconnection_agent.unrecognised import Unrecognised
 
 Conn = psycopg.Connection[tuple[object, ...]]
 DATA = Path(__file__).resolve().parents[2] / "data"
@@ -88,6 +91,34 @@ def _cites_its_dataset(positioned_by: str, source: str, lat: float, lon: float) 
     else:
         return False
     return point is not None and _km(lat, lon, *point) < 1
+
+
+def _waiting_mw_and_connection_points() -> list[tuple[float, str]]:
+    """(MW to grid, connection point as written) for every waiting project in both reports."""
+    waiting = []
+    main = openpyxl.load_workbook(DATA / "publicqueuereport.xlsx", read_only=True)
+    rows = list(main["Grid GenerationQueue"].iter_rows(min_row=4, values_only=True))
+    header = [" ".join(str(c).split()) if c else "" for c in rows[0]]
+    mw, poi = header.index("Net MWs to Grid"), header.index("Station or Transmission Line")
+    waiting += [(num(r[mw]), str(r[poi])) for r in rows[1:] if isinstance(r[mw], (int, float))]
+    batch = openpyxl.load_workbook(
+        DATA / "cluster-15-interconnection-requests.xlsx", read_only=True
+    )
+    rows = list(batch["Cluster 15 "].iter_rows(values_only=True))
+    mw, poi = rows[0].index("NET MW POI"), rows[0].index("POI")
+    waiting += [(num(r[mw]), str(r[poi])) for r in rows[1:] if isinstance(r[mw], (int, float))]
+    return waiting
+
+
+def _share_placed_from_the_files() -> float:
+    places = Path(__file__).resolve().parents[2] / "src/interconnection_agent/places"
+    with (places / "spellings.csv").open(newline="") as f:
+        ends = {r["poi_key"]: {r["site"], r["other_end_site"]} - {""} for r in csv.DictReader(f)}
+    with (places / "positions.csv").open(newline="") as f:
+        positioned = {r["site"] for r in csv.DictReader(f) if r["positioned_by"] != "county"}
+    waiting = _waiting_mw_and_connection_points()
+    placed = sum(mw for mw, poi in waiting if ends.get(normalize_station(poi), set()) & positioned)
+    return placed / sum(mw for mw, _ in waiting)
 
 
 def test_loading_gives_every_project_its_facts_and_place_and_reloading_changes_nothing(
@@ -166,11 +197,11 @@ def test_values_the_reviewed_tables_dont_know_are_reported_never_guessed(
             "  WHERE pp.source = p.source AND pp.native_id = p.native_id)"
         ).fetchall()
     }
-    assert placeless == set(report.unrecognised["substation spelling"])
+    assert placeless == set(report.unrecognised[Unrecognised.SUBSTATION_SPELLING])
 
     # Study-progress values outside the reviewed mapping (the main report has an "Unexpected"
     # and a "Withdrawn" in its study columns) leave furthest_step empty and are reported.
-    assert {"Unexpected", "Withdrawn"} <= set(report.unrecognised["study progress"])
+    assert {"Unexpected", "Withdrawn"} <= set(report.unrecognised[Unrecognised.STUDY_PROGRESS])
     unknown_progress = one(
         conn,
         "SELECT count(*) FROM caiso_projects "
@@ -221,6 +252,17 @@ def test_a_project_missing_its_outcome_date_gets_a_clearly_marked_estimate(
     ) == (None, expected, True)
 
     assert report.estimated_outcome_dates == 51  # 39 withdrawn + 12 built, per the report file
+
+    # A built project with no online date and no proposed one has nothing to estimate from:
+    # it's left without an outcome date and reported. (Today's file has none.)
+    undated_built = {
+        r[0]
+        for r in conn.execute(
+            "SELECT native_id FROM caiso_projects WHERE status = 'Operational' "
+            "AND outcome_date IS NULL"
+        ).fetchall()
+    }
+    assert undated_built == set(report.built_projects_without_a_date)
 
 
 def test_each_substation_gets_a_map_position_or_falls_back_to_its_county(
@@ -273,22 +315,16 @@ def test_each_substation_gets_a_map_position_or_falls_back_to_its_county(
         "SELECT positioned_by, county, latitude FROM places WHERE site = 'Lee Lake'",
     ) == ("county", "Riverside", None)
 
-    placed, waiting = one(
-        conn,
-        "SELECT sum(r.mw) FILTER (WHERE EXISTS (SELECT 1 FROM project_places pp JOIN places pl "
-        "  USING (place) WHERE pp.source = p.source AND pp.native_id = p.native_id "
-        "  AND pl.positioned_by <> 'county')), sum(r.mw) "
-        "FROM caiso_projects p JOIN project_resources r USING (source, native_id) "
-        "WHERE p.status = 'Active'",
-    )
-    assert report.share_of_waiting_mw_placed == pytest.approx(num(placed) / num(waiting))
+    # The share of waiting MW whose substation is on the map, worked out here from the two
+    # reports' "MW to grid" columns and the reviewed spelling and position tables.
+    assert report.share_of_waiting_mw_placed == pytest.approx(_share_placed_from_the_files())
     assert 0.85 < report.share_of_waiting_mw_placed <= 1
 
 
 def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(
     loaded: tuple[Conn, LoadReport],
 ) -> None:
-    conn, _ = loaded
+    conn, report = loaded
 
     # Newark 230 kV: the operator's 2025-26 plan approves a transformer upgrade there,
     # finishing May 2032, costing $31.3M-$62.6M, paid by all electricity customers.
@@ -324,6 +360,14 @@ def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(
         "WHERE pl.site = 'Whirlwind' AND pl.voltage_kv = 230 AND b.bottleneck = 'Antelope-Vincent'",
     )[0]
     assert num(cost) == pytest.approx(13.2e6 / 1_500_000)
+
+    # 22 bottlenecks in the cost file give no added MW or no cost for their next upgrade
+    # ("N/A"): GLW has 853 MW but no cost; Mira Loma-Mesa has neither. They get no cost to
+    # add room, and are reported.
+    uncosted = {v.split(":")[0] for v in report.unrecognised[Unrecognised.BOTTLENECK_COST]}
+    assert len(uncosted) == 22
+    assert {"GLW 230kV area constraint", "Mira Loma-Mesa Constraint"} <= uncosted
+    assert "Antelope-Vincent Constraint" not in uncosted
 
     # A point on the bottleneck list that's a line counts at both ends, saying which line,
     # unless an end has its own row in the list: the list's own answer for it stands.

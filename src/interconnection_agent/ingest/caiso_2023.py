@@ -45,11 +45,12 @@ DELIVERABILITY: dict[str, str] = {
 _UPSERT = """
     INSERT INTO projects (
         source, native_id, status, q_date, proposed_online_date, withdrawn_date, county,
-        state, iso, raw_poi, normalized_poi, poi_unmapped, utility, batch, deliverability
+        state, iso, raw_poi, normalized_poi, poi_unmapped, utility, batch, deliverability,
+        mw_to_grid
     ) VALUES (
         'caiso_raw', %(native_id)s, %(status)s, %(q_date)s, %(proposed_online_date)s,
         %(withdrawn_date)s, %(county)s, %(state)s, 'CAISO', %(raw_poi)s, %(normalized_poi)s,
-        %(poi_unmapped)s, %(utility)s, %(batch)s, %(deliverability)s
+        %(poi_unmapped)s, %(utility)s, %(batch)s, %(deliverability)s, %(mw_to_grid)s
     )
     ON CONFLICT (source, native_id) DO UPDATE SET
         status = EXCLUDED.status, q_date = EXCLUDED.q_date,
@@ -58,7 +59,8 @@ _UPSERT = """
         state = EXCLUDED.state, raw_poi = EXCLUDED.raw_poi,
         normalized_poi = EXCLUDED.normalized_poi, poi_unmapped = EXCLUDED.poi_unmapped,
         utility = EXCLUDED.utility,
-        batch = EXCLUDED.batch, deliverability = EXCLUDED.deliverability
+        batch = EXCLUDED.batch, deliverability = EXCLUDED.deliverability,
+        mw_to_grid = EXCLUDED.mw_to_grid
 """
 
 _UPSERT_RESOURCE = """
@@ -105,6 +107,7 @@ def run_caiso_2023_ingest(
                         "utility": _cells.clean(cells.get("PTO")),
                         "batch": BATCH,
                         "deliverability": DELIVERABILITY.get(service),
+                        "mw_to_grid": _cells.mw_or_none(cells.get("NET MW POI")),
                     },
                 )
                 by_fuel: dict[str, float] = {}
