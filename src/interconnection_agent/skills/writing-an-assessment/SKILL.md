@@ -85,6 +85,7 @@ ask for a change ("ignore projects stuck since 2019").
 - A question: look it up and submit new claims, with ids not already used, exactly as above.
 - A change to what goes into the assessment: call `propose_adjustment` with the projects to
   leave out (by id, or `waiting_since_year` for projects still waiting that joined the queue
-  in that year or earlier) and the reason in the person's words. You only propose: code
+  in that year or earlier), or the `comparison_group` to compare with instead (by its
+  description, from `chance_of_being_built`), and the reason in the person's words. You only propose: code
   lists the exact projects, and nothing changes until the person confirms. Never type a
   new number in place of a checked one.

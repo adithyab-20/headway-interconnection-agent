@@ -130,15 +130,17 @@ LOOKUP_TOOLS: list[dict[str, Any]] = [
 ]
 PROPOSE_ADJUSTMENT = {
     "name": "propose_adjustment",
-    "description": "Propose leaving projects out of the assessment, when a person asks for "
-    "that. Nothing changes until a person confirms. Give projects by id, or "
-    "waiting_since_year to leave out projects still waiting at this substation that "
-    "joined the queue in that year or earlier.",
+    "description": "Propose a change to what goes into the assessment, when a person asks "
+    "for one. Nothing changes until a person confirms. Leave projects out by id, or with "
+    "waiting_since_year (projects still waiting at this substation that joined the queue "
+    "in that year or earlier); or compare with another comparison_group, by its "
+    "description from chance_of_being_built.",
     "input_schema": {
         "type": "object",
         "properties": {
             "projects": {"type": "array", "items": {"type": "string"}},
             "waiting_since_year": {"type": "integer"},
+            "comparison_group": {"type": "string"},
             "why": {"type": "string", "description": "The reason, in the person's words."},
         },
         "required": ["why"],
@@ -165,7 +167,7 @@ def write_assessment(
     lookups = Lookups(conn)
     brief = (
         f"Write an assessment for a {project.describe()} connecting at the {site} "
-        f"substation. Its voltage sections: {', '.join(places_at(conn, site))}. "
+        f"substation. Its voltage sections: {', '.join(places_at(conn, site=site))}. "
         f"The data was taken on {data_as_of(conn).isoformat()}. Look things up, then submit "
         "with submit_assessment."
     )
@@ -202,7 +204,7 @@ def ask(assessment: Assessment, model: Model, request: str) -> Answer:
     brief = (
         f"This is an assessment for a {assessment.project.describe()} connecting at the "
         f"{assessment.site} substation (voltage sections: "
-        f"{', '.join(places_at(assessment.lookups.conn, assessment.site))}). Its claims:\n"
+        f"{', '.join(places_at(assessment.lookups.conn, site=assessment.site))}). Its claims:\n"
         f"{shown}\n\nA person asks: {request!r}\n\nIf they want something left out of "
         "the assessment, call propose_adjustment. Otherwise look things up and submit new "
         "claims with submit_assessment, with ids not used above."
@@ -258,7 +260,7 @@ class _Conversation:
 
 
 @dataclass(frozen=True)
-class _Outcome:
+class _Finished:
     parsed: Parsed | None = None
     proposal: ProposedAdjustment | None = None
 
@@ -272,7 +274,7 @@ def _run(
     tools: list[dict[str, Any]],
     existing: Sequence[Claim] = (),
     site: str | None = None,
-) -> _Outcome:
+) -> _Finished:
     conversation = _Conversation(model, budget, tools, [{"role": "user", "content": brief}])
     submissions = 0
     while True:
@@ -293,12 +295,12 @@ def _run(
                 if problems and submissions < MOST_SUBMISSIONS:
                     results.append(_result(block.id, _sent_back(problems), error=True))
                 else:
-                    final = _Outcome(parsed=parsed)
+                    final = _Finished(parsed=parsed)
                     results.append(_result(block.id, "Accepted."))
                 continue
             if block.name == PROPOSE_ADJUSTMENT["name"] and site is not None:
                 try:
-                    final = _Outcome(proposal=_proposal(lookups, site, arguments))
+                    final = _Finished(proposal=_proposal(lookups, site, arguments))
                     results.append(_result(block.id, "Proposed; a person will confirm it."))
                 except ValueError as e:
                     results.append(_result(block.id, str(e), error=True))
@@ -315,49 +317,44 @@ def _run(
 
 
 def _proposal(lookups: Lookups, site: str, arguments: dict[str, Any]) -> ProposedAdjustment:
-    """Turn what the model proposed into the exact projects it would leave out, found in
-    SQL, so a person confirms a list rather than a description."""
+    """Turn what the model proposed into exactly what would change: the projects it would
+    leave out, found in SQL, and a comparison group the assessment offers. A person
+    confirms that, rather than a description."""
     why = str(arguments.get("why") or "").strip()
     if not why:
         raise ValueError("Give the reason (why).")
     ids, said = set(), []
-    named = arguments.get("projects") or []
+    named = {str(n) for n in arguments.get("projects") or []}
     if named:
-        found = lookups.conn.execute(
-            "SELECT native_id FROM caiso_projects WHERE native_id = ANY(%s)",
-            ([str(n) for n in named],),
-        ).fetchall()
-        unknown = {str(n) for n in named} - {str(r[0]) for r in found}
+        unknown = named - lookups.rows_in("caiso_raw", named)
         if unknown:
             raise ValueError(f"No CAISO project called {sorted(unknown)}.")
-        ids |= {str(n) for n in named}
-        said.append(f"the projects {', '.join(sorted(ids))}")
+        ids |= named
+        said.append(f"leave out the projects {', '.join(sorted(named))}")
     year = arguments.get("waiting_since_year")
     if year is not None:
         if isinstance(year, bool) or not isinstance(year, int):
             raise ValueError("waiting_since_year must be a year, such as 2019.")
-        stuck = [
-            str(r[0])
-            for r in lookups.conn.execute(
-                "SELECT p.native_id FROM caiso_projects p WHERE p.status = 'Active' "
-                "AND extract(year FROM p.q_date) <= %s AND EXISTS (SELECT 1 FROM "
-                "project_places pp WHERE pp.source = p.source AND pp.native_id = p.native_id "
-                "AND pp.place = ANY(%s)) ORDER BY 1",
-                (year, places_at(lookups.conn, site)),
-            ).fetchall()
-        ]
+        stuck = lookups.waiting_since(site, year)
         if not stuck:
             raise ValueError(f"No project at {site} has been waiting since {year} or earlier.")
         ids |= set(stuck)
         said.append(
-            f"the {len(stuck)} projects at {site} still waiting that joined the queue in "
-            f"{year} or earlier ({', '.join(stuck)})"
+            f"leave out the {len(stuck)} projects at {site} still waiting that joined the "
+            f"queue in {year} or earlier ({', '.join(stuck)})"
         )
-    if not ids:
-        raise ValueError("Name the projects, or give waiting_since_year.")
-    return ProposedAdjustment(
-        Adjustment(frozenset(ids), why), f"Leave out {' and '.join(said)}. Reason: {why}"
+    group = arguments.get("comparison_group")
+    if group is not None:
+        if str(group) not in lookups.comparison_groups():
+            lookups.compare_with(str(group))  # raises, naming the groups on offer
+        said.append(f"compare with {group}")
+    if not said:
+        raise ValueError("Name the projects, give waiting_since_year, or a comparison_group.")
+    adjustment = Adjustment(
+        why, leave_out=frozenset(ids), comparison_group=str(group) if group else None
     )
+    plan = "; ".join(said)
+    return ProposedAdjustment(adjustment, f"{plan[0].upper()}{plan[1:]}. Reason: {why}")
 
 
 def _sent_back(problems: list[str]) -> str:

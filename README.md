@@ -65,9 +65,9 @@ Built so far:
   things up and writes an assessment made only of Factual Claims and Judgements, following
   the writing skill (`src/interconnection_agent/skills/writing-an-assessment/SKILL.md`).
   Code checks every number before it's shown (see "What the checking proves" below). A
-  person can leave projects out (the numbers are worked out and checked again), approve,
-  reject or rewrite each Judgement, and finalise once every Judgement is decided. Every
-  change is logged. A plain request ("ignore projects stuck since 2019") becomes a proposed
+  person can leave projects out or pick a narrower or broader comparison group (the numbers
+  are worked out and checked again), approve, reject or rewrite each Judgement, and
+  finalise once every Judgement is decided. Every change is logged. A plain request ("ignore projects stuck since 2019") becomes a proposed
   change that applies only when a person confirms it.
 
 Not built yet: the map app, and saving assessments. See the

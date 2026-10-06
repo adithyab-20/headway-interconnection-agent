@@ -95,7 +95,7 @@ def realistic_mw_ahead(
         (places, sorted(leave_out)),
     ).fetchall()
 
-    records = [r for r in history(conn) if r.past.native_id not in leave_out]
+    records = history(conn, leave_out=leave_out)
     by_id = {r.past.native_id: r for r in records}
     estimates: dict[ComparisonGroup, ChanceGivenWait] = {}
     old_rules: list[WaitingProject] = []

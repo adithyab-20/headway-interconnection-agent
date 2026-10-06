@@ -277,6 +277,37 @@ def test_an_adjustment_recalculates_and_rechecks_the_numbers_it_affects(conn: Co
     assert biggest in change.what and "waiting" in change.what and change.when is not None
 
 
+AT_THE_WHIRLWIND_SUBSTATION = "Solar only, 50-150 MW, at the Whirlwind substation"
+
+
+def test_an_adjustment_can_narrow_the_comparison_group(conn: Conn) -> None:
+    assessment = written(conn)
+    why = "Only this substation's own history is comparable."
+
+    assessment.adjust(Adjustment(comparison_group=AT_THE_WHIRLWIND_SUBSTATION, why=why), by="Dana")
+
+    # Past solar-only projects of 50-150 MW at any voltage section of Whirlwind, under the
+    # old rules, that have a queue date and, if they ended, an end date.
+    (past,) = conn.execute(
+        "SELECT count(*) FROM caiso_projects p WHERE p.batch IS DISTINCT FROM 'C15' "
+        "AND p.q_date IS NOT NULL AND (p.status = 'Active' OR p.outcome_date IS NOT NULL) "
+        "AND p.mw_to_grid >= 50 AND p.mw_to_grid < 150 "
+        "AND ARRAY(SELECT r.type FROM project_resources r WHERE r.source = p.source "
+        "          AND r.native_id = p.native_id) = ARRAY['Solar'] "
+        "AND p.native_id IN (SELECT native_id FROM project_places JOIN places USING (place) "
+        "                    WHERE places.site = 'Whirlwind')"
+    ).fetchone() or (None,)
+    _, past_projects = worked_out(assessment, "chance")
+    assert past_projects == past
+    assert f"Of {past} projects like this one" in assessment.text()
+    change = assessment.changes[-1]
+    assert AT_THE_WHIRLWIND_SUBSTATION in change.what and change.why == why
+
+    # Only a group the assessment's comparisons offer.
+    with pytest.raises(ValueError, match="comparison group"):
+        assessment.adjust(Adjustment(comparison_group="Made up", why=why), by="Dana")
+
+
 def test_an_adjustment_never_brings_back_a_rejected_claim(conn: Conn) -> None:
     lookups: list[dict[str, Any]] = []
 
@@ -294,7 +325,7 @@ def test_an_adjustment_never_brings_back_a_rejected_claim(conn: Conn) -> None:
     assessment = write_assessment(conn, model, site="Whirlwind", project=SOLAR_100_MW)
     biggest, _ = biggest_waiting_at_whirlwind(conn)
 
-    assessment.adjust(Adjustment(frozenset({biggest}), why="A duplicate."), by="Dana")
+    assessment.adjust(Adjustment(leave_out=frozenset({biggest}), why="A duplicate."), by="Dana")
 
     waiting = next(c for c in assessment.factual_claims if c.id == "waiting")
     assert waiting.check is not None and not waiting.check.passed
@@ -437,3 +468,23 @@ def test_a_question_gets_new_checked_claims(conn: Conn) -> None:
     ).fetchone() or (None,)
     assert f"{withdrawn} projects have withdrawn at Whirlwind. [checked]" in assessment.text()
     assert assessment.changes[-1].what == "answered: How many projects have withdrawn here?"
+
+
+def test_a_request_to_compare_more_narrowly_becomes_a_proposed_adjustment(conn: Conn) -> None:
+    assessment = written(conn)
+    why = "Compare only with this substation."
+    model = ScriptedModel(
+        lambda _: [call("propose_adjustment", comparison_group="Made up", why=why)],
+        lambda _: [
+            call("propose_adjustment", comparison_group=AT_THE_WHIRLWIND_SUBSTATION, why=why)
+        ],
+    )
+
+    answer = ask(assessment, model, "only compare with projects at this substation")
+
+    # The made-up group was sent back; the real one is proposed, and nothing applied yet.
+    assert model.requests[1]["messages"][-1]["content"][0]["is_error"]
+    assert answer.proposal is not None
+    assert answer.proposal.adjustment.comparison_group == AT_THE_WHIRLWIND_SUBSTATION
+    assert AT_THE_WHIRLWIND_SUBSTATION in answer.proposal.description
+    assert assessment.changes[-1].what.startswith("proposed:")

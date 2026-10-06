@@ -1,0 +1,1244 @@
+<title>Headway prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>/*LEAFLET_CSS*/</style>
+<style>
+/* Layout: a calm page that answers first. Three plain answers, then "dig deeper" tabs,
+   with the write-up and review in their own view so neither crowds the other. */
+:root{
+  --ground:#F2F5F3; --panel:#FFFFFF; --soft:#E9EFEB; --rule:#DCE4DF; --rule-2:#C9D4CE;
+  --ink:#1D2926; --ink-2:#3A4945; --muted:#62716C; --faint:#85928D;
+  /* Magnitude: one teal, light to dark. */
+  --t1:#A9D9D0; --t2:#6CBBAD; --t3:#3A9A8C; --t4:#1F7468; --t5:#0F4F48;
+  --accent:#1F7468; --accent-ink:#FFFFFF; --accent-wash:#E0F0EC;
+  --band:rgba(58,154,140,.20);
+  /* Outcomes and the unknown: soft, never loud. */
+  --sand:#E6DCCB; --sand-dot:#D5C19C; --unlit:#DFE6E2; --sand-ink:#7A6A50; --sky:#D3E3EC; --sky-edge:#9DBACB; --lav:#B9B0DA; --lav-wash:#EEEBF8; --lav-ink:#5E5591;
+  --ok:#2E7D57; --ok-mark:#3FA56F; --ok-wash:#E4F3EA;
+  --ask:#9A6512; --ask-mark:#E7A93C; --ask-wash:#FBF1DE;
+  --no:#B24A43; --no-mark:#D2665E; --no-wash:#F8E6E4;
+  --land:#E3EBE6; --land-edge:#C2D0C8; --land-2:#EDF1EE; --sea:#DCE8EC; --county-edge:#FFFFFF; --county-hover:#D8E5DE;
+  --shadow:0 1px 2px rgba(29,41,38,.05),0 10px 30px rgba(29,41,38,.07);
+  --sans:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#111715; --panel:#18201D; --soft:#1F2925; --rule:#2B3632; --rule-2:#38453F;
+  --ink:#E7EFEB; --ink-2:#C6D2CD; --muted:#9DABA6; --faint:#83918C;
+  --t1:#1B5A51; --t2:#287A6D; --t3:#45A797; --t4:#7BCABC; --t5:#B7E4DB;
+  --accent:#5DBAAA; --accent-ink:#0E1B18; --accent-wash:#1C3330; --band:rgba(93,186,170,.22);
+  --sand:#4D4538; --sand-dot:#7A6A4E; --unlit:#28322E; --sand-ink:#D2C2A6; --sky:#24363F; --sky-edge:#4B6B7C; --lav:#6E6699; --lav-wash:#262338; --lav-ink:#C2BAEB;
+  --ok:#6CCB97; --ok-mark:#3FA56F; --ok-wash:#173023; --ask:#F0C06A; --ask-mark:#E7A93C; --ask-wash:#33280F; --no:#EE958E; --no-mark:#D2665E; --no-wash:#391C1A;
+  --land:#1F2925; --land-edge:#3A4842; --land-2:#19211E; --sea:#121A1E; --county-edge:#2C3833; --county-hover:#26332E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#111715; --panel:#18201D; --soft:#1F2925; --rule:#2B3632; --rule-2:#38453F;
+  --ink:#E7EFEB; --ink-2:#C6D2CD; --muted:#9DABA6; --faint:#83918C;
+  --t1:#1B5A51; --t2:#287A6D; --t3:#45A797; --t4:#7BCABC; --t5:#B7E4DB;
+  --accent:#5DBAAA; --accent-ink:#0E1B18; --accent-wash:#1C3330; --band:rgba(93,186,170,.22);
+  --sand:#4D4538; --sand-dot:#7A6A4E; --unlit:#28322E; --sand-ink:#D2C2A6; --sky:#24363F; --sky-edge:#4B6B7C; --lav:#6E6699; --lav-wash:#262338; --lav-ink:#C2BAEB;
+  --ok:#6CCB97; --ok-mark:#3FA56F; --ok-wash:#173023; --ask:#F0C06A; --ask-mark:#E7A93C; --ask-wash:#33280F; --no:#EE958E; --no-mark:#D2665E; --no-wash:#391C1A;
+  --land:#1F2925; --land-edge:#3A4842; --land-2:#19211E; --sea:#121A1E; --county-edge:#2C3833; --county-hover:#26332E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
+.t{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .faint{color:var(--faint)}
+.small{font-size:13px}
+
+/* Prototype chrome: quiet strip above the product. */
+.proto{display:flex;align-items:center;gap:14px;padding:6px 16px;background:var(--soft);color:var(--muted);font-size:12.5px;flex-wrap:wrap;border-bottom:1px solid var(--rule)}
+.proto b{color:var(--ink-2);font-weight:700;letter-spacing:.04em}
+.proto nav{display:flex;gap:2px;flex-wrap:wrap}
+.proto nav button{background:transparent;border:0;color:inherit;padding:3px 10px;border-radius:999px;cursor:pointer}
+.proto nav button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.proto .note{margin-left:auto}
+.screen{display:none} .screen.on{display:block}
+
+.appbar{display:flex;align-items:center;gap:12px;height:60px;padding-inline:20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;background:none;border:0;padding:0;cursor:pointer}
+.appbar .meta{margin-left:auto;font-size:13px;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--ink-2)}
+.btn.p{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.p:hover{filter:brightness(1.06)}
+.btn.q{border-color:transparent;background:transparent;color:var(--muted);padding-inline:10px}
+.btn.q:hover{color:var(--ink);background:var(--soft)}
+.btn.sm{padding:5px 12px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.link{all:unset;cursor:pointer;color:var(--accent);font-weight:600;font-size:13.5px;display:inline-flex;gap:4px;align-items:center}
+.link:hover{text-decoration:underline;text-underline-offset:3px}
+.link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------------- Map ---------------- */
+.mapwrap{position:relative;height:calc(100vh - 60px - 34px);min-height:600px;margin:0 16px 16px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+#lmap{position:absolute;inset:0;background:var(--sea)}
+.leaflet-container{font-family:var(--sans);background:var(--sea)}
+.leaflet-container .state{fill:var(--land-2);stroke:var(--land-edge);stroke-width:1}
+.leaflet-container .state.home{fill:var(--land)}
+.leaflet-container .county{fill:var(--land);fill-opacity:1;stroke:var(--county-edge);stroke-width:.8}
+.leaflet-container .county.ca{fill:var(--land)}
+.leaflet-container .county.other{fill:var(--land-2)}
+.leaflet-container .county:hover{fill:var(--county-hover)}
+.leaflet-container .county.picked{fill:var(--accent-wash);stroke:var(--accent);stroke-width:1.6}
+.leaflet-container .site{stroke:var(--panel);stroke-width:1.5;fill-opacity:1;cursor:pointer}
+.leaflet-container .site.k0{fill:var(--t1)} .leaflet-container .site.k1{fill:var(--t2)} .leaflet-container .site.k2{fill:var(--t3)} .leaflet-container .site.k3{fill:var(--t5)}
+.leaflet-container .site.onlynew{fill:var(--lav)}
+.leaflet-container .site.planned{fill:var(--panel);stroke-width:3}
+.leaflet-container .site.planned.k0{stroke:var(--t1)} .leaflet-container .site.planned.k1{stroke:var(--t2)} .leaflet-container .site.planned.k2{stroke:var(--t3)} .leaflet-container .site.planned.k3{stroke:var(--t5)}
+.leaflet-container .halo{fill:none;stroke:var(--lav);stroke-width:2.4;pointer-events:none}
+.leaflet-container .sel-ring{fill:none;stroke:var(--ink);stroke-width:2;pointer-events:none}
+.leaflet-container .faded{opacity:.28}
+.city-label{font-size:11.5px;color:var(--muted);white-space:nowrap;font-weight:500;text-shadow:0 0 3px var(--land),0 0 3px var(--land),0 0 3px var(--land)}
+.city-label i{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--faint);margin-right:5px;vertical-align:2px}
+.city-label.major{font-size:12.5px;font-weight:650;color:var(--ink-2)}
+.county-label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);white-space:nowrap;text-align:center;font-weight:600}
+.cbadge{display:inline-flex;align-items:center;gap:4px;background:var(--panel);color:var(--lav-ink);border:1.5px dashed var(--lav);border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:700;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.leaflet-control-attribution{font-size:10.5px;background:color-mix(in srgb,var(--panel) 80%,transparent)!important;color:var(--muted)}
+.leaflet-control-attribution a{color:var(--muted)}
+.leaflet-bar a{background:var(--panel);color:var(--ink);border-color:var(--rule)!important}
+.leaflet-bar{border:0!important;box-shadow:var(--shadow)!important;border-radius:12px!important;overflow:hidden}
+.leaflet-tooltip{background:var(--ink);color:var(--panel);border:0;border-radius:10px;padding:8px 11px;font-size:13px;box-shadow:none}
+.leaflet-tooltip-top:before{border-top-color:var(--ink)}
+.leaflet-tooltip .dim{opacity:.75}
+
+.panel{position:absolute;left:16px;top:16px;bottom:16px;width:370px;max-width:calc(100% - 32px);z-index:500;background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.panel .ph{padding:22px 22px 14px;display:grid;gap:12px}
+.panel h1{font-size:23px;font-weight:750;line-height:1.2}
+.panel h2{font-size:21px;font-weight:750}
+.panel .ph p{margin:0;color:var(--muted);font-size:14px}
+.panel .pb{overflow:auto;flex:1;min-height:0;padding:0 12px 16px}
+.search{position:relative}
+.search input{width:100%;border:1px solid var(--rule-2);background:var(--ground);border-radius:999px;padding:11px 16px 11px 40px}
+.search>svg{position:absolute;left:14px;top:21px;transform:translateY(-50%);color:var(--faint)}
+.results{margin-top:6px;background:var(--panel);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.results .grp{font-size:11.5px;font-weight:700;color:var(--faint);padding:8px 14px 4px;letter-spacing:.04em;text-transform:uppercase}
+.results button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:none;padding:8px 14px;text-align:left;cursor:pointer}
+.results button:hover,.results button:focus-visible{background:var(--soft)}
+.results button span{color:var(--muted);font-size:13px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:0;background:var(--soft);border-radius:999px;padding:6px 12px;font-size:13.5px;cursor:pointer;color:var(--ink-2);font-weight:550}
+.chips button:hover{background:var(--accent-wash)}
+.howto{display:grid;gap:12px;padding:6px 10px 4px}
+.howto div{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start;font-size:14px;color:var(--ink-2)}
+.howto b.n{width:26px;height:26px;border-radius:50%;background:var(--accent-wash);color:var(--accent);display:grid;place-items:center;font-size:13px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 12px;border-radius:12px;cursor:pointer;background:none;border:0;width:100%;text-align:left}
+.row:hover,.row.hl{background:var(--soft)}
+.row .nm{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .nm small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.row .v{text-align:right;font-weight:650;align-self:start}
+.row .v small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.row .bar{grid-column:1/-1}
+.sec{padding:12px 12px 6px;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.legend{position:absolute;right:16px;bottom:28px;z-index:500;background:var(--panel);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;display:grid;gap:8px;font-size:13px;max-width:calc(100% - 32px)}
+.legend .title{font-weight:700}
+.legend .scale{display:grid;grid-template-columns:repeat(4,60px);gap:4px;font-size:11.5px;color:var(--muted);text-align:center}
+.legend .scale i{display:block;height:10px;border-radius:5px;margin-bottom:4px}
+.legend .ends{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.legend .keys{display:grid;gap:5px;color:var(--ink-2);font-size:12.5px}
+.legend .keys span{display:flex;align-items:center;gap:7px}
+.site-card{display:grid;gap:12px;padding:0 10px}
+.site-card .big{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--panel);padding:9px 12px;border-radius:10px;font-size:13px;z-index:900;max-width:270px;line-height:1.4}
+.tip .dim{opacity:.75}
+
+/* ---------------- Home ---------------- */
+.home{max-width:1160px;margin:0 auto;padding:12px 24px 80px;display:grid;gap:72px}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-top:28px}
+.eyebrow{font-size:13.5px;font-weight:700;color:var(--accent);letter-spacing:.02em}
+.hero h1{font-size:52px;line-height:1.04;font-weight:800;letter-spacing:-.035em;margin:12px 0 18px}
+.hero p.lede{font-size:19px;line-height:1.55;color:var(--ink-2);margin:0 0 26px;max-width:34em}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn.lg{padding:12px 22px;font-size:15.5px}
+.term{all:unset;cursor:help;border-bottom:1.5px dotted var(--sky-edge)}
+.term:hover,.term:focus-visible{border-bottom-color:var(--accent);color:var(--ink)}
+.pop{position:fixed;z-index:950;max-width:300px;background:var(--panel);color:var(--ink-2);border-radius:14px;box-shadow:0 12px 40px rgba(17,23,21,.18);padding:14px 16px;font-size:14px;line-height:1.5}
+.pop b{display:block;color:var(--ink);margin-bottom:2px}
+.try{background:var(--panel);border-radius:24px;box-shadow:var(--shadow);padding:26px 26px 22px;display:grid;gap:16px}
+.try h2{font-size:18px}
+.try .opts{display:grid;gap:8px}
+.try .opts label{font-size:13px;font-weight:650;color:var(--muted)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:6px 13px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.try .result{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;background:var(--ground);border-radius:18px;padding:18px}
+.try .result .big{font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.try .result .big small{font-size:18px;font-weight:700}
+.try .result p{margin:6px 0 0;color:var(--ink-2)}
+.try .dots{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;width:150px;max-width:none}
+.dots i{aspect-ratio:1;border-radius:50%;display:block;transition:background .35s,box-shadow .35s}
+.dots i.b{background:var(--t3)} .dots i.w{background:var(--sand)} .dots i.s{background:var(--panel);box-shadow:inset 0 0 0 1.5px var(--sky-edge)}
+.try .fine{font-size:13px;color:var(--muted);margin:0}
+.chapter{display:grid;gap:20px}
+.chapter .head2{display:grid;gap:10px;max-width:46em}
+.chapter h2{font-size:34px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.chapter .head2 p{margin:0;font-size:17px;color:var(--ink-2);line-height:1.6}
+.story{background:var(--panel);border-radius:24px;box-shadow:var(--shadow);padding:26px 26px 20px;display:grid;gap:16px}
+.story .caption{display:flex;align-items:center;gap:18px;flex-wrap:wrap;min-height:58px}
+.story .caption p{margin:0;font-size:20px;font-weight:650;flex:1;min-width:240px;letter-spacing:-.01em}
+.story .caption p span{color:var(--muted);font-weight:400;font-size:16px;display:block;margin-top:2px}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper .pips{display:flex;gap:6px}
+.stepper .pips button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--rule-2);cursor:pointer}
+.stepper .pips button[aria-current="true"]{background:var(--accent);width:24px;border-radius:5px}
+.dotfield{width:100%;display:block}
+.dotfield circle{transition:fill .5s ease,stroke .5s ease}
+.dotfield text{fill:var(--muted);font-size:12px;font-family:var(--sans)}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.three .c{background:var(--panel);border-radius:20px;box-shadow:var(--shadow);padding:22px;display:grid;gap:8px;align-content:start}
+.three .c h3{font-size:17px}
+.three .c p{margin:0;color:var(--muted);font-size:14.5px}
+.three .ic{width:38px;height:38px;border-radius:12px;background:var(--accent-wash);color:var(--accent);display:grid;place-items:center}
+.strip{background:var(--panel);border-radius:24px;box-shadow:var(--shadow);padding:24px 26px}
+.strip svg{width:100%;display:block;overflow:visible}
+.strip text{fill:var(--muted);font-size:12px;font-family:var(--sans)}
+.strip .lab{fill:var(--ink);font-weight:700;font-size:13px}
+.about{border-top:1px solid var(--rule);padding-top:36px;display:grid;gap:18px}
+.about h2{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.about-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.about h3{font-size:15px;margin-bottom:6px}
+.about p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.6}
+.foot{color:var(--muted);font-size:13px;display:grid;gap:4px;border-top:1px solid var(--rule);padding-top:20px}
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:28px}
+  .hero h1{font-size:40px}
+  .three{grid-template-columns:minmax(0,1fr)}
+  .about-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .mapwrap{margin:0 8px 8px;height:calc(100vh - 60px - 34px)}
+  .panel{top:auto;left:8px;right:8px;bottom:8px;width:auto;max-width:none;max-height:52%}
+  .legend{top:8px;right:8px;bottom:auto;padding:8px 10px}
+  .legend .scale{grid-template-columns:repeat(4,44px);font-size:10.5px}
+  .home{padding-inline:16px;gap:48px}
+  .hero h1{font-size:34px}
+  .try .result{grid-template-columns:minmax(0,1fr)}
+  .chapter h2{font-size:27px}
+  .about-grid{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ---------------- Substation page ---------------- */
+.page{max-width:1120px;margin:0 auto;padding:8px 24px 72px;display:grid;gap:22px}
+.back{justify-self:start}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.head h1{font-size:40px;font-weight:800;letter-spacing:-.025em;line-height:1.05}
+.head .sub{color:var(--muted);margin-top:6px}
+.views{display:inline-flex;background:var(--soft);border-radius:999px;padding:4px;gap:2px}
+.views button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-weight:650;cursor:pointer;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+.views button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.badge{background:var(--ask-mark);color:#3A2600;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px}
+
+.madlib{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 22px;font-size:17px;line-height:2.1;color:var(--ink-2)}
+.madlib select,.madlib input{border:0;background:var(--accent-wash);color:var(--ink);border-radius:999px;padding:3px 12px;font-weight:650;cursor:pointer}
+.madlib input{width:84px;cursor:text}
+.madlib select:hover,.madlib input:hover{background:var(--t1)}
+
+.answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.answer{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:22px 22px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.answer .q{font-size:14px;font-weight:700;color:var(--muted)}
+.answer .big{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.answer .big small{font-size:20px;font-weight:700;letter-spacing:-.01em;margin-left:4px}
+.answer .says{font-size:16px;color:var(--ink-2);margin:0}
+.answer .range{font-size:13.5px;color:var(--muted)}
+.answer .foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.answer.unknownish .note{background:var(--lav-wash);color:var(--lav-ink);border-radius:10px;padding:8px 10px;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.dots{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:300px}
+.dots i{aspect-ratio:1;border-radius:50%;display:block}
+.dots i.b{background:var(--t3)} .dots i.w{background:var(--sand)} .dots i.s{background:var(--panel);box-shadow:inset 0 0 0 1.5px var(--sky-edge)}
+.key{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.key span{display:inline-flex;gap:5px;align-items:center}
+.key i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.years{display:inline-flex;gap:4px;flex-wrap:wrap}
+.years button{border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.years button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+
+.basis{display:flex;gap:12px;align-items:flex-start;background:var(--accent-wash);border-radius:14px;padding:14px 18px;color:var(--ink-2);font-size:14.5px}
+.basis svg{flex:none;margin-top:2px;color:var(--accent)}
+
+.deeper{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.tabs{display:flex;gap:4px;padding:10px 12px 0;border-bottom:1px solid var(--rule);overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:10px 14px 12px;font-weight:650;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabpanel{padding:22px 24px 26px}
+.tabpanel h3{font-size:18px;margin-bottom:4px}
+.tabpanel .lead{color:var(--muted);margin:0 0 16px;max-width:66ch}
+.chart{width:100%;display:block;overflow:visible}
+.chart text{fill:var(--muted);font-size:12px;font-family:var(--sans)}
+.chart .grid{stroke:var(--rule)}
+.chart .strong{fill:var(--ink);font-weight:700}
+
+.plist{display:grid;gap:8px}
+.prow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.6fr) 110px;gap:14px;align-items:center;padding:12px 14px;border-radius:12px;background:var(--ground)}
+.prow.out{opacity:.55}
+.prow .who b{display:block;font-weight:650}
+.prow .who span{color:var(--muted);font-size:13px}
+.prow .counts{text-align:right}
+.prow .counts b{font-size:17px}
+.prow .counts span{display:block;color:var(--muted);font-size:12px}
+.prow.sum{background:transparent;border-top:1px solid var(--rule);border-radius:0;padding-top:14px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--ink-2);white-space:nowrap}
+.pill.lav{background:var(--lav-wash);color:var(--lav-ink)}
+.pill.out{background:var(--ask-wash);color:var(--ask)}
+
+.steps{display:grid;gap:0;position:relative}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,180px) 120px;gap:14px;align-items:center;padding:12px 0}
+.step+.step{border-top:1px solid var(--rule)}
+.step .dot{width:14px;height:14px;border-radius:50%;justify-self:center;background:var(--panel);box-shadow:inset 0 0 0 2px var(--rule-2)}
+.step.ok .dot{background:var(--t2);box-shadow:none}
+.step.used .dot{background:var(--accent);box-shadow:0 0 0 4px var(--accent-wash)}
+.step .what b{display:block;font-weight:650}
+.step .what span{color:var(--muted);font-size:13px}
+.step .fig{text-align:right;font-weight:700}
+.step .fig span{display:block;font-weight:400;color:var(--muted);font-size:12px}
+
+.twin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+.item{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;padding:12px 0;border-top:1px solid var(--rule)}
+.item b.yr{font-size:17px}
+.item .nm{font-weight:600}
+.item .s{color:var(--muted);font-size:13px}
+.boxnote{font-size:13px;color:var(--muted);background:var(--ground);border-radius:10px;padding:10px 12px;margin-top:14px}
+
+/* ---------------- Write-up ---------------- */
+.writeup{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+.doc-card{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:26px 28px}
+.doc-card h2{font-size:22px}
+.byline{color:var(--muted);font-size:13.5px;margin-top:4px}
+.progress{display:flex;align-items:center;gap:14px;background:var(--ground);border-radius:14px;padding:14px 16px;margin:18px 0 8px}
+.progress .bar{flex:1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden;display:flex;gap:2px}
+.progress .bar i{display:block;height:100%}
+.stmt{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px;padding:16px 0;border-top:1px solid var(--rule)}
+.stmt p{margin:0;font-size:16px;line-height:1.55}
+.stmt .meta{margin-top:6px;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted)}
+.stmt .meta .ok{color:var(--ok);font-weight:650}
+.stmt .meta .ask{color:var(--ask);font-weight:650}
+.stmt .meta .no{color:var(--no);font-weight:650}
+.stmt.opinion{background:var(--ask-wash);margin-inline:-28px;padding-inline:28px;border-top-color:transparent;border-radius:0}
+.stmt.opinion.done{background:transparent;border-top-color:var(--rule)}
+.stmt.opinion.rejected p{text-decoration:line-through;color:var(--faint)}
+.num{all:unset;cursor:pointer;font-weight:700;border-bottom:2px solid var(--t1)}
+.num:hover{border-bottom-color:var(--accent)}
+.num:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.choices{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+textarea{width:100%;border:1px solid var(--rule-2);border-radius:12px;padding:10px 12px;background:var(--panel);resize:vertical;min-height:80px}
+.side-cards{display:grid;gap:16px;position:sticky;top:16px}
+.side-cards .c{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;display:grid;gap:10px}
+.side-cards h3{font-size:16px}
+.ask-in{display:flex;gap:8px}
+.ask-in input{flex:1;min-width:0;border:1px solid var(--rule-2);border-radius:999px;padding:9px 14px;background:var(--ground)}
+.suggest{display:flex;gap:6px;flex-wrap:wrap}
+.suggest button{border:0;background:var(--soft);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.suggest button:hover{background:var(--accent-wash)}
+.proposal{border-radius:14px;padding:14px;display:grid;gap:10px;background:var(--ask-wash)}
+.proposal ul{margin:0;padding-left:18px;font-size:14px}
+.change{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:14px}
+.change s{color:var(--faint)}
+.log{display:grid;gap:10px;font-size:13.5px;margin:0;padding:0;list-style:none}
+.log li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px}
+.log time{color:var(--faint)}
+
+/* ---------------- "How we know" drawer ---------------- */
+.scrim{position:fixed;inset:0;background:rgba(17,23,21,.28);z-index:40}
+.drawer{position:fixed;top:12px;right:12px;bottom:12px;width:min(520px,calc(100% - 24px));background:var(--panel);z-index:41;display:flex;flex-direction:column;border-radius:20px;box-shadow:0 20px 60px rgba(17,23,21,.25);overflow:hidden}
+.drawer header{padding:22px 24px 6px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.drawer h2{font-size:24px}
+.drawer .body{overflow:auto;padding:8px 24px 28px;display:grid;gap:16px;align-content:start}
+.verified{display:flex;gap:10px;align-items:flex-start;background:var(--ok-wash);color:var(--ok);border-radius:12px;padding:12px 14px;font-size:14px}
+.verified b{display:block}
+.verified span{color:var(--ink-2)}
+.tally{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tally div{background:var(--ground);border-radius:12px;padding:12px}
+.tally b{font-size:22px;display:block}
+.tally span{font-size:13px;color:var(--muted)}
+details.rows summary{cursor:pointer;font-weight:650;color:var(--accent);list-style:none}
+details.rows summary::-webkit-details-marker{display:none}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+table.t th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--rule-2)}
+table.t td{padding:6px 8px;border-bottom:1px solid var(--rule)}
+table.t .r{text-align:right}
+.mono{font-family:var(--mono);font-size:12px}
+.scroll-x{overflow-x:auto}
+
+/* ---------------- Decisions ---------------- */
+.docs{max-width:960px;margin:0 auto;padding:16px 24px 72px;display:grid;gap:18px}
+.docs h1{font-size:32px;font-weight:800}
+.decision{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 24px;display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:18px}
+.decision h3{font-size:16px}
+.decision .q{font-size:13px;color:var(--muted);margin-top:4px}
+.decision p{margin:0 0 8px;max-width:66ch}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.swatches span{display:grid;gap:4px;font-size:12px;color:var(--muted);justify-items:start}
+.swatches i{display:block;width:56px;height:30px;border-radius:8px;box-shadow:inset 0 0 0 1px var(--rule)}
+
+@media (max-width:980px){
+  .answers{grid-template-columns:minmax(0,1fr)}
+  .writeup{grid-template-columns:minmax(0,1fr)}
+  .side-cards{position:static}
+  .twin{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .legend .keys{display:none}
+  .page{padding-inline:16px}
+  .head h1{font-size:32px}
+  .madlib{font-size:15.5px}
+  .prow{grid-template-columns:minmax(0,1fr) 96px}
+  .prow .viz{grid-column:1/-1;order:3}
+  .step{grid-template-columns:24px minmax(0,1fr) 100px}
+  .step .viz{grid-column:2/-1;order:3}
+  .decision{grid-template-columns:minmax(0,1fr)}
+  .appbar .meta{display:none}
+  .doc-card{padding:20px}
+  .stmt.opinion{margin-inline:-20px;padding-inline:20px}
+  .proto .note{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .drawer{animation:rise .22s ease-out}
+  @keyframes rise{from{transform:translateY(10px);opacity:.4}}
+  .answer,.deeper,.doc-card{animation:fade .3s ease-out both}
+  @keyframes fade{from{opacity:.6;transform:translateY(4px)}}
+}
+</style>
+
+<div class="proto" role="banner">
+  <b>DESIGN PROTOTYPE</b>
+  <nav aria-label="Prototype screens">
+    <button data-go="home" aria-pressed="true">Home</button>
+    <button data-go="map" aria-pressed="false">Map</button>
+    <button data-go="site" aria-pressed="false">Substation</button>
+    <button data-go="dec" aria-pressed="false">Decisions</button>
+  </nav>
+  <span class="note">Real numbers from CAISO's queue report of 24 Jul 2026. The full page is built for Midway; the write-up is an example.</span>
+</div>
+
+<header class="appbar">
+  <button class="brand" data-go="home" aria-label="Headway home">
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="9" fill="var(--accent)"/><path d="M7 19c3-7 7-9 14-10" fill="none" stroke="var(--accent-ink)" stroke-width="2.4" stroke-linecap="round"/><circle cx="7" cy="19" r="2.6" fill="var(--accent-ink)"/><circle cx="21" cy="9" r="2.6" fill="var(--accent-ink)"/></svg>
+    Headway
+  </button>
+  <nav class="meta" style="display:flex;gap:6px;align-items:center"><button class="btn q sm" data-go="home">Overview</button><button class="btn sm" data-go="map">Map</button></nav>
+</header>
+
+<main>
+  <section class="screen on" id="s-home" aria-label="Home"></section>
+  <section class="screen" id="s-map" aria-label="Map"></section>
+  <section class="screen" id="s-site" aria-label="Substation"></section>
+  <section class="screen" id="s-dec" aria-label="Decisions"></section>
+</main>
+<div class="tip" id="tip" hidden></div>
+<div id="drawer-root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+const SITES = /*SITES*/;
+const COUNTIES = /*COUNTIES*/;
+const STATES = /*STATES*/;
+const LANDING = /*LANDING*/;
+const YEARS = /*YEARS*/;
+// Towns for orientation and search: [name, lat, lon, major]. Approximate centres.
+const CITIES = [["Los Angeles",34.05,-118.24,1],["San Diego",32.72,-117.16,1],["San Jose",37.34,-121.89,1],["San Francisco",37.77,-122.42,1],["Fresno",36.74,-119.79,1],["Sacramento",38.58,-121.49,1],["Bakersfield",35.37,-119.02,1],["Las Vegas",36.17,-115.14,1],["Phoenix",33.45,-112.07,1],["Reno",39.53,-119.81,1],["Redding",40.59,-122.39,1],["Palm Springs",33.83,-116.55,1],["El Centro",32.79,-115.56,1],["Barstow",34.9,-117.02,1],["Long Beach",33.77,-118.19,0],["Oakland",37.8,-122.27,0],["Anaheim",33.84,-117.91,0],["Riverside",33.95,-117.4,0],["Stockton",37.96,-121.29,0],["Modesto",37.64,-120.99,0],["San Bernardino",34.11,-117.29,0],["Oxnard",34.2,-119.18,0],["Palmdale",34.58,-118.12,0],["Lancaster",34.7,-118.14,0],["Salinas",36.68,-121.66,0],["Visalia",36.33,-119.29,0],["Victorville",34.54,-117.29,0],["Santa Rosa",38.44,-122.71,0],["Merced",37.3,-120.48,0],["Chico",39.73,-121.84,0],["San Luis Obispo",35.28,-120.66,0],["Santa Barbara",34.42,-119.7,0],["Indio",33.72,-116.22,0],["Blythe",33.61,-114.6,0],["Ridgecrest",35.62,-117.67,0],["Tehachapi",35.13,-118.45,0],["Mojave",35.05,-118.17,0],["Bishop",37.36,-118.4,0],["Eureka",40.8,-124.16,0],["Hanford",36.33,-119.65,0],["Los Banos",37.06,-120.85,0],["Tracy",37.74,-121.43,0],["Livermore",37.68,-121.77,0],["Vacaville",38.36,-121.99,0],["Yuba City",39.14,-121.62,0],["Coalinga",36.14,-120.36,0],["Taft",35.14,-119.46,0],["Needles",34.85,-114.61,0],["Pahrump",36.21,-115.98,0],["Yuma",32.69,-114.63,0],["Kingman",35.19,-114.05,0],["Lake Havasu City",34.48,-114.32,0],["Monterey",36.6,-121.89,0],["Santa Cruz",36.97,-122.03,0],["Napa",38.3,-122.29,0],["Ukiah",39.15,-123.21,0],["Susanville",40.42,-120.65,0],["Lompoc",34.64,-120.46,0],["Paso Robles",35.63,-120.69,0],["Lemoore",36.3,-119.78,0],["Delano",35.77,-119.25,0],["Boulder City",35.98,-114.83,0],["Buckeye",33.37,-112.58,0]];
+const M = /*MIDWAY*/;
+</script>
+<script>
+"use strict";
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mw = v => v > 0 && v < 10 ? "under 10" : (Math.round(v/10)*10).toLocaleString("en-US");          // MW to the nearest 10, like the checker
+const pct = v => { const p = v*100; return p > 0 && p < 1 ? p.toFixed(1)+"%" : Math.round(p)+"%"; };
+const in100 = v => Math.round(v*100);
+const yrs = v => v.toFixed(1).replace(/\.0$/,"");
+const dateLong = s => new Date(s+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+const svgNS = "http://www.w3.org/2000/svg";
+const I = {
+  check:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="var(--ok-mark)"/><path d="M6 10.3l2.7 2.7 5.4-5.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  ask:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="var(--ask-mark)"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.3 2.1c-.7.4-1.1.8-1.1 1.6v.3" fill="none" stroke="#3A2600" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="14.4" r="1.1" fill="#3A2600"/></svg>',
+  no:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="var(--no-mark)"/><path d="M7 7l6 6m0-6l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
+  info:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9v5M10 6.2v.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
+  arrow:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8m-3-3 3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  back:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M11 7H3m3-3L3 7l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  search:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+};
+
+// Realistic MW ahead, in four plain classes.
+const BREAKS = [300, 1000, 2000];
+const CLASS_LABEL = ["under 300", "300–1,000", "1,000–2,000", "2,000+"];
+const classOf = v => BREAKS.filter(b => v >= b).length;
+const classVar = k => ["var(--t1)","var(--t2)","var(--t3)","var(--t5)"][k];
+const RADIUS = [4.5, 6, 7.5, 9.5];
+const onlyNew = s => s.n === 0 && s.nn > 0;
+const busierThan = v => SITES.filter(s => s.realistic < v).length;
+
+const state = { screen:"home", years:10, rung:null, view:"overview", tab:"fared",
+  decisions:{}, rewritten:{}, editing:null, adjusted:false, proposal:null, log:[], final:false };
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+function go(name){
+  state.screen = name;
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === "s-"+name));
+  document.querySelectorAll(".proto nav button").forEach(b => b.setAttribute("aria-pressed", b.dataset.go === name));
+  if (name === "map") { if (!lmap) renderMap(); else requestAnimationFrame(() => lmap.invalidateSize()); }
+  closePop(); hideTip();
+  window.scrollTo(0,0);
+}
+const tip = $("#tip");
+function showTip(html, x, y){ tip.innerHTML = html; tip.hidden = false; const r = tip.getBoundingClientRect();
+  let l = x + 14, t = y + 14; if (l + r.width > innerWidth - 8) l = x - r.width - 14; if (t + r.height > innerHeight - 8) t = y - r.height - 14;
+  tip.style.left = l+"px"; tip.style.top = t+"px"; }
+const hideTip = () => { tip.hidden = true; };
+
+// ======================================================================
+// HOME
+// ======================================================================
+const TYPES = [["Solar","Solar only"],["Solar + battery","Solar + battery"],["Battery","Battery only"],["Wind","Wind"],["Gas","Gas"]];
+const SIZES = [["Under 50 MW","small"],["50–150 MW","medium"],["150–300 MW","large"],["Over 300 MW","very large"]];
+const TERMS = {
+  queue:["The queue","The waiting list every new power project joins when it asks the grid operator for permission to connect. Each request is studied before it's allowed to plug in."],
+  substation:["Substation","A fenced yard of equipment where power lines meet. It's where a new solar farm, wind farm or battery physically plugs into the grid."],
+  mw:["MW (megawatt)","A measure of how much power a project can send to the grid at once. Large solar farms and batteries are often 100 to 300 MW."],
+  rules:["The 2023 rule change","In 2023 California's grid operator changed how it takes in and studies new requests. Projects that applied under the new rules haven't had time to finish, so their odds can't be known yet."],
+};
+const home = { type:"Solar + battery", size:"large", step:0 };
+
+function renderHome(){
+  const T = LANDING.totals, all = T.all;
+  const yrsCols = Object.keys(YEARS).map(Number).sort((a,b)=>a-b);
+  $("#s-home").innerHTML = `<div class="home">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">A look at California's grid connection queue</div>
+        <h1>What happens to power projects waiting to join California's grid</h1>
+        <p class="lede">Before a new solar farm, wind farm or battery can send power to the grid, it applies to connect and waits in a <button class="term" data-term="queue">queue</button> while the grid operator studies it. Headway looks at what happened to the ${all.toLocaleString("en-US")} projects that applied under the old rules, and uses that history to estimate, at each <button class="term" data-term="substation">substation</button>, how likely a new project is to be built and how long it tends to take.</p>
+        <div class="cta"><button class="btn p lg" data-go="map">Explore the map ${I.arrow}</button><button class="btn lg" id="see-problem">How it works</button></div>
+      </div>
+      <div class="try" id="try" aria-live="polite"></div>
+    </section>
+
+    <section class="chapter" id="problem">
+      <div class="head2"><div class="eyebrow">The history</div>
+        <h2>Most projects leave the queue before they're built</h2>
+        <p>Each dot below is one project that applied to connect to California's grid, placed by the year it applied. Step through to see what happened to them.</p></div>
+      <div class="story">
+        <div class="caption"><p id="story-text"></p>
+          <div class="stepper"><button class="btn sm" id="st-prev" aria-label="Previous">${I.back}</button><div class="pips" id="pips"></div><button class="btn p sm" id="st-next">Next ${I.arrow}</button></div></div>
+        <svg class="dotfield" id="dotfield" role="img" aria-label="One dot per project, by year applied, coloured by what happened to it"></svg>
+        <div class="key" id="story-key"></div>
+      </div>
+    </section>
+
+    <section class="chapter">
+      <div class="head2"><div class="eyebrow">Location</div>
+        <h2>How crowded the queue is varies a lot by substation</h2>
+        <p>Each bar below is a substation. Its height is the <button class="term" data-term="mw">MW</button> of projects realistically waiting there: each waiting project counted by its chance of being built, given how long it has already waited.</p></div>
+      <div class="strip" id="strip"></div>
+    </section>
+
+    <section class="chapter">
+      <div class="head2"><div class="eyebrow">Method</div><h2>How the numbers are made</h2></div>
+      <div class="three">
+        <div class="c"><span class="ic">${I.search}</span><h3>Traceable</h3><p>Each number links to how it was worked out and the exact rows of the grid operator's data it came from.</p></div>
+        <div class="c"><span class="ic"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5l3 3 7-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Checked by code</h3><p>A language model drafts each written summary. Code then recalculates every number in it from the data, and anything that doesn't match is left out.</p></div>
+        <div class="c"><span class="ic"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="6.5" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 15.5c1-3 3-4.4 5.5-4.4s4.5 1.4 5.5 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><h3>Reviewed by a person</h3><p>Interpretations are labelled as opinions and wait for a reviewer to accept, reject or reword them. Leaving a project out recalculates everything that depends on it.</p></div>
+      </div>
+    </section>
+
+    <section class="about" aria-labelledby="h-about">
+      <h2 id="h-about">About this project</h2>
+      <div class="about-grid">
+        <div><h3>What it is</h3><p>An independent project exploring how a language model can write analysis whose every number is checked against public data. It isn't affiliated with the grid operator.</p></div>
+        <div><h3>Data</h3><p>CAISO's interconnection queue report of ${dateLong(M.as_of)}. Substation positions from OpenStreetMap and public filings; county boundaries from the US Census Bureau.</p></div>
+        <div><h3>Method</h3><p>For each group of similar past projects, the share built by each year after applying. Projects still waiting count only for the years they've been watched. Likely ranges come from resampling, and past predictions are checked against what happened.</p></div>
+        <div><h3>Limits</h3><p>The history covers projects that applied before the <button class="term" data-term="rules">2023 rule change</button>; newer projects can't be scored yet. It describes past outcomes, not the physics of the grid, and doesn't replace a power-flow study.</p></div>
+      </div>
+      <button class="link" data-go="map" style="margin-top:6px">Explore the map ${I.arrow}</button>
+    </section>
+  </div>`;
+  renderTry(); renderStory(); renderStrip();
+  $("#s-home").querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+  $("#see-problem").addEventListener("click", () => $("#problem").scrollIntoView({behavior:"smooth"}));
+  wireTerms($("#s-home"));
+}
+function wireTerms(root){
+  root.querySelectorAll(".term").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation(); closePop();
+    const [h, body] = TERMS[b.dataset.term]; const p = document.createElement("div");
+    p.className = "pop"; p.setAttribute("role","dialog"); p.innerHTML = `<b>${esc(h)}</b>${esc(body)}`;
+    document.body.appendChild(p); const r = b.getBoundingClientRect(), pr = p.getBoundingClientRect();
+    p.style.left = Math.max(8, Math.min(innerWidth - pr.width - 8, r.left)) + "px";
+    p.style.top = (r.bottom + 8 + pr.height > innerHeight ? r.top - pr.height - 8 : r.bottom + 8) + "px";
+  }));
+}
+function closePop(){ document.querySelectorAll(".pop").forEach(p => p.remove()); }
+document.addEventListener("click", closePop);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closePop(); });
+addEventListener("scroll", closePop, {passive:true});
+
+function renderTry(){
+  const d = LANDING.types[TYPES.find(t=>t[0]===home.type)[1]][home.size][10];
+  const built = in100(d.chance), gave = Math.round(d.gave_up*100), wait = Math.max(0, 100-built-gave);
+  const cells = [...Array(built).fill("b"), ...Array(wait).fill("s"), ...Array(gave).fill("w")];
+  $("#try").innerHTML = `<h2>Try a project type</h2>
+    <div class="opts"><label id="l-type">Type</label><div class="seg" role="group" aria-labelledby="l-type">${TYPES.map(([l])=>`<button data-type="${esc(l)}" aria-pressed="${l===home.type}">${esc(l)}</button>`).join("")}</div></div>
+    <div class="opts"><label id="l-size">Size</label><div class="seg" role="group" aria-labelledby="l-size">${SIZES.map(([l,k])=>`<button data-size="${k}" aria-pressed="${k===home.size}">${l}</button>`).join("")}</div></div>
+    <div class="result">
+      <div class="dots" role="img" aria-label="Of 100 similar projects after 10 years: ${built} built, ${gave} withdrew, ${wait} still waiting">${cells.map(c=>`<i class="${c}"></i>`).join("")}</div>
+      <div><div class="big t">${built}<small> in 100</small></div>
+        <p>similar projects across California were built within 10 years. ${gave} withdrew; ${wait} are still waiting.</p>
+        <p class="fine" style="margin-top:6px">Likely between ${in100(d.range[0])} and ${in100(d.range[1])} in 100 · from ${d.projects} past projects${d.wait?` · those built took about ${Math.round(d.wait)} years`:""}</p></div>
+    </div>
+    <div class="key"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--sand)"></i>withdrew</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--sky-edge)"></i>still waiting</span></div>
+    <p class="fine">This is the statewide history; it varies a lot by substation. <button class="link" data-go="map">Explore the map ${I.arrow}</button></p>`;
+  $("#try").querySelectorAll("[data-type]").forEach(b => b.addEventListener("click", () => { home.type = b.dataset.type; renderTry(); }));
+  $("#try").querySelectorAll("[data-size]").forEach(b => b.addEventListener("click", () => { home.size = b.dataset.size; renderTry(); }));
+  $("#try").querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+}
+
+// The story: one dot per project, stacked by year applied.
+function renderStory(){
+  const years = Object.keys(YEARS).map(Number).sort((a,b)=>a-b);
+  const tot = k => years.reduce((s,y)=>s+(YEARS[y][k]||0),0);
+  const built = tot("built"), gave = tot("gave"), waiting = tot("waiting"), newW = tot("new"), all = built+gave+waiting+newW;
+  const oldWaitingSince = years.filter(y => YEARS[y].waiting).slice(0,1)[0];
+  const steps = [
+    [`${all.toLocaleString("en-US")} projects asked to connect.`, "Each dot is one of them, stacked by the year it applied.", {}],
+    [`${built} were built.`, `That's about ${Math.round(built/(built+gave)*100)} in every 100 that reached an outcome.`, {built:1}],
+    [`${gave.toLocaleString("en-US")} withdrew.`, "Withdrawing is by far the most common outcome.", {built:1, gave:1}],
+    [`${waiting} are still waiting.`, `Some have been in line since ${oldWaitingSince}.`, {built:1, gave:1, waiting:1}],
+    [`And in 2025, ${YEARS[2025] ? (YEARS[2025].new + (YEARS[2025].gave||0)) : newW} more applied under the new rules.`, `${newW} of them are still waiting. Nothing under these rules has finished yet, so their odds can't be known.`, {built:1, gave:1, waiting:1, new:1}],
+  ];
+  const s = steps[home.step];
+  $("#story-text").innerHTML = `${esc(s[0])}<span>${esc(s[1])}</span>`;
+  $("#pips").innerHTML = steps.map((_,i)=>`<button aria-label="Step ${i+1}" aria-current="${i===home.step}" data-step="${i}"></button>`).join("");
+  $("#st-prev").disabled = home.step === 0;
+  $("#st-next").innerHTML = home.step === steps.length-1 ? `Start again` : `Next ${I.arrow}`;
+  const on = s[2];
+  const keyItems = [["built","var(--t3)","built"],["waiting","","still waiting"],["new","var(--lav)","new rules, still waiting"],["gave","var(--sand-dot)","withdrew"]].filter(([k])=>on[k]);
+  $("#story-key").innerHTML = keyItems.map(([k,c,l])=>`<span><i style="${k==="waiting"?"box-shadow:inset 0 0 0 1.5px var(--sky-edge)":"background:"+c}"></i>${l}</span>`).join("") + (keyItems.length?"":`<span><i style="background:var(--rule-2)"></i>a project</span>`);
+
+  const svg = $("#dotfield");
+  const perRow = 6, d = 5.2, gap = 1.4, colW = perRow*(d+gap), colGap = 9, top = 8;
+  const maxN = Math.max(...years.map(y => Object.values(YEARS[y]).reduce((a,b)=>a+b,0)));
+  const plotH = Math.ceil(maxN/perRow)*(d+gap);
+  const Wd = years.length*(colW+colGap), Hd = top + plotH + 26;
+  if (!svg.dataset.built) {
+    svg.setAttribute("viewBox", `0 0 ${Wd} ${Hd}`);
+    let html = "";
+    years.forEach((y, ci) => {
+      const x0 = ci*(colW+colGap); let i = 0;
+      for (const k of ["built","waiting","new","gave"]) for (let j=0;j<(YEARS[y][k]||0);j++,i++) {
+        const cx = x0 + (i%perRow)*(d+gap) + d/2, cy = top + plotH - Math.floor(i/perRow)*(d+gap) - d/2;
+        html += `<circle data-k="${k}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${d/2}"/>`;
+      }
+      if (y % 5 === 0 || y === years[0] || y === years[years.length-1]) html += `<text x="${x0+colW/2}" y="${Hd-6}" text-anchor="middle">${y}</text>`;
+      html += `<rect class="col" data-y="${y}" x="${x0-colGap/2}" y="0" width="${colW+colGap}" height="${Hd}" fill="transparent"/>`;
+    });
+    svg.innerHTML = html; svg.dataset.built = "1";
+    svg.querySelectorAll(".col").forEach(r => {
+      const y = +r.dataset.y, c = YEARS[y], n = Object.values(c).reduce((a,b)=>a+b,0);
+      r.addEventListener("pointermove", e => showTip(`<b>${y}</b> · ${n} applied<br>${c.built||0} built · ${c.gave||0} withdrew · ${(c.waiting||0)+(c.new||0)} still waiting`, e.clientX, e.clientY));
+      r.addEventListener("pointerleave", hideTip);
+    });
+  }
+  const fill = { built:"var(--t3)", gave:"var(--sand-dot)", waiting:"var(--panel)", new:"var(--lav)" };
+  svg.querySelectorAll("circle").forEach(c => {
+    const k = c.dataset.k, lit = on[k];
+    c.setAttribute("fill", lit ? fill[k] : "var(--unlit)");
+    c.setAttribute("stroke", lit && k==="waiting" ? "var(--sky-edge)" : "none");
+    c.setAttribute("stroke-width", lit && k==="waiting" ? 1.1 : 0);
+  });
+  $("#pips").querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => { home.step = +b.dataset.step; renderStory(); }));
+  $("#st-prev").onclick = () => { home.step = Math.max(0, home.step-1); renderStory(); };
+  $("#st-next").onclick = () => { home.step = home.step === steps.length-1 ? 0 : home.step+1; renderStory(); };
+}
+
+// Every substation as one bar, busiest first: a few have thousands of MW ahead, most have little.
+function renderStrip(){
+  const host = $("#strip"), sites = SITES.filter(s => !onlyNew(s)).slice().sort((a,b)=>b.realistic-a.realistic);
+  const Wd = 1000, Hd = 230, m = {l:44, r:8, t:16, b:28}, max = 4000;
+  const bw = (Wd-m.l-m.r)/sites.length, y = v => m.t + (1 - v/max)*(Hd-m.t-m.b);
+  const sorted = sites.map(s=>s.realistic).sort((a,b)=>a-b), median = sorted[Math.floor(sorted.length/2)];
+  const top = sites[0], quiet = sites.filter(s => s.realistic <= 300).length;
+  host.innerHTML = `<svg viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="${sites.length} substations ranked by MW realistically ahead">
+    ${[0,1000,2000,3000,4000].map(t=>`<line x1="${m.l}" x2="${Wd-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)"/><text x="${m.l-8}" y="${y(t)+4}" text-anchor="end">${t?t.toLocaleString("en-US"):0}</text>`).join("")}
+    ${sites.map((s,i)=>`<rect class="sbar" data-site="${esc(s.site)}" x="${(m.l+i*bw+0.6).toFixed(1)}" y="${y(s.realistic).toFixed(1)}" width="${Math.max(1,bw-1.2).toFixed(1)}" height="${(y(0)-y(s.realistic)).toFixed(1)}" rx="1.5" fill="${classVar(classOf(s.realistic))}"/>`).join("")}
+    <text class="lab" x="${m.l+bw+6}" y="${y(top.realistic)+4}">${esc(top.site)}: ${mw(top.realistic)} MW</text>
+    <line x1="${m.l}" x2="${Wd-m.r}" y1="${y(median)}" y2="${y(median)}" stroke="var(--ink-2)" stroke-width="1"/>
+    <text class="lab" x="${Wd-m.r}" y="${y(median)-8}" text-anchor="end">Half have under ${mw(median)} MW</text>
+    <text x="${m.l}" y="${Hd-6}">Busiest</text><text x="${Wd-m.r}" y="${Hd-6}" text-anchor="end">Calmest · ${sites.length} substations</text>
+    ${sites.map((s,i)=>`<rect class="hitbar" data-site="${esc(s.site)}" x="${(m.l+i*bw).toFixed(1)}" y="${m.t}" width="${bw.toFixed(1)}" height="${Hd-m.t-m.b}" fill="transparent" style="cursor:pointer"/>`).join("")}
+  </svg>
+  <p class="muted small" style="margin:10px 0 0">${quiet} of ${sites.length} substations have under 300 MW realistically ahead. Hover a bar to see which one; click to find it on the map.</p>`;
+  host.querySelectorAll(".hitbar").forEach(c => {
+    const s = SITES.find(q => q.site === c.dataset.site), bar = host.querySelector(`.sbar[data-site="${CSS.escape(s.site)}"]`);
+    c.addEventListener("pointermove", e => { bar.setAttribute("opacity", .6); showTip(`<b>${esc(s.site)}</b> · ${esc(s.county||"")} County<br>${mw(s.realistic)} MW realistically ahead`, e.clientX, e.clientY); });
+    c.addEventListener("pointerleave", () => { bar.removeAttribute("opacity"); hideTip(); });
+    c.addEventListener("click", () => { hideTip(); go("map"); mapPickSite(s.site); });
+  });
+}
+
+// ======================================================================
+// MAP
+// ======================================================================
+const placed = SITES.filter(s => s.lat != null), unplaced = SITES.filter(s => s.lat == null);
+const MAXW = Math.max(...SITES.map(s => s.realistic));
+const mapState = { view:"welcome", area:null, site:null, q:"" };
+let lmap = null, siteLayers = {}, countyLayers = {}, selRing = null, cityMarkers = [], countyLabels = [], countyBadges = [];
+const toRad = d => d*Math.PI/180;
+const miles = (a, b) => { const R = 3958.8, dLat = toRad(b[0]-a[0]), dLon = toRad(b[1]-a[1]);
+  const h = Math.sin(dLat/2)**2 + Math.cos(toRad(a[0]))*Math.cos(toRad(b[0]))*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(h)); };
+const countyKey = (name) => COUNTIES.features.find(f => f.properties.name === name);
+
+function initMap(){
+  if (lmap) { lmap.invalidateSize(); return; }
+  lmap = L.map("lmap", { zoomControl:false, attributionControl:true, minZoom:5, maxZoom:11, zoomSnap:0.25, worldCopyJump:false });
+  lmap.fitBounds([[32.4,-124.5],[42,-114]], { paddingTopLeft:[innerWidth > 760 ? 400 : 0, 0] });   // a view must exist before shapes are added
+  L.control.zoom({ position:"topright" }).addTo(lmap);
+  lmap.attributionControl.setPrefix(false).addAttribution("Boundaries: US Census Bureau · Substation positions: © OpenStreetMap contributors");
+  L.geoJSON(STATES, { style: f => ({ className: "state" + (f.properties.code==="CA"?" home":""), weight:1 }), interactive:false }).addTo(lmap);
+  L.geoJSON(COUNTIES, {
+    style: f => ({ className: "county " + (f.properties.state==="CA"?"ca":"other"), weight:.8 }),
+    onEachFeature: (f, layer) => {
+      countyLayers[f.properties.name] = layer;
+      layer.on("click", () => showArea({ kind:"county", name:f.properties.name }));
+    }
+  }).addTo(lmap);
+  // County names, shown when zoomed in.
+  COUNTIES.features.forEach(f => { const c = countyLayers[f.properties.name].getBounds().getCenter();
+    countyLabels.push(L.marker(c, { interactive:false, icon:L.divIcon({ className:"", html:`<div class="county-label">${esc(f.properties.name)}</div>`, iconSize:[120,14], iconAnchor:[60,7] }) })); });
+  // Unplaced substations: a badge in their county, never a fake point.
+  const byCounty = {}; unplaced.forEach(s => (byCounty[s.county] ||= []).push(s));
+  Object.entries(byCounty).forEach(([name, list]) => {
+    const layer = countyLayers[name]; if (!layer) return;
+    const c = layer.getBounds().getCenter();
+    countyBadges.push(L.marker(c, { icon:L.divIcon({ className:"", html:`<span class="cbadge" title="${list.length} substation${list.length>1?"s":""} somewhere in ${esc(name)} County">+${list.length}</span>`, iconSize:[40,20], iconAnchor:[20,22] }) })
+      .on("click", () => showArea({ kind:"county", name }))
+      .bindTooltip(`${list.length} more substation${list.length>1?"s":""} somewhere in ${esc(name)} County.<br><span class="dim">We don't know exactly where, so they aren't drawn as dots.</span>`, { direction:"top", offset:[0,-18] }));
+  });
+  // Towns for orientation.
+  CITIES.forEach(([n, lat, lon, major]) => cityMarkers.push([major, L.marker([lat, lon], { interactive:false, icon:L.divIcon({ className:"", html:`<div class="city-label${major?" major":""}"><i></i>${esc(n)}</div>`, iconSize:[140,16], iconAnchor:[2,8] }) })]));
+  // Substations, biggest first so small ones stay on top.
+  placed.slice().sort((a,b)=>b.realistic-a.realistic).forEach(s => {
+    const k = classOf(s.realistic);
+    if (s.new > 0 && !onlyNew(s)) L.circleMarker([s.lat, s.lon], { radius: 1, className:"halo", interactive:false }).addTo(lmap)._halo = true;
+    const m = L.circleMarker([s.lat, s.lon], { radius: 6, className:`site k${k}${onlyNew(s)?" onlynew":""}${s.by==="planned"?" planned":""}` })
+      .bindTooltip(`<b>${esc(s.site)}</b><br>${onlyNew(s) ? "Only new-rules projects waiting" : `${mw(s.realistic)} MW realistically ahead`}${s.by==="planned"?`<br><span class="dim">Planned, not built yet</span>`:""}`, { direction:"top", offset:[0,-6] })
+      .on("click", () => mapPickSite(s.site)).addTo(lmap);
+    siteLayers[s.site] = m;
+  });
+  lmap.on("zoomend", sizeForZoom);
+  sizeForZoom();
+}
+function sizeForZoom(){
+  const z = lmap.getZoom(), f = Math.max(0.8, Math.min(1.6, 0.6 + (z-5)*0.25));
+  lmap.eachLayer(l => {
+    if (!(l instanceof L.CircleMarker)) return;
+    const s = Object.entries(siteLayers).find(([,m]) => m === l);
+    if (s) l.setRadius(RADIUS[classOf(SITES.find(q=>q.site===s[0]).realistic)] * f);
+    else if (l._halo) { const site = placed.find(q => q.lat === l.getLatLng().lat && q.lon === l.getLatLng().lng); l.setRadius(RADIUS[classOf(site.realistic)] * f + 3.5); }
+  });
+  if (selRing) selRing.setRadius(RADIUS[classOf(SITES.find(q=>q.site===mapState.site).realistic)] * f + 6);
+  cityMarkers.forEach(([major, mk]) => { const show = major ? z >= 5.5 : z >= 7; show ? mk.addTo(lmap) : mk.remove(); });
+  countyLabels.forEach(mk => z >= 7.75 ? mk.addTo(lmap) : mk.remove());
+  countyBadges.forEach(mk => z >= 7 ? mk.addTo(lmap) : mk.remove());
+}
+
+function renderMap(){
+  $("#s-map").innerHTML = `<div class="mapwrap"><div id="lmap" aria-label="Map of substations"></div>
+    <aside class="panel" id="panel" aria-label="Find a place"></aside>
+    <div class="legend" aria-label="Legend">
+      <span class="title">Projects realistically ahead</span>
+      <div class="scale">${CLASS_LABEL.map((l,k)=>`<span><i style="background:${classVar(k)}"></i>${l}</span>`).join("")}</div>
+      <div class="ends"><span>fewer</span><span>MW</span><span>more</span></div>
+      <div class="keys">
+        <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="var(--panel)" stroke="var(--t3)" stroke-width="2.6"/></svg>Planned substation, not built yet</span>
+        <span><svg width="18" height="18" aria-hidden="true"><circle cx="9" cy="9" r="7.4" fill="none" stroke="var(--lav)" stroke-width="2.2"/><circle cx="9" cy="9" r="4.4" fill="var(--t3)"/></svg>New-rules projects also waiting</span>
+        <span><span class="cbadge" style="cursor:default">+3</span>More somewhere in this county (zoom in)</span>
+      </div>
+    </div></div>`;
+  lmap = null; siteLayers = {}; countyLayers = {}; cityMarkers = []; countyLabels = []; countyBadges = []; selRing = null;
+  requestAnimationFrame(() => { initMap(); renderPanel(); highlight(); });
+}
+function siteRow(s, extra){
+  const right = onlyNew(s) ? `<span class="v muted">—<small>only new-rules projects</small></span>` : `<span class="v t">${mw(s.realistic)} MW<small>ahead</small></span>`;
+  return `<button class="row" data-site="${esc(s.site)}"><span class="nm">${esc(s.site)}<small>${extra}</small></span>${right}
+    <svg class="bar" viewBox="0 0 100 8" preserveAspectRatio="none" width="100%" height="8" aria-hidden="true"><rect y="1" width="100" height="6" rx="3" fill="var(--soft)"/><rect y="1" width="${Math.max(s.realistic/MAXW*100, s.realistic>0?1.2:0)}" height="6" rx="3" fill="${classVar(classOf(s.realistic))}"/></svg></button>`;
+}
+function renderPanel(){
+  const p = $("#panel"); if (!p) return;
+  if (mapState.view === "welcome") {
+    p.innerHTML = `<div class="ph">
+        <h1>Explore by place</h1>
+        <p>Type a town or county to see the substations around it, where new projects connect to the grid.</p>
+        ${searchBox()}
+      </div>
+      <div class="pb">
+        <div class="sec">Or start from a town</div>
+        <div class="chips" style="padding:0 10px">${["Bakersfield","Fresno","Lancaster","Palm Springs","Blythe","El Centro","Los Banos","Las Vegas"].map(c=>`<button data-city="${c}">${c}</button>`).join("")}</div>
+        <div class="sec" style="margin-top:12px">Reading the map</div>
+        <div class="howto">
+          <div><b class="n">1</b><span>Each circle is a <b>substation</b>, where power plants connect to the grid.</span></div>
+          <div><b class="n">2</b><span><b>Darker and bigger</b> means more projects are realistically waiting there.</span></div>
+          <div><b class="n">3</b><span>Pick one to see how likely a new project is to be built there, and how long it tends to take.</span></div>
+        </div>
+      </div>`;
+  } else if (mapState.view === "area") {
+    const a = mapState.area;
+    let near = [], somewhere = [], title, sub;
+    if (a.kind === "city") {
+      near = placed.map(s => ({s, d:miles([a.lat,a.lon],[s.lat,s.lon])})).filter(x => x.d <= 60).sort((x,y)=>x.d-y.d);
+      const counties = new Set(near.map(x=>x.s.county)); somewhere = unplaced.filter(s => counties.has(s.county));
+      title = `Near ${a.name}`; sub = `${near.length} substation${near.length===1?"":"s"} within 60 miles`;
+    } else {
+      near = placed.filter(s => s.county === a.name).map(s => ({s})).sort((x,y)=>y.s.realistic-x.s.realistic);
+      somewhere = unplaced.filter(s => s.county === a.name);
+      title = `${a.name} County`; sub = `${near.length + somewhere.length} substation${near.length + somewhere.length===1?"":"s"} with projects waiting`;
+    }
+    const calmest = near.filter(x=>!onlyNew(x.s)).slice().sort((x,y)=>x.s.realistic-y.s.realistic)[0];
+    p.innerHTML = `<div class="ph">
+        <button class="link" data-back>${I.back} Search again</button>
+        <div><h2>${esc(title)}</h2><p>${esc(sub)}${calmest && near.length > 2 ? `. The least crowded is <b>${esc(calmest.s.site)}</b>.` : "."}</p></div>
+      </div>
+      <div class="pb">
+        ${near.length ? `<div class="sec">${a.kind==="city"?"Closest first":"Busiest first"}</div>${near.map(x => siteRow(x.s, x.d!=null ? `${Math.round(x.d)} miles away` : (x.s.by==="planned"?"planned substation":`${esc(x.s.county)} County`))).join("")}` : `<p class="muted" style="padding:0 10px">No substations with projects waiting nearby.</p>`}
+        ${somewhere.length ? `<div class="sec">Somewhere in the area, location not exact</div>${somewhere.map(s => siteRow(s, `${esc(s.county)} County`)).join("")}` : ""}
+      </div>`;
+  } else {
+    const s = SITES.find(q => q.site === mapState.site);
+    const where = {openstreetmap:`${s.county} County`, document:`${s.county} County · placed from a public filing`, planned:`${s.county} County · planned, not built yet`, county:`Somewhere in ${s.county} County`}[s.by];
+    p.innerHTML = `<div class="ph">
+        <button class="link" data-back>${I.back} ${mapState.area ? (mapState.area.kind==="city" ? `Near ${esc(mapState.area.name)}` : `${esc(mapState.area.name)} County`) : "Search again"}</button>
+        <div><h2>${esc(s.site)}</h2><p>${esc(where)}</p></div>
+      </div>
+      <div class="pb"><div class="site-card">
+        ${onlyNew(s) ? `<p style="margin:0">Only projects that applied under the 2023 rules are waiting here. Nothing under those rules has finished yet, so nobody can say how many will be built.</p>` : `
+        <div><div class="big t">${mw(s.realistic)} MW</div><p style="margin:6px 0 0;color:var(--ink-2)">of projects are realistically ahead of a new one here. That's more than at ${Math.round(busierThan(s.realistic)/SITES.length*100)}% of substations.</p></div>`}
+        ${s.new>0 && !onlyNew(s) ? `<div class="pill lav" style="justify-self:start">+ ${mw(s.new)} MW from new-rules projects, odds unknown</div>` : ""}
+        <button class="btn p" id="open-site">See the odds here ${I.arrow}</button>
+        ${s.site!=="Midway"?`<span class="faint small">Prototype: opens Midway's page.</span>`:""}
+      </div></div>`;
+    $("#open-site").addEventListener("click", () => { state.view="overview"; renderSite(); go("site"); });
+  }
+  wireSearch(p);
+  p.querySelectorAll("[data-city]").forEach(b => b.addEventListener("click", () => { const c = CITIES.find(x=>x[0]===b.dataset.city); showArea({kind:"city", name:c[0], lat:c[1], lon:c[2]}); }));
+  p.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => {
+    if (mapState.view === "site" && mapState.area) { mapState.view = "area"; mapState.site = null; highlight(); renderPanel(); }
+    else { mapState.view = "welcome"; mapState.area = null; mapState.site = null; highlight(); renderPanel(); lmap.flyToBounds([[32.4,-124.5],[42,-114]], { paddingTopLeft:[innerWidth > 760 ? 400 : 0, 0], duration:.6 }); }
+  }));
+  p.querySelectorAll(".row").forEach(r => {
+    r.addEventListener("click", () => mapPickSite(r.dataset.site));
+    r.addEventListener("pointerenter", () => { const m = siteLayers[r.dataset.site]; m && m.openTooltip(); });
+    r.addEventListener("pointerleave", () => { const m = siteLayers[r.dataset.site]; m && m.closeTooltip(); });
+  });
+}
+function searchBox(){
+  return `<div class="search">${I.search}<input id="mq" type="search" autocomplete="off" placeholder="Town, county or substation" value="${esc(mapState.q)}" aria-label="Search a town, county or substation"><div id="mres"></div></div>`;
+}
+function wireSearch(p){
+  const inp = $("#mq", p); if (!inp) return;
+  const show = () => {
+    const q = inp.value.trim().toLowerCase(); mapState.q = inp.value; const box = $("#mres", p);
+    if (q.length < 2) { box.innerHTML = ""; return; }
+    const towns = CITIES.filter(c => c[0].toLowerCase().includes(q)).slice(0,5);
+    const counties = [...new Set(SITES.map(s=>s.county).filter(Boolean))].filter(c => c.toLowerCase().includes(q)).slice(0,4);
+    const subs = SITES.filter(s => s.site.toLowerCase().includes(q)).slice(0,5);
+    if (!towns.length && !counties.length && !subs.length) { box.innerHTML = `<div class="results"><div class="grp">No matches</div><p class="muted small" style="margin:0;padding:4px 14px 10px">Try a nearby town or the county name.</p></div>`; return; }
+    box.innerHTML = `<div class="results">
+      ${towns.length?`<div class="grp">Towns</div>${towns.map(c=>`<button data-city="${esc(c[0])}">${esc(c[0])}<span>town</span></button>`).join("")}`:""}
+      ${counties.length?`<div class="grp">Counties</div>${counties.map(c=>`<button data-county="${esc(c)}">${esc(c)} County<span>${SITES.filter(s=>s.county===c).length} substations</span></button>`).join("")}`:""}
+      ${subs.length?`<div class="grp">Substations</div>${subs.map(s=>`<button data-sub="${esc(s.site)}">${esc(s.site)}<span>${esc(s.county||"")}</span></button>`).join("")}`:""}
+    </div>`;
+    box.querySelectorAll("[data-city]").forEach(b => b.addEventListener("click", () => { const c = CITIES.find(x=>x[0]===b.dataset.city); mapState.q=""; showArea({kind:"city", name:c[0], lat:c[1], lon:c[2]}); }));
+    box.querySelectorAll("[data-county]").forEach(b => b.addEventListener("click", () => { mapState.q=""; showArea({kind:"county", name:b.dataset.county}); }));
+    box.querySelectorAll("[data-sub]").forEach(b => b.addEventListener("click", () => { mapState.q=""; mapPickSite(b.dataset.sub); }));
+  };
+  inp.addEventListener("input", show);
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") { const first = $("#mres button", p); first && first.click(); } });
+  show();
+}
+function showArea(area){
+  mapState.view = "area"; mapState.area = area; mapState.site = null;
+  if (area.kind === "city") lmap.flyTo([area.lat, area.lon], 8.5, { duration:.7 });
+  else { const l = countyLayers[area.name]; l && lmap.flyToBounds(l.getBounds(), { paddingTopLeft:[innerWidth > 760 ? 400 : 0, 0], padding:[30,30], duration:.7 }); }
+  highlight(); renderPanel();
+}
+function mapPickSite(name){
+  if (!lmap) { requestAnimationFrame(() => mapPickSite(name)); return; }
+  const s = SITES.find(q => q.site === name);
+  mapState.view = "site"; mapState.site = name;
+  if (!mapState.area && s.county) mapState.area = { kind:"county", name:s.county };
+  if (s.lat != null) lmap.flyTo([s.lat, s.lon], Math.max(lmap.getZoom(), 8.5), { duration:.7 });
+  else { const l = countyLayers[s.county]; l && lmap.flyToBounds(l.getBounds(), { padding:[40,40], duration:.7 }); }
+  highlight(); renderPanel();
+}
+function highlight(){
+  if (!lmap) return;
+  Object.values(countyLayers).forEach(l => l.getElement() && l.getElement().classList.remove("picked"));
+  const a = mapState.area;
+  if (a && a.kind === "county" && countyLayers[a.name]) countyLayers[a.name].getElement().classList.add("picked");
+  if (mapState.view === "site" && SITES.find(q=>q.site===mapState.site).lat == null && countyLayers[SITES.find(q=>q.site===mapState.site).county]) countyLayers[SITES.find(q=>q.site===mapState.site).county].getElement().classList.add("picked");
+  if (selRing) { selRing.remove(); selRing = null; }
+  const s = mapState.site && SITES.find(q => q.site === mapState.site);
+  if (s && s.lat != null) { selRing = L.circleMarker([s.lat, s.lon], { radius: 14, className:"sel-ring", interactive:false }).addTo(lmap); sizeForZoom(); }
+}
+
+// ======================================================================
+// SUBSTATION
+// ======================================================================
+const usedIdx = () => state.rung ?? M.ladder.findIndex(r => r.used);
+const odds = n => M.ladder[usedIdx()].by_n[n];
+const curAhead = () => state.adjusted ? {realistic:M.adjusted.realistic, range:M.adjusted.range, waiting:M.adjusted.waiting} : {realistic:M.ahead.realistic, range:M.ahead.range, waiting:M.ahead.waiting};
+const typeName = t => { const s = new Set(t); if (s.has("Solar") && s.has("Battery") && s.size===2) return "Solar + battery"; if (s.size===1) return {"Natural Gas":"Gas","Wind Turbine":"Wind"}[t[0]] || t[0]; return t.join(" + "); };
+const plainGroup = r => r.desc.replace("Solar + battery","solar + battery projects").replace("All projects","all projects").replace(", 150-300 MW"," of 150–300 MW").replace(/, /," ");
+
+function renderSite(){
+  const el = $("#s-site");
+  const toReview = claims().filter(c => c.kind==="judgement" && !state.decisions[c.id]).length;
+  el.innerHTML = `<div class="page">
+    <button class="link back" data-go="map">${I.back} All substations</button>
+    <div class="head">
+      <div><h1>Midway</h1><div class="sub">Substation in Kern County · ${M.places.map(p=>p.kv).join(", ").replace(/, (\d+)$/," and $1")} kV</div></div>
+      <div class="views" role="tablist" aria-label="View">
+        <button role="tab" data-view="overview" aria-selected="${state.view==="overview"}">The odds</button>
+        <button role="tab" data-view="writeup" aria-selected="${state.view==="writeup"}">Write-up ${toReview&&!state.final?`<span class="badge">${toReview} to review</span>`:""}</button>
+      </div>
+    </div>
+    <div id="view">${state.view==="overview" ? overview() : writeup()}</div>
+  </div>`;
+  if (state.view==="overview") { drawTab(); }
+  wire();
+}
+
+function overview(){
+  const n = state.years, o = odds(n), a = curAhead(), rung = M.ladder[usedIdx()];
+  const busier = busierThan(a.realistic), share = Math.round(busier/SITES.length*100);
+  return `<div style="display:grid;gap:20px">
+    <div class="madlib">For a
+      <select id="f-type" aria-label="Project type"><option>solar</option><option selected>solar + battery</option><option>battery</option><option>wind</option><option>gas</option></select>
+      project of <input id="f-mw" type="number" value="200" min="1" aria-label="Size in MW"> MW, connecting at
+      <select id="f-place" aria-label="Voltage">${M.places.map(p=>`<option${p.kv===230?" selected":""}>${p.kv} kV</option>`).join("")}</select>:
+    </div>
+
+    <div class="answers">
+      <article class="answer" aria-labelledby="a1">
+        <span class="q" id="a1">Will it get built?</span>
+        ${o.refused ? `<p class="says">We can't say for ${n} years: no similar project has been watched that long.</p>` : `
+        <div class="big t">${in100(o.chance)}<small>in 100</small></div>
+        <p class="says">similar projects were built within ${n} years of applying.</p>
+        ${dotArray(n)}
+        <div class="key"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--sand)"></i>withdrew</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--sky-edge)"></i>still waiting</span></div>
+        <span class="range">Likely somewhere between ${in100(o.range[0])} and ${in100(o.range[1])} in 100.</span>
+        <div class="years" role="group" aria-label="Within how many years">${[3,5,7,10].map(k=>`<button data-n="${k}" aria-pressed="${k===n}">${k} yrs</button>`).join("")}</div>`}
+        <div class="foot"><span>${o.projects} past projects</span><button class="link" data-why="chance">How we know ${I.arrow}</button></div>
+      </article>
+
+      <article class="answer" aria-labelledby="a2">
+        <span class="q" id="a2">How long does it take?</span>
+        <div class="big t">${Math.round(o.wait)}<small>years</small></div>
+        <p class="says">is typical, from applying to running, for the projects that did get built.</p>
+        ${waitScale(o)}
+        <span class="range">Likely between ${Math.round(o.wait_range[0])} and ${Math.round(o.wait_range[1])} years.</span>
+        <div class="foot"><span>${o.built} built projects</span><button class="link" data-why="wait">How we know ${I.arrow}</button></div>
+      </article>
+
+      <article class="answer unknownish" aria-labelledby="a3">
+        <span class="q" id="a3">How crowded is it?</span>
+        <div class="big t">${mw(a.realistic)}<small>MW</small></div>
+        <p class="says">of projects are realistically ahead of a new one here. That's more than at ${share}% of substations.</p>
+        ${crowdBar(a)}
+        <span class="range">Likely between ${mw(a.range[0])} and ${mw(a.range[1])} MW, out of ${mw(a.waiting)} MW waiting.</span>
+        <div class="note">${I.info}<span>Another <b>${mw(M.ahead.new)} MW</b> applied under 2023's new rules. It's too soon to know how much of it will be built, so it isn't counted above.</span></div>
+        <div class="foot"><span>${M.ahead.projects.length + M.ahead.new_projects.length} waiting projects</span><button class="link" data-why="ahead">How we know ${I.arrow}</button></div>
+      </article>
+    </div>
+
+    <div class="basis">${I.info}<span>These answers come from <b>${o.projects} past ${plainGroup(rung)}</b> that applied before the 2023 rule change. Midway itself has too few past projects to go on. <button class="link" data-tab="compared">How we chose them</button></span></div>
+
+    <section class="deeper" aria-label="More detail">
+      <div class="tabs" role="tablist">${[["fared","How similar projects fared"],["ahead",`Projects ahead (${M.ahead.projects.length + M.ahead.new_projects.length})`],["grid","Upgrades and costs"],["compared","Who we compared with"]].map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${state.tab===k}">${l}</button>`).join("")}</div>
+      <div class="tabpanel" id="tabpanel" role="tabpanel"></div>
+    </section>
+  </div>`;
+}
+function dotArray(n){
+  // 100 similar projects, by what had happened to them N years after applying.
+  const d = M.curve.reduce((b,q)=>Math.abs(q.y-n)<Math.abs(b.y-n)?q:b, M.curve[0]);
+  const built = in100(odds(n).chance), gave = Math.round(d.withdrawn*100), wait = Math.max(0, 100-built-gave);
+  const cells = [...Array(built).fill("b"), ...Array(wait).fill("s"), ...Array(gave).fill("w")];
+  return `<div class="dots" role="img" aria-label="Of 100 similar projects after ${n} years: ${built} built, ${gave} withdrew, ${wait} still waiting">${cells.map(c=>`<i class="${c}"></i>`).join("")}</div>`;
+}
+function waitScale(o){
+  const w = 300, max = 15, sc = v => v/max*w;
+  return `<svg class="chart" viewBox="0 0 ${w} 40" role="img" aria-label="Typical wait ${yrs(o.wait)} years, likely ${yrs(o.wait_range[0])} to ${yrs(o.wait_range[1])}">
+    <rect x="0" y="12" width="${w}" height="8" rx="4" fill="var(--soft)"/>
+    <rect x="${sc(o.wait_range[0])}" y="12" width="${sc(o.wait_range[1])-sc(o.wait_range[0])}" height="8" rx="4" fill="var(--band)"/>
+    <circle cx="${sc(o.wait)}" cy="16" r="7" fill="var(--t3)" stroke="var(--panel)" stroke-width="2.5"/>
+    ${[0,5,10,15].map(t=>`<text x="${sc(t)}" y="38" text-anchor="${t===0?"start":t===15?"end":"middle"}">${t}${t===15?" yrs":""}</text>`).join("")}
+  </svg>`;
+}
+function crowdBar(a){
+  const w = 300, sc = v => v/a.waiting*w;
+  return `<svg class="chart" viewBox="0 0 ${w} 40" role="img" aria-label="${mw(a.realistic)} MW realistically ahead out of ${mw(a.waiting)} MW waiting">
+    <rect x="0" y="12" width="${w}" height="8" rx="4" fill="var(--soft)"/>
+    <rect x="0" y="12" width="${sc(a.realistic)}" height="8" rx="4" fill="var(--t3)"/>
+    <rect x="${sc(a.range[0])}" y="10" width="${sc(a.range[1])-sc(a.range[0])}" height="12" rx="6" fill="var(--band)"/>
+    <text x="0" y="38">0</text><text x="${w}" y="38" text-anchor="end">${mw(a.waiting)} MW waiting</text>
+  </svg>`;
+}
+
+function drawTab(){
+  const p = $("#tabpanel"); if (!p) return;
+  if (state.tab === "fared") { p.innerHTML = `<h3>How similar projects fared over time</h3><p class="lead">Out of every 100 similar projects, how many had been built, had given up, or were still waiting, year by year after applying. Most withdraw.</p><div id="curve"></div>`; curve(); }
+  if (state.tab === "ahead") p.innerHTML = aheadTab();
+  if (state.tab === "grid") p.innerHTML = gridTab();
+  if (state.tab === "compared") p.innerHTML = comparedTab();
+  p.querySelectorAll("[data-rung]").forEach(b => b.addEventListener("click", () => { state.rung = +b.dataset.rung; renderSite(); }));
+  p.querySelectorAll("[data-why]").forEach(b => b.addEventListener("click", () => why(b.dataset.why, b)));
+}
+function curve(){
+  const host = $("#curve"), data = M.curve, n = state.years;
+  const Wd = 760, Hd = 280, m = {l:40, r:118, t:10, b:34};
+  const maxY = Math.max(...data.map(d=>d.y));
+  const x = v => m.l + (v/maxY)*(Wd-m.l-m.r), y = v => m.t + (1-v)*(Hd-m.t-m.b);
+  const area = (top, bot) => data.map((d,i)=>(i?"L":"M")+x(d.y)+","+y(top(d))).join("") + data.slice().reverse().map(d=>"L"+x(d.y)+","+y(bot(d))).join("")+"Z";
+  const wTop = d => 1 - d.withdrawn, last = data[data.length-1];
+  const nd = data.reduce((b,d)=>Math.abs(d.y-n)<Math.abs(b.y-n)?d:b, data[0]);
+  const tx = []; for (let t=0;t<=maxY;t+=2) tx.push(t);
+  host.innerHTML = `<svg class="chart" viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="Share of similar projects built, still waiting and given up, by years since applying">
+    ${[0,.25,.5,.75,1].map(t=>`<line class="grid" x1="${m.l}" x2="${Wd-m.r}" y1="${y(t)}" y2="${y(t)}"/><text x="${m.l-8}" y="${y(t)+4}" text-anchor="end">${t*100}</text>`).join("")}
+    <path d="${area(()=>1, wTop)}" fill="var(--sand)"/>
+    <path d="${area(wTop, d=>d.built)}" fill="var(--sky)"/>
+    <path d="${area(d=>d.built, ()=>0)}" fill="var(--t3)"/>
+    <path d="${area(d=>d.hi, d=>d.lo)}" fill="var(--band)"/>
+    ${tx.map(t=>`<text x="${x(t)}" y="${Hd-m.b+18}" text-anchor="middle">${t}</text>`).join("")}
+    <text x="${(m.l+Wd-m.r)/2}" y="${Hd-2}" text-anchor="middle">years after applying</text>
+    <line x1="${x(n)}" x2="${x(n)}" y1="${m.t}" y2="${y(0)}" stroke="var(--ink)" stroke-width="1.2"/>
+    <text class="strong" x="${x(n)+6}" y="${m.t+14}">year ${n}: ${in100(nd.built)} built</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y((1+wTop(last))/2)+4}">Withdrew · ${in100(last.withdrawn)}</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y((wTop(last)+last.built)/2)+4}">Waiting · ${in100(1-last.withdrawn-last.built)}</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y(last.built/2)+4}">Built · ${in100(last.built)}</text>
+    <line id="xh" y1="${m.t}" y2="${y(0)}" stroke="var(--ink-2)" opacity="0"/>
+    <rect id="hit" x="${m.l}" y="${m.t}" width="${Wd-m.l-m.r}" height="${Hd-m.t-m.b}" fill="transparent"/>
+  </svg>
+  <div class="key" style="margin-top:8px"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--band);box-shadow:inset 0 0 0 1px var(--t3)"></i>likely range of built</span><span><i style="background:var(--sky)"></i>still waiting</span><span><i style="background:var(--sand)"></i>withdrew</span><span>· per 100 projects</span></div>`;
+  const svg = host.querySelector("svg"), xh = $("#xh",host);
+  $("#hit",host).addEventListener("pointermove", e => {
+    const r = svg.getBoundingClientRect(), vx = (e.clientX - r.left) * (Wd / r.width);
+    const yv = Math.max(0, Math.min(maxY, (vx - m.l) / (Wd-m.l-m.r) * maxY));
+    const d = data.reduce((b,q)=>Math.abs(q.y-yv)<Math.abs(b.y-yv)?q:b, data[0]);
+    xh.setAttribute("x1", x(d.y)); xh.setAttribute("x2", x(d.y)); xh.setAttribute("opacity", 1);
+    showTip(`<span class="dim">${d.y} years after applying, of 100</span><br><b>${in100(d.built)}</b> built <span class="dim">(likely ${in100(d.lo)}–${in100(d.hi)})</span><br><b>${in100(1-d.withdrawn-d.built)}</b> still waiting<br><b>${in100(d.withdrawn)}</b> withdrew`, e.clientX, e.clientY);
+  });
+  $("#hit",host).addEventListener("pointerleave", () => { xh.setAttribute("opacity",0); hideTip(); });
+}
+function aheadTab(){
+  const out = new Set(state.adjusted ? M.adjusted.leave_out : []);
+  const all = [...M.ahead.projects, ...M.ahead.new_projects], max = Math.max(...all.map(p=>p.mw));
+  const w = 260, sc = v => v/max*w;
+  const step = s => ({"Agreement signed":"has signed its agreement","Second study done":"finished its second study","First study done":"finished its first study"}[s] || "hasn't been studied yet");
+  const rowHtml = p => {
+    const isNew = p.chance == null, isOut = out.has(p.id);
+    const bar = `<svg class="viz" width="100%" height="16" viewBox="0 0 ${w} 16" style="max-width:${w}px" aria-hidden="true">
+      <rect x="0" y="3" width="${sc(p.mw)}" height="10" rx="5" fill="${isNew?"var(--lav-wash)":"var(--soft)"}" stroke="${isNew?"var(--lav)":"var(--rule-2)"}"/>
+      ${isNew||isOut?"":`<rect x="0" y="3" width="${sc(p.mw*p.chance)}" height="10" rx="5" fill="var(--t3)"/>`}</svg>`;
+    const counts = isOut ? `<b>—</b><span>left out by you</span>` : isNew ? `<b class="t" style="color:var(--lav-ink)">?</b><span>odds unknown</span>` : `<b class="t">${mw(p.mw*p.chance)} MW</b><span>${pct(p.chance)} likely to be built</span>`;
+    return `<div class="prow${isOut?" out":""}">
+      <div class="who"><b>${mw(p.mw)} MW ${esc(typeName(p.types).toLowerCase())}</b><span>Applied ${p.q.slice(0,4)}, ${step(p.step)}${p.line?" · on a line, counts at both ends":""}</span></div>
+      ${bar}<div class="counts">${counts}</div></div>`;
+  };
+  const a = curAhead();
+  return `<h3>Projects already waiting</h3>
+    <p class="lead">Each bar is a waiting project's size. The filled part is how much of it is likely to be built, given how long it has already waited. Add up the filled parts and you get the ${mw(a.realistic)} MW above.</p>
+    <div class="plist">${M.ahead.projects.slice().sort((a,b)=>b.mw*b.chance-a.mw*a.chance).map(rowHtml).join("")}
+      <div class="prow sum"><div class="who"><b>Realistically ahead</b></div><span></span><div class="counts"><b class="t">${mw(a.realistic)} MW</b></div></div>
+    </div>
+    <h3 style="margin-top:22px">Newer projects, under 2023's rules</h3>
+    <p class="lead">No project under these rules has finished yet, so there's no history to judge their odds. We show them, but we don't add them in.</p>
+    <div class="plist">${M.ahead.new_projects.map(rowHtml).join("")}</div>`;
+}
+function gridTab(){
+  const ups = [...new Map(M.upgrades.map(u=>[u.id,u])).values()].sort((a,b)=>a.year-b.year);
+  const bn = [...new Map(M.bottlenecks.map(b=>[b.bottleneck,b])).values()];
+  const full = bn.filter(b => b.room === 0).length;
+  const costed = bn.filter(b => b.perkw != null).map(b => b.perkw);
+  return `<div class="twin">
+    <div><h3>Planned grid upgrades</h3><p class="lead">Approved by the grid operator, paid for by all electricity customers.</p>
+      ${ups.map(u=>`<div class="item"><b class="yr t">${u.year}</b><div><div class="nm">${esc(u.name)}</div><div class="s">${u.lo!=null?`About $${u.lo}–${u.hi} million`:"Cost not published"} · ${esc(u.utility)}</div></div></div>`).join("")}</div>
+    <div><h3>Bottlenecks nearby</h3><p class="lead">${full} of the ${bn.length} lines and transformers Midway sits behind have no room left${costed.length?`. Adding room costs about <b>$${Math.round(Math.min(...costed))}–${Math.round(Math.max(...costed))} per kW</b>`:""}.</p>
+      ${bn.sort((a,b)=>(a.room??1e9)-(b.room??1e9)).map(b=>`<div class="item" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="nm">${esc(b.bottleneck)}</div><div class="s">${b.room===0?"Full":b.room==null?"Room not listed":`${mw(b.room)} MW of room left`}</div></div><div class="t" style="text-align:right;font-weight:650">${b.perkw!=null?`$${Math.round(b.perkw)}/kW`:`<span class="faint" style="font-weight:400">not costed</span>`}</div></div>`).join("")}
+    </div></div>
+    <p class="boxnote">Costs are the operator's estimates in 2022 dollars. Neither box changes the odds above; they're here so you can see what's coming.</p>`;
+}
+function comparedTab(){
+  const n = state.years, used = usedIdx();
+  const label = r => ({"voltage section":"Midway 230 kV only","site":"All of Midway","bottleneck area":`Behind ${r.area}`,"county":`${r.area} County`,"California":"Across California"}[r.kind]);
+  const typeLine = r => r.desc.split(",").slice(0,-1).join(",").replace("150-300","150–300");
+  return `<h3>Who we compared with</h3>
+    <p class="lead">We start with projects as close to yours as possible and widen the circle until there are enough to trust: at least 30 that finished one way or the other, and 10 that were built.</p>
+    <div class="steps">${M.ladder.map((r,i) => {
+      const est = r.enough && r.by_n[n] && !r.by_n[n].refused ? r.by_n[n] : null;
+      const prog = Math.min(1, r.resolved/30), w = 160;
+      return `<div class="step${r.enough?" ok":""}${i===used?" used":""}">
+        <span class="dot" aria-hidden="true"></span>
+        <div class="what"><b>${esc(label(r))}</b><span>${esc(typeLine(r))} · ${r.resolved} finished, ${r.built} built</span></div>
+        <svg class="viz" width="100%" height="10" viewBox="0 0 ${w} 10" style="max-width:${w}px" aria-hidden="true"><rect y="2" width="${w}" height="6" rx="3" fill="var(--soft)"/><rect y="2" width="${prog*w}" height="6" rx="3" fill="${r.enough?"var(--t2)":"var(--rule-2)"}"/></svg>
+        <div class="fig">${i===used ? `${in100(est.chance)} in 100<span>in use</span>` : est ? `<button class="btn sm" data-rung="${i}">Use · ${in100(est.chance)} in 100</button>` : `<span style="font-weight:400;color:var(--muted)">too few</span>`}</div>
+      </div>`;}).join("")}</div>
+    <p class="boxnote">"In 100" is the chance of being built within ${n} years. The bar shows how close each group comes to having enough finished projects.</p>`;
+}
+
+// ---------- write-up ----------
+function claims(){
+  const o10 = M.ladder[M.ladder.findIndex(r=>r.used)].by_n[10], a = curAhead();
+  return [
+    {id:"f1", kind:"fact", parts:["Of ", {v:o10.projects,u:"",k:"chance"}, " past solar + battery projects of 150–300 MW across California, ", {v:o10.built,u:"",k:"chance"}, " were built, ", {v:o10.withdrawn,u:"",k:"chance"}, " withdrew and ", {v:o10.waiting,u:"",k:"chance"}, " are still waiting."]},
+    {id:"f2", kind:"fact", parts:["Projects like this one had a ", {v:o10.chance,u:"%",k:"chance"}, " chance of being built within 10 years, likely between ", {v:o10.range[0],u:"%",k:"chance"}, " and ", {v:o10.range[1],u:"%",k:"chance"}, "."]},
+    {id:"f3", kind:"fact", parts:["About ", {v:a.realistic,u:"MW",k:"ahead"}, " of projects are realistically ahead at Midway, out of ", {v:a.waiting,u:"MW",k:"ahead"}, " waiting."]},
+    {id:"f4", kind:"fact", parts:["Another ", {v:M.ahead.new,u:"MW",k:"ahead"}, " applied under 2023's new rules; its odds aren't known yet."]},
+    {id:"j1", kind:"opinion", text:"Midway, its bottlenecks and Kern County each have too few past projects, so the California-wide figure is the best guide available. Conditions at Midway may differ."},
+    {id:"j2", kind:"opinion", text:"Most of the MW ahead comes from two large projects that signed agreements in 2019 and 2021. If either stalls, the line ahead is much shorter than it looks."},
+  ];
+}
+const val = (v,u) => u==="%" ? pct(v) : u==="MW" ? mw(v)+" MW" : v.toLocaleString("en-US");
+function writeup(){
+  const cl = claims(), ops = cl.filter(c=>c.kind==="opinion"), decided = ops.filter(j=>state.decisions[j.id]).length, left = ops.length - decided;
+  return `<div class="writeup">
+    <article class="doc-card">
+      <h2>200 MW solar + battery at Midway</h2>
+      <div class="byline">Written by the assistant from the data. Every number was recalculated by code before you saw it.</div>
+      <div class="progress">
+        ${state.final ? `${I.check}<span><b>Final.</b> Every point has been reviewed.</span>` : left ? `${I.ask}<span><b>${left} point${left===1?"":"s"} need${left===1?"s":""} your review.</b> Facts are checked by code; opinions need a person.</span>` : `${I.check}<span><b>All reviewed.</b> You can finalise it.</span>`}
+        <div class="bar" aria-hidden="true">${cl.map(c=>`<i style="flex:1;background:${c.kind==="fact"||state.decisions[c.id]&&state.decisions[c.id]!=="rejected"?"var(--ok-mark)":state.decisions[c.id]==="rejected"?"var(--no-mark)":"var(--ask-mark)"}"></i>`).join("")}</div>
+      </div>
+      ${cl.map(c => c.kind==="fact" ? `<div class="stmt"><span>${I.check}</span><div><p>${c.parts.map(p=>typeof p==="string"?esc(p):`<button class="num t" data-why="${p.k}" title="See where this comes from">${val(p.v,p.u)}</button>`).join("")}</p>
+          <div class="meta"><span class="ok">Fact · checked against the data</span>${state.adjusted&&c.id==="f3"?`<span class="pill out">updated after your change</span>`:""}</div></div></div>` : opinion(c)).join("")}
+      <div style="display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap">
+        <button class="btn p" id="finalise" ${!left&&!state.final?"":"disabled"}>${state.final?"Finalised":"Finalise"}</button>
+        <span class="muted small">${state.final?"No more changes can be made.":left?`Review the ${left} remaining opinion${left===1?"":"s"} first.`:"Ready."}</span>
+      </div>
+    </article>
+    <div class="side-cards">
+      <section class="c" aria-labelledby="h-ask">
+        <h3 id="h-ask">Ask or request a change</h3>
+        ${state.proposal ? proposal() : `
+          <div class="ask-in"><input id="ask-in" placeholder="Ask anything about Midway" aria-label="Ask about Midway" ${state.final?"disabled":""}><button class="btn p sm" id="ask-go" ${state.final?"disabled":""}>Ask</button></div>
+          <div class="suggest">${["Ignore projects stuck since 2019","How long do batteries wait here?"].map(s=>`<button data-suggest="${esc(s)}" ${state.final?"disabled":""}>${esc(s)}</button>`).join("")}</div>
+          <p class="faint small" style="margin:0">If you ask to leave projects out, you'll see exactly what would change before anything does.</p>`}
+      </section>
+      <section class="c" aria-labelledby="h-log">
+        <h3 id="h-log">History</h3>
+        <ol class="log">${[{t:"09:12",w:"The assistant wrote this"}, ...state.log].reverse().map(l=>`<li><time class="t">${l.t}</time><span>${esc(l.w)}${l.y?`<br><span class="muted">"${esc(l.y)}"</span>`:""}</span></li>`).join("")}</ol>
+      </section>
+    </div>
+  </div>`;
+}
+function opinion(j){
+  const d = state.decisions[j.id], text = state.rewritten[j.id] || j.text;
+  const icon = d==="rejected" ? I.no : d ? I.check : I.ask;
+  const status = d==="approved" ? `<span class="ok">You agreed</span>` : d==="rejected" ? `<span class="no">You disagreed; it won't be shown</span>` : d==="rewritten" ? `<span class="ok">Reworded by you</span>` : `<span class="ask">Opinion · do you agree?</span>`;
+  return `<div class="stmt opinion${d?" done":""}${d==="rejected"?" rejected":""}"><span>${icon}</span><div>
+    ${state.editing===j.id ? `<label class="small muted" for="rw">Say it your way</label><textarea id="rw">${esc(text)}</textarea>
+      <div class="choices"><button class="btn p sm" data-save="${j.id}">Save</button><button class="btn q sm" data-cancel>Cancel</button></div>`
+    : `<p>${esc(text)}</p><div class="meta">${status}<span>Not checked by code</span></div>
+    ${state.final ? "" : `<div class="choices">${d ? `<button class="btn q sm" data-undo="${j.id}">Change my answer</button>` : `<button class="btn sm" data-dec="approved" data-j="${j.id}">Agree</button><button class="btn sm" data-dec="rejected" data-j="${j.id}">Disagree</button><button class="btn q sm" data-edit="${j.id}">Reword</button>`}</div>`}`}
+  </div></div>`;
+}
+function proposal(){
+  const ps = M.ahead.projects.filter(p=>M.adjusted.leave_out.includes(p.id));
+  return `<div class="proposal" role="group" aria-label="Suggested change">
+    <b>Here's what that would change</b>
+    <span class="small">Leave out ${ps.length} projects still waiting that applied in 2019 or earlier:</span>
+    <ul>${ps.map(p=>`<li>${mw(p.mw)} MW ${esc(typeName(p.types).toLowerCase())}, applied ${p.q.slice(0,4)}</li>`).join("")}</ul>
+    <div class="change">Realistically ahead: <s class="t">${mw(M.ahead.realistic)} MW</s> → <b class="t">${mw(M.adjusted.realistic)} MW</b></div>
+    <span class="small muted">Numbers are recalculated and checked again. Opinions that rest on them come back for review.</span>
+    <div style="display:flex;gap:8px"><button class="btn p sm" id="apply">Make this change</button><button class="btn q sm" id="discard">Never mind</button></div>
+  </div>`;
+}
+
+function wire(){
+  const el = $("#s-site"), now = () => new Date().toTimeString().slice(0,5);
+  el.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+  el.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.view; renderSite(); }));
+  el.querySelectorAll(".tabs [data-tab]").forEach(b => b.addEventListener("click", () => { state.tab = b.dataset.tab; el.querySelectorAll(".tabs [data-tab]").forEach(x=>x.setAttribute("aria-selected", x===b)); drawTab(); }));
+  el.querySelectorAll(".basis [data-tab]").forEach(b => b.addEventListener("click", () => { state.tab = b.dataset.tab; renderSite(); $(".deeper").scrollIntoView({behavior:"smooth"}); }));
+  el.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { state.years = +b.dataset.n; renderSite(); }));
+  el.querySelectorAll(".answers [data-why], .doc-card [data-why]").forEach(b => b.addEventListener("click", () => why(b.dataset.why, b)));
+  el.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => { state.decisions[b.dataset.j] = b.dataset.dec; state.log.push({t:now(), w:`You ${b.dataset.dec==="approved"?"agreed with":"disagreed with"} an opinion`}); renderSite(); }));
+  el.querySelectorAll("[data-undo]").forEach(b => b.addEventListener("click", () => { delete state.decisions[b.dataset.undo]; renderSite(); }));
+  el.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => { state.editing = b.dataset.edit; renderSite(); $("#rw").focus(); }));
+  el.querySelectorAll("[data-cancel]").forEach(b => b.addEventListener("click", () => { state.editing = null; renderSite(); }));
+  el.querySelectorAll("[data-save]").forEach(b => b.addEventListener("click", () => { const id=b.dataset.save; state.rewritten[id]=$("#rw").value; state.decisions[id]="rewritten"; state.editing=null; state.log.push({t:now(), w:"You reworded an opinion"}); renderSite(); }));
+  const ask = () => { const v = ($("#ask-in")||{}).value||""; if (!v.trim()) return; state.proposal = v; state.log.push({t:now(), w:`You asked: "${v}"`}); renderSite(); };
+  $("#ask-go") && $("#ask-go").addEventListener("click", ask);
+  $("#ask-in") && $("#ask-in").addEventListener("keydown", e => { if (e.key==="Enter") ask(); });
+  el.querySelectorAll("[data-suggest]").forEach(b => b.addEventListener("click", () => { $("#ask-in").value = b.dataset.suggest; ask(); }));
+  $("#apply") && $("#apply").addEventListener("click", () => { const y = state.proposal; state.adjusted = true; state.proposal = null; delete state.decisions.j2;
+    state.log.push({t:now(), w:`You left out ${M.adjusted.leave_out.length} projects. Realistically ahead went from ${mw(M.ahead.realistic)} to ${mw(M.adjusted.realistic)} MW, checked again. One opinion came back for review.`, y}); renderSite(); });
+  $("#discard") && $("#discard").addEventListener("click", () => { state.proposal = null; renderSite(); });
+  $("#finalise") && $("#finalise").addEventListener("click", () => { state.final = true; state.log.push({t:now(), w:"You finalised the write-up"}); renderSite(); });
+}
+
+// ---------- "How we know" ----------
+let lastFocus = null;
+function why(kind, from){
+  lastFocus = from;
+  const n = state.years, o = odds(n), rung = M.ladder[usedIdx()], a = curAhead();
+  let title, say, tally, table, count;
+  if (kind === "chance" || kind === "wait") {
+    title = kind==="chance" ? `${in100(o.chance)} in 100 built within ${n} years` : `About ${Math.round(o.wait)} years to get built`;
+    say = kind==="chance"
+      ? `We looked at <b>${o.projects} past ${plainGroup(rung)}</b>. We followed each one from the day it applied: built, withdrew, or still waiting. A project still waiting only counts for the years we've seen it, never as a failure. Then we redrew the group at random 400 times to get the likely range.`
+      : `Of the ${o.projects} similar projects, ${o.built} were built. Half of those that get built had done so ${yrs(o.wait)} years after applying. The likely range comes from redrawing the group at random 400 times.`;
+    tally = `<div class="tally"><div><b class="t">${o.built}</b><span>built</span></div><div><b class="t">${o.withdrawn}</b><span>withdrew</span></div><div><b class="t">${o.waiting}</b><span>still waiting</span></div></div>`;
+    count = M.rows.length;
+    table = `<table class="t"><thead><tr><th>Project</th><th>Applied</th><th class="r">MW</th><th>What happened</th><th class="r">Years</th></tr></thead><tbody>${M.rows.map(r=>`<tr><td class="mono">${esc(r.id)}</td><td class="t">${r.q.slice(0,4)}</td><td class="r t">${Math.round(r.mw)}</td><td>${{built:"Built",withdrawn:"Withdrew",waiting:"Still waiting"}[r.outcome]}${r.est?' <span class="pill" title="The operator\'s file has no date, so we estimated it">date estimated</span>':""}</td><td class="r t">${r.years.toFixed(1)}</td></tr>`).join("")}</tbody></table>`;
+  } else {
+    title = `${mw(a.realistic)} MW realistically ahead`;
+    say = `We took each project still waiting at Midway and multiplied its size by its chance of still being built, given how long it has already waited. Those chances come from similar projects across California. Projects from 2023's new-rules batch are listed but not added in, because nothing like them has finished yet.`;
+    tally = `<div class="tally"><div><b class="t">${M.ahead.projects.length}</b><span>waiting, counted</span></div><div><b class="t">${mw(a.waiting)}</b><span>MW they add up to</span></div><div><b class="t">${M.ahead.new_projects.length}</b><span>newer, not counted</span></div></div>`;
+    count = M.ahead.projects.length + M.ahead.new_projects.length;
+    table = `<table class="t"><thead><tr><th>Project</th><th class="r">MW</th><th class="r">Waited</th><th class="r">Chance</th><th class="r">Counts as</th></tr></thead><tbody>${[...M.ahead.projects, ...M.ahead.new_projects].map(p=>`<tr><td class="mono">${esc(p.id)}</td><td class="r t">${Math.round(p.mw)}</td><td class="r t">${yrs(p.waited)} yrs</td><td class="r t">${p.chance==null?"unknown":pct(p.chance)}</td><td class="r t">${p.chance==null?"not added":Math.round(p.mw*p.chance)+" MW"}</td></tr>`).join("")}</tbody></table>`;
+  }
+  $("#drawer-root").innerHTML = `<div class="scrim" data-close></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
+    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${title}</h2></div><button class="btn q sm" data-close aria-label="Close">✕</button></header>
+    <div class="body">
+      <p style="margin:0;color:var(--ink-2)">${say}</p>
+      ${tally}
+      <div class="verified">${I.check}<div><b>Checked</b><span>Code recalculated this number from the rows below, from CAISO's queue report of ${dateLong(M.as_of)}. It matched.</span></div></div>
+      <details class="rows"><summary>See all ${count} source rows ${I.arrow}</summary><div class="scroll-x">${table}</div></details>
+    </div>
+  </aside>`;
+  document.querySelectorAll("#drawer-root [data-close]").forEach(b => b.addEventListener("click", closeWhy));
+  $("#drawer-root .drawer [data-close]").focus();
+  document.addEventListener("keydown", escWhy);
+}
+function escWhy(e){ if (e.key === "Escape") closeWhy(); }
+function closeWhy(){ $("#drawer-root").innerHTML = ""; document.removeEventListener("keydown", escWhy); lastFocus && lastFocus.focus && lastFocus.focus(); }
+
+// ======================================================================
+// DECISIONS
+// ======================================================================
+function renderDec(){
+  const sw = (v,l) => `<span><i style="background:var(${v})"></i>${l}</span>`;
+  const D = [
+    ["Name", "#43", `<p><b>Headway.</b> To make headway is to move forward, which is what every project in the queue is trying to do. Short, calm, and says nothing technical. One constant in the code.</p>`],
+    ["Look", "Ticket 4", `<p>Calm and airy: a soft sage ground, white cards with rounded corners and gentle shadows, one friendly typeface (Figtree), generous space. Colour is spent on meaning only: one teal that deepens with more projects ahead, sand for projects that withdrew, soft sky for still waiting, lavender for what nobody can know yet. Light and dark themes.</p>
+      <div class="swatches">${sw("--t1","")}${sw("--t2","")}${sw("--t3","teal: more ahead")}${sw("--t5","")}${sw("--sand","withdrew")}${sw("--sky","waiting")}${sw("--lav","unknown")}</div>`],
+    ["How the page reads", "#35", `<p><b>Answers first.</b> The page opens with three questions a newcomer would ask, each answered in one plain sentence with one simple picture: <i>Will it get built? How long does it take? How crowded is it?</i> Chances are said as "17 in 100" with a grid of 100 dots, which people read more easily than percentages.</p>
+      <p><b>Detail on request.</b> Charts, the list of projects ahead, upgrades and costs, and how we chose the comparison sit in four tabs below. Every answer has "How we know", which explains the method in a sentence or two, says it was checked, and only then offers the raw rows.</p>`],
+    ["Review", "#35", `<p>The write-up has its own view so it never crowds the numbers; a badge on its tab shows how many points need you. Facts carry a green check and their numbers open "How we know". Opinions are tinted, asking "do you agree?", with <b>Agree · Disagree · Reword</b>. A request to leave projects out shows exactly what would change before anything does. Finalise unlocks once every opinion is answered.</p>`],
+    ["How the history ladder is shown", "Ticket 4", `<p>"Who we compared with": a short list that widens from Midway 230 kV out to all of California. Each step shows how close it comes to having enough finished projects, and the one in use is marked. Steps with enough history offer "Use", with their chance, so you can make the comparison wider.</p>`],
+    ["The landing page", "New", `<p>Explains the problem before showing any substation. The hero states it in one sentence and lets you try it straight away: pick a project type and size and see "17 in 100" as a grid of dots. Below, a step-through chart puts every past project on screen as a dot by the year it applied, then lights up the ones built, the ones that withdrew and the ones still waiting. A ranked bar chart shows why location matters. Jargon (queue, substation, MW, the 2023 rule change) is tappable for a plain definition.</p>`],
+    ["The map", "#32, #45", `<p>A real map of California's counties, drawn from public Census boundaries, with towns for orientation. No list of substation names on arrival: the panel asks "Where is your project?" and takes a town, county or substation name. Picking a town lists the substations within 60 miles, closest first, and names the least crowded one. Clicking a county lists its substations.</p>
+      <p>Substations without an exact location are never drawn as guessed dots: a dashed "+3" badge sits in their county when you zoom in, and they're listed in that county's results. Planned substations are hollow rings. A soft lavender halo marks substations where new-rules projects are also waiting; a lavender dot means they're the only ones.</p>`],
+    ["Transmission lines in the background", "#46", `<p>Not in the first version. They'd compete with the dots, and the line data isn't loaded yet.</p>`],
+  ];
+  $("#s-dec").innerHTML = `<div class="docs"><div><h1>Design decisions</h1><p class="muted">The open design questions from the map-app ticket, answered by this prototype.</p></div>
+    ${D.map(([h,q,b])=>`<section class="decision"><div><h3>${h}</h3><div class="q">${q}</div></div><div>${b}</div></section>`).join("")}</div>`;
+}
+renderHome(); renderSite(); renderDec();
+</script>

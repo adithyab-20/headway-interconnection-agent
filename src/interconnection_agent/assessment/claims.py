@@ -25,6 +25,7 @@ class Value:
     """One number in a Factual Claim, as the model stated it."""
 
     value: float
+    # As the model wrote them, not yet trusted: the checker says if they're on the fixed lists.
     unit: str
     derivation: str
     of: str  # the figure quoted, or the column of the rows (or "projects", to count them)
@@ -95,7 +96,7 @@ class Parsed:
     rejected: list[Rejected] = field(default_factory=list)
 
 
-NEITHER = "is neither a Factual Claim nor a Judgement"
+NOT_EITHER_KIND = "is neither a Factual Claim nor a Judgement"
 
 
 def parse_claims(items: Sequence[Any], existing: Sequence[Claim] = ()) -> Parsed:
@@ -132,12 +133,12 @@ class ClaimError(ValueError):
 
 def _parse(item: Any) -> Claim:
     if not isinstance(item, dict):
-        raise ClaimError(f"{item!r} {NEITHER}")
+        raise ClaimError(f"{item!r} {NOT_EITHER_KIND}")
     name = item.get("id")
     label = name if isinstance(name, str) and name else repr(item.get("text", item))[:60]
     kind = item.get("kind")
     if kind not in ("factual", "judgement"):
-        raise ClaimError(f"{label} (kind {kind!r}) {NEITHER}")
+        raise ClaimError(f"{label} (kind {kind!r}) {NOT_EITHER_KIND}")
     if not isinstance(name, str) or not name:
         raise ClaimError(f"{label}: every claim needs an id")
     text = item.get("text")

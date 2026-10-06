@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import datetime
 import json
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any
@@ -136,6 +136,14 @@ ARGUMENTS: dict[str, frozenset[str]] = {
 # on its own, "10" could be passed off as any number.
 ASKED_WITH_UNIT = {"within_years": "years", "mw": "MW"}
 
+# Each dataset, and the view that reads only its rows (ADR 0001).
+VIEWS = {"caiso_raw": "caiso_projects", "lbnl": "lbnl_projects"}
+# A project (``p``) connected at one of a list of places.
+AT_PLACES = (
+    "EXISTS (SELECT 1 FROM project_places pp WHERE pp.source = p.source "
+    "AND pp.native_id = p.native_id AND pp.place = ANY(%s))"
+)
+
 STATUSES = {"waiting": "Active", "built": "Operational", "withdrawn": "Withdrawn"}
 RULES = {
     "old": "p.batch IS DISTINCT FROM 'C15'",
@@ -150,6 +158,9 @@ class Lookups:
 
     conn: Conn
     leave_out: frozenset[str] = frozenset()
+    # The comparison group a person chose (an Adjustment). It replaces the one a chance
+    # lookup would pick, wherever that lookup offers it.
+    comparison_group: str | None = None
     log: dict[str, Lookup] = field(default_factory=dict)
 
     def run(self, tool: str, arguments: Mapping[str, Any]) -> Lookup:
@@ -187,13 +198,63 @@ class Lookups:
         """Leave these projects out of every lookup from now on (an Adjustment)."""
         self.leave_out = self.leave_out | native_ids
 
+    def compare_with(self, group: str) -> None:
+        """Use this comparison group for the chances from now on (an Adjustment). Only a
+        group a chance lookup in this assessment offered can be chosen."""
+        offered = self.comparison_groups()
+        if group not in offered:
+            raise ValueError(
+                f"No comparison group called {group!r} in this assessment. "
+                + (
+                    "The groups are: " + "; ".join(offered)
+                    if offered
+                    else "Look up chance_of_being_built first: it lists the groups."
+                )
+            )
+        self.comparison_group = group
+
+    def comparison_groups(self) -> list[str]:
+        """Every comparison group the chance lookups so far offered, most specific first."""
+        offered: dict[str, None] = {}
+        for lookup in self.log.values():
+            for group in lookup.notes.get("comparison_groups_to_choose_from", ()):
+                offered[group] = None
+        return list(offered)
+
+    def waiting_since(self, site: str, year: int) -> list[str]:
+        """Projects at a site still waiting that joined the queue in ``year`` or earlier."""
+        return [
+            str(r[0])
+            for r in self.conn.execute(
+                "SELECT p.native_id FROM caiso_projects p WHERE p.status = 'Active' "
+                f"AND extract(year FROM p.q_date) <= %s AND {AT_PLACES} ORDER BY 1",
+                (year, places_at(self.conn, site=site)),
+            ).fetchall()
+        ]
+
+    def rows_in(self, source: str, ids: Iterable[str]) -> set[str]:
+        """Which of these ids are rows of ``source``."""
+        found = self.conn.execute(
+            f"SELECT native_id FROM {VIEWS[source]} WHERE native_id = ANY(%s)", (sorted(ids),)
+        ).fetchall()
+        return {str(r[0]) for r in found}
+
+    def column_in(self, source: str, column: str, ids: Iterable[str]) -> dict[str, object]:
+        """One column of the operator's file, read from the database for these rows."""
+        assert column in COLUMNS and COLUMNS[column].from_the_data  # never a name from the model
+        found = self.conn.execute(
+            f"SELECT native_id, {column} FROM {VIEWS[source]} WHERE native_id = ANY(%s)",
+            (sorted(ids),),
+        ).fetchall()
+        return {str(native_id): x for native_id, x in found}
+
     # --- the lookups ---
 
-    def _chance(self, a: dict[str, Any]) -> _Result:
-        within = float(a["within_years"])
-        project_type = ProjectType(a["project_type"]) if a.get("project_type") else None
-        mw = float(a["mw"]) if a.get("mw") is not None and project_type else None
-        place = a.get("place")
+    def _chance(self, asked: dict[str, Any]) -> _Result:
+        within = float(asked["within_years"])
+        project_type = ProjectType(asked["project_type"]) if asked.get("project_type") else None
+        mw = float(asked["mw"]) if asked.get("mw") is not None and project_type else None
+        place = asked.get("place")
         odds = odds_for(
             self.conn,
             within_years=within,
@@ -202,11 +263,13 @@ class Lookups:
             place=place,
             leave_out=self.leave_out,
         )
-        if a.get("group"):
-            chosen = next((g for g in odds.ladder if g.description == a["group"]), None)
+        offered = {g.description for g in odds.ladder}
+        wanted = self.comparison_group if self.comparison_group in offered else asked.get("group")
+        if wanted:
+            chosen = next((g for g in odds.ladder if g.description == wanted), None)
             if chosen is None:
                 raise LookupError(
-                    f"No comparison group called {a['group']!r}. The groups are: "
+                    f"No comparison group called {wanted!r}. The groups are: "
                     + "; ".join(g.description for g in odds.ladder)
                 )
             odds = odds_for(
@@ -247,9 +310,9 @@ class Lookups:
         }
         return figures, [], notes
 
-    def _ahead(self, a: dict[str, Any]) -> _Result:
+    def _ahead(self, asked: dict[str, Any]) -> _Result:
         ahead = realistic_mw_ahead(
-            self.conn, place=a.get("place"), site=a.get("site"), leave_out=self.leave_out
+            self.conn, place=asked.get("place"), site=asked.get("site"), leave_out=self.leave_out
         )
         old = frozenset(p.native_id for p in ahead.projects)
         new = frozenset(p.native_id for p in ahead.new_rules_projects)
@@ -279,23 +342,22 @@ class Lookups:
         }
         return figures, rows, notes
 
-    def _list(self, a: dict[str, Any]) -> _Result:
-        status = STATUSES.get(str(a.get("status")))
+    def _list(self, asked: dict[str, Any]) -> _Result:
+        status = STATUSES.get(str(asked.get("status")))
         if status is None:
             raise LookupError(f"status must be one of {sorted(STATUSES)}.")
-        rules = RULES.get(str(a.get("rules", "any")))
+        rules = RULES.get(str(asked.get("rules", "any")))
         if rules is None:
             raise LookupError(f"rules must be one of {sorted(RULES)}.")
-        places = _places(self.conn, a)
+        places = places_at(self.conn, site=asked.get("site"), place=asked.get("place"))
         parts: list[str] | None = None
-        if a.get("project_type"):
-            kind = ProjectType(a["project_type"])
+        if asked.get("project_type"):
+            kind = ProjectType(asked["project_type"])
             parts = sorted(next(p for p, t in TYPE_OF_PARTS.items() if t is kind))
         found = self.conn.execute(
             "SELECT p.native_id, p.mw_to_grid, p.q_date FROM caiso_projects p "
             "WHERE p.status = %s AND " + rules + " "
-            "AND EXISTS (SELECT 1 FROM project_places pp WHERE pp.source = p.source "
-            "            AND pp.native_id = p.native_id AND pp.place = ANY(%s)) "
+            f"AND {AT_PLACES} "
             "AND (%s::text[] IS NULL OR ARRAY(SELECT r.type FROM project_resources r "
             "     WHERE r.source = p.source AND r.native_id = p.native_id ORDER BY r.type) "
             "     = %s::text[]) "
@@ -318,19 +380,15 @@ class Lookups:
 _Result = tuple[dict[str, Figure], list[dict[str, Any]], dict[str, str | tuple[str, ...]]]
 
 
-def _places(conn: Conn, a: Mapping[str, Any]) -> list[str]:
-    if bool(a.get("place")) == bool(a.get("site")):
+def places_at(conn: Conn, *, site: str | None = None, place: str | None = None) -> list[str]:
+    """One voltage section, or every voltage section of a site."""
+    if bool(place) == bool(site):
         raise LookupError("Give exactly one of place or site.")
-    if a.get("place"):
-        sql, name = "SELECT place FROM places WHERE place = %s", a["place"]
+    if place:
+        sql, name = "SELECT place FROM places WHERE place = %s", place
     else:
-        sql, name = "SELECT place FROM places WHERE site = %s ORDER BY place", a["site"]
+        sql, name = "SELECT place FROM places WHERE site = %s ORDER BY place", str(site)
     places = [str(r[0]) for r in conn.execute(sql, (name,)).fetchall()]
     if not places:
         raise LookupError(f"No place or site called {name!r}.")
     return places
-
-
-def places_at(conn: Conn, site: str) -> list[str]:
-    """The voltage sections of a site, lowest voltage first."""
-    return _places(conn, {"site": site})

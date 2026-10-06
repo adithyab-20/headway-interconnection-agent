@@ -50,11 +50,13 @@ class Change:
 
 @dataclass(frozen=True)
 class Adjustment:
-    """A change to what goes into an assessment: projects left out, and why. The numbers are
-    then worked out again and checked again; they are never typed over."""
+    """A change to what goes into an assessment, and why: projects left out, or a narrower
+    or broader comparison group. The numbers are then worked out again and checked again;
+    they are never typed over."""
 
-    leave_out: frozenset[str]
     why: str
+    leave_out: frozenset[str] = frozenset()
+    comparison_group: str | None = None  # one the assessment's chance lookups offer
 
 
 class NotReady(ValueError):
@@ -109,6 +111,8 @@ class Assessment:
         the checker rejected stays rejected: working its numbers out again would only make
         them right, not the claim."""
         self.still_open()
+        if adjustment.comparison_group is not None:
+            self.lookups.compare_with(adjustment.comparison_group)  # before anything changes
         self.lookups.leave(adjustment.leave_out)
         rerun: dict[str, Lookup | str] = {}
         changed: list[str] = []
@@ -134,10 +138,14 @@ class Assessment:
             ):
                 self.claims[i] = replace(claim, decision=Decision.AWAITING, decided_by=None)
                 changed.append(f"{claim.id}: back to awaiting a decision")
+        made = (
+            [f"left out {', '.join(sorted(adjustment.leave_out))}"] if adjustment.leave_out else []
+        ) + (
+            [f"compared with {adjustment.comparison_group}"] if adjustment.comparison_group else []
+        )
         self.log(
             by,
-            f"left out {', '.join(sorted(adjustment.leave_out))}; "
-            + ("; ".join(changed) if changed else "no number changed"),
+            "; ".join(made + (changed or ["no number changed"])),
             adjustment.why,
         )
 

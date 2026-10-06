@@ -10,7 +10,10 @@ For every number in a Factual Claim it confirms:
 * the number reproduces within the margin written down for its unit (``MARGINS``): counts,
   sums, middles and single values of the operator's own columns are worked out again from
   the database; figures and columns a tested function worked out are compared with what the
-  function returned, not recalculated;
+  function returned, not recalculated (ADR 0003). The middle of a column is the exception
+  that proves the rule: ADR 0003 compares medians rather than redo them because a claim
+  would have to cite hundreds of rows; a project list is short and its rows are cited
+  anyway, so redoing it costs nothing;
 * every number in the sentence is in a slot, so nothing unchecked can be shown. Names the
   lookups used or returned ("Whirlwind 230 kV", "the 2023 batch") may contain digits.
 
@@ -34,10 +37,8 @@ from interconnection_agent.assessment.claims import (
     Value,
     parse_claims,
 )
-from interconnection_agent.assessment.lookups import COLUMNS, Derivation, Lookup, Lookups
+from interconnection_agent.assessment.lookups import COLUMNS, VIEWS, Derivation, Lookup, Lookups
 
-# Each dataset, and the view that reads only its rows (ADR 0001).
-VIEWS = {"caiso_raw": "caiso_projects", "lbnl": "lbnl_projects"}
 SOURCES = tuple(VIEWS)
 # How close a stated number must be to the number the data gives, per unit. Written down
 # here so "close enough" is a rule, not a feeling (ADR 0003).
@@ -137,7 +138,7 @@ def _check_rows(
         )
     else:
         problems = _same_rows(cited, lookup.row_ids, lookup)
-    unknown = cited - _rows_in(lookups, v.source, cited)
+    unknown = cited - lookups.rows_in(v.source, cited)
     if unknown:
         problems.append(f"{sorted(unknown)} aren't {v.source} rows")
     if problems:
@@ -158,7 +159,7 @@ def _check_rows(
             [f"{v.derivation} of {v.of} isn't worked out by this lookup; quote a figure"],
         )
     if column.from_the_data:
-        data = _column_in(lookups, v.source, v.of, cited)
+        data = lookups.column_in(v.source, v.of, cited)
     else:
         data = {str(r["native_id"]): r.get(v.of) for r in lookup.rows if r["native_id"] in cited}
     numbers = [float(x) for x in data.values() if isinstance(x, (int, float))]
@@ -197,22 +198,6 @@ def _within(v: Value, data: float) -> list[str]:
     if margin(v.value, data):
         return []
     return [f"says {v.value:g} {v.unit}, the data gives {data:.4g} {v.unit}"]
-
-
-def _rows_in(lookups: Lookups, source: str, ids: Iterable[str]) -> set[str]:
-    found = lookups.conn.execute(
-        f"SELECT native_id FROM {VIEWS[source]} WHERE native_id = ANY(%s)", (sorted(ids),)
-    ).fetchall()
-    return {str(r[0]) for r in found}
-
-
-def _column_in(lookups: Lookups, source: str, column: str, ids: Iterable[str]) -> dict[str, object]:
-    assert column in COLUMNS and COLUMNS[column].from_the_data  # never a name from the model
-    found = lookups.conn.execute(
-        f"SELECT native_id, {column} FROM {VIEWS[source]} WHERE native_id = ANY(%s)",
-        (sorted(ids),),
-    ).fetchall()
-    return {str(native_id): x for native_id, x in found}
 
 
 def _text_problems(claim: FactualClaim, log: dict[str, Lookup]) -> list[str]:
