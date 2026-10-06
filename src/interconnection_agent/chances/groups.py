@@ -10,6 +10,11 @@ past projects. It steps back from type and size at the project's own voltage sec
 site, to each bottleneck area it sits behind (narrowest first), to its county, then to type
 and size across California, type alone, and finally all projects.
 
+Every figure here comes from CAISO's own file (decision #38), read through the per-source
+view ``caiso_projects``. ADR 0001 asks analysis functions to be told which dataset to use;
+these take no ``source`` because there is only one they can honestly use (Berkeley Lab's file
+has no places, batches or MW to grid), and each row they return names it.
+
 A figure for N years also needs a project in the group watched for N years. To reach that
 far it keeps widening the place (and drops the size), but it never changes the project type
 just to find a longer history: it refuses instead (decision #38: no battery has 15 years).
@@ -33,6 +38,7 @@ from interconnection_agent.chances.estimate import (
 
 Conn = psycopg.Connection[tuple[object, ...]]
 
+SOURCE = "caiso_raw"
 DAYS_PER_YEAR = 365.25
 OUTCOMES = {"Operational": Outcome.BUILT, "Withdrawn": Outcome.WITHDRAWN, "Active": Outcome.WAITING}
 
@@ -92,8 +98,9 @@ class AreaKind(StrEnum):
 
 
 @dataclass(frozen=True)
-class Level:
-    """One comparison group on the ladder from most specific to all projects."""
+class ComparisonGroup:
+    """The past projects a new project is compared with: one rung of the ladder from most
+    specific to all projects."""
 
     description: str
     project_type: ProjectType | None
@@ -110,9 +117,10 @@ class Level:
 
 @dataclass(frozen=True)
 class Odds:
-    used: Level
-    ladder: tuple[Level, ...]  # most specific first; ``used`` is the first with enough
+    used: ComparisonGroup
+    ladder: tuple[ComparisonGroup, ...]  # most specific first; ``used`` is the first with enough
     chance: Chance
+    history_from: str  # which rules and which file the history comes from (decision #39)
 
 
 @dataclass(frozen=True)
@@ -171,7 +179,7 @@ def history(conn: Conn, as_of: datetime.date | None = None) -> list[Record]:
         years = max(0, (end - q_date).days) / DAYS_PER_YEAR
         records.append(
             Record(
-                PastProject(str(native_id), years, outcome, bool(estimated)),
+                PastProject(SOURCE, str(native_id), years, outcome, bool(estimated)),
                 TYPE_OF_PARTS.get(frozenset(str(t) for t in parts)),
                 float(mw) if isinstance(mw, (int, float)) else None,
                 frozenset(str(p) for p in places),
@@ -238,12 +246,12 @@ def _areas(conn: Conn, place: str) -> list[_Area]:
 _CALIFORNIA = _Area(AreaKind.CALIFORNIA, None, "across California", None)
 
 
-def _level(
+def _group(
     records: list[Record],
     project_type: ProjectType | None,
     size: SizeBand | None,
     area: _Area,
-) -> Level:
+) -> ComparisonGroup:
     members = [
         r
         for r in records
@@ -253,11 +261,11 @@ def _level(
     ]
     resolved = sum(r.past.outcome is not Outcome.WAITING for r in members)
     built = sum(r.past.outcome is Outcome.BUILT for r in members)
-    group = ", ".join(
+    like = ", ".join(
         [str(project_type) if project_type else "All projects"] + ([size.label] if size else [])
     )
-    return Level(
-        description=f"{group}, {area.description}",
+    return ComparisonGroup(
+        description=f"{like}, {area.description}",
         project_type=project_type,
         size=size,
         area_kind=area.kind,
@@ -277,31 +285,37 @@ def comparison_ladder(
     project_type: ProjectType | None,
     mw: float | None,
     place: str | None,
-) -> tuple[Level, ...]:
+) -> tuple[ComparisonGroup, ...]:
     """Every comparison group for a project, most specific first, with its counts."""
     if mw is not None and project_type is None:
         raise ValueError("A size narrows a project type; give the type too.")
     size = next((band for band in SIZE_BANDS if band.holds(mw)), None)
-    groups: list[tuple[ProjectType | None, SizeBand | None]] = []
+    # (type, size) from most to least specific: type and size, type, all projects.
+    narrowings: list[tuple[ProjectType | None, SizeBand | None]] = []
     if project_type is not None:
         if size is not None:
-            groups.append((project_type, size))
-        groups.append((project_type, None))
-    groups.append((None, None))
+            narrowings.append((project_type, size))
+        narrowings.append((project_type, None))
+    narrowings.append((None, None))
     local = _areas(conn, place) if place else []
-    pairs = [(groups[0], area) for area in local] + [(g, _CALIFORNIA) for g in groups]
-    return tuple(_level(records, kind, size, area) for (kind, size), area in pairs)
+    rungs = [(narrowings[0], area) for area in local] + [(n, _CALIFORNIA) for n in narrowings]
+    return tuple(_group(records, kind, band, area) for (kind, band), area in rungs)
 
 
-def usable_levels(ladder: tuple[Level, ...]) -> list[Level]:
-    """The levels a figure may come from, in order: the most specific with enough history,
+def usable_groups(ladder: tuple[ComparisonGroup, ...]) -> list[ComparisonGroup]:
+    """The groups a figure may come from, in order: the most specific with enough history,
     then the wider ones that also have enough, but only of the same project type."""
-    first = next(level for level in ladder if level.enough or level is ladder[-1])
+    first = next(group for group in ladder if group.enough or group is ladder[-1])
     return [first] + [
-        level
-        for level in ladder[ladder.index(first) + 1 :]
-        if level.enough and level.project_type is first.project_type
+        group
+        for group in ladder[ladder.index(first) + 1 :]
+        if group.enough and group.project_type is first.project_type
     ]
+
+
+def members(records: list[Record], group: ComparisonGroup) -> list[PastProject]:
+    """The past projects in a comparison group."""
+    return [r.past for r in records if r.past.native_id in group.native_ids]
 
 
 def odds_for(
@@ -311,23 +325,32 @@ def odds_for(
     project_type: ProjectType | None = None,
     mw: float | None = None,
     place: str | None = None,
+    use: ComparisonGroup | None = None,
 ) -> Odds:
     """The chance of being built within ``within_years``, and the typical wait, for the most
     specific comparison group with enough history. ``mw`` is the MW to grid; ``place`` a
-    voltage section such as "Birds Landing 230 kV".
+    voltage section such as "Birds Landing 230 kV". ``use`` picks another group from the
+    ladder instead, even one with too few projects (it stays marked as such).
 
-    Raises :class:`NotEnoughHistory` if no group of this project type has been watched for
-    ``within_years``.
+    Raises :class:`NotEnoughHistory` if no group of this project type (or the group picked)
+    has been watched for ``within_years``.
     """
     records = history(conn)
     ladder = comparison_ladder(records, conn, project_type, mw, place)
-    usable = usable_levels(ladder)
-    used = next((lv for lv in usable if lv.longest_watched_years >= within_years), None)
+    usable = [use] if use else usable_groups(ladder)
+    used = next((g for g in usable if g.longest_watched_years >= within_years), None)
     if used is None:
         raise NotEnoughHistory(
             f"No figure for {within_years:g} years: no {usable[0].description.split(',')[0]} "
             f"group has been watched that long (longest: "
-            f"{max(lv.longest_watched_years for lv in usable):.1f} years)."
+            f"{max(g.longest_watched_years for g in usable):.1f} years)."
         )
-    group = [r.past for r in records if r.past.native_id in used.native_ids]
-    return Odds(used, ladder, chance_of_reaching_operation(group, within_years))
+    return Odds(
+        used,
+        ladder,
+        chance_of_reaching_operation(members(records, used), within_years),
+        history_from=(
+            "projects that applied before the 2023 rule change "
+            f"(CAISO queue report of {data_as_of(conn).isoformat()})"
+        ),
+    )

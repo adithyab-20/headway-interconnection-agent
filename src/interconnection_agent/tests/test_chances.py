@@ -19,7 +19,7 @@ BUILT, WITHDRAWN, WAITING = Outcome.BUILT, Outcome.WITHDRAWN, Outcome.WAITING
 
 
 def project(name: str, years: float, outcome: Outcome) -> PastProject:
-    return PastProject(native_id=name, years=years, outcome=outcome)
+    return PastProject(source="caiso_raw", native_id=name, years=years, outcome=outcome)
 
 
 def test_a_project_still_waiting_counts_for_the_years_it_was_watched_never_as_a_failure() -> None:

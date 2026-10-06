@@ -15,7 +15,7 @@ from interconnection_agent.chances.estimate import (
 )
 from interconnection_agent.chances.groups import (
     AreaKind,
-    Level,
+    ComparisonGroup,
     Odds,
     ProjectType,
     SizeBand,
@@ -29,7 +29,7 @@ __all__ = [
     "backtest",
     "AreaKind",
     "Chance",
-    "Level",
+    "ComparisonGroup",
     "MWAhead",
     "WaitingProject",
     "realistic_mw_ahead",

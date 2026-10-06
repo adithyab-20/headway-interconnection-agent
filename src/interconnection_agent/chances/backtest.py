@@ -9,10 +9,18 @@ Calibration is what's reported, not accuracy (decision #26): most projects withd
 model that always says "won't be built" would look accurate and be useless. Calibration asks
 whether, of the projects given about 20%, about 20% were built.
 
-Only the project type narrows the comparison group here, never size or place: both are
-recorded as of today (projects resize, connection points move), so using them would let the
-future leak into the past. For the same reason the replay leans on one small leak it can't
-avoid: the 51 estimated outcome dates were estimated from the whole history.
+What it checks is the chance of being built within the next five years given the wait so
+far. Projects that had joined less than a year before a cut-off stand in for the chance from
+the day a project joins. Two things the product shows can't be checked this way:
+
+  * the chance "at any point the history covers" that realistic MW ahead uses, because the
+    years after the last cut-off haven't happened yet;
+  * size and place, which narrow the live comparison groups. Both are recorded as of today
+    (projects resize, connection points move), so using them would let the future leak into
+    the past. Only the project type narrows the group here.
+
+The replay leans on two small leaks it can't avoid: project types as recorded today, and the
+51 estimated outcome dates, which were estimated from the whole history.
 """
 
 from __future__ import annotations
@@ -22,12 +30,14 @@ from dataclasses import dataclass
 
 from interconnection_agent.chances.estimate import ChanceGivenWait, NotEnoughHistory, Outcome
 from interconnection_agent.chances.groups import (
+    SOURCE,
+    ComparisonGroup,
     Conn,
-    Level,
     comparison_ladder,
     data_as_of,
     history,
-    usable_levels,
+    members,
+    usable_groups,
 )
 
 WITHIN_YEARS = 5
@@ -38,6 +48,7 @@ BANDS = ((0.0, 0.05), (0.05, 0.1), (0.1, 0.2), (0.2, 0.35), (0.35, 0.5), (0.5, 1
 
 @dataclass(frozen=True)
 class Prediction:
+    source: str
     native_id: str
     cutoff: datetime.date
     waited_years: float
@@ -107,28 +118,27 @@ def backtest(conn: Conn, within_years: float = WITHIN_YEARS) -> Backtest:
                 (_years_on(cutoff, within_years),),
             ).fetchall()
         }
-        then = history(conn, as_of=cutoff)
-        estimates: dict[Level, ChanceGivenWait] = {}
-        for record in then:
+        known_then = history(conn, as_of=cutoff)
+        estimates: dict[ComparisonGroup, ChanceGivenWait] = {}
+        for record in known_then:
             if record.past.outcome is not Outcome.WAITING:
                 continue
-            ladder = comparison_ladder(then, conn, record.project_type, None, None)
-            for level in usable_levels(ladder):
-                if level not in estimates:
-                    estimates[level] = ChanceGivenWait(
-                        [r.past for r in then if r.past.native_id in level.native_ids]
-                    )
+            ladder = comparison_ladder(known_then, conn, record.project_type, None, None)
+            for group in usable_groups(ladder):
+                if group not in estimates:
+                    estimates[group] = ChanceGivenWait(members(known_then, group))
                 try:
-                    chance = estimates[level].after(record.past.years, within_years)
+                    chance = estimates[group].after(record.past.years, within_years)
                 except NotEnoughHistory:
                     continue
                 predictions.append(
                     Prediction(
+                        SOURCE,
                         record.past.native_id,
                         cutoff,
                         record.past.years,
                         chance,
-                        level.description,
+                        group.description,
                         record.past.native_id in built_by_then,
                     )
                 )

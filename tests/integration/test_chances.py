@@ -51,6 +51,10 @@ def test_across_all_of_california_the_chances_match_the_research_measurement(con
     by_15 = odds_for(conn, within_years=15)
 
     assert by_10.used.description == "All projects, across California"
+    # Every figure says which rules its history comes from (decision #39).
+    assert by_10.history_from == (
+        "projects that applied before the 2023 rule change (CAISO queue report of 2026-07-24)"
+    )
     assert by_10.chance.chance == pytest.approx(0.124, abs=0.002)
     assert by_15.chance.chance == pytest.approx(0.153, abs=0.002)
     # Its bootstrap range around the baseline was 10.4%-13.7%.
@@ -89,6 +93,19 @@ def test_it_uses_the_most_specific_group_and_place_with_enough_history_and_says_
     ]
     assert odds.chance.projects == odds.used.projects
 
+    # A narrower group can still be chosen. Its figure comes from its own projects, and it
+    # stays marked as too few to rely on.
+    smyrna = odds_for(
+        conn,
+        project_type=ProjectType.SOLAR,
+        mw=20,
+        place="Smyrna 115 kV",
+        within_years=5,
+        use=odds.ladder[0],
+    )
+    assert smyrna.used == odds.ladder[0] and not smyrna.used.enough
+    assert {row.native_id for row in smyrna.chance.rows} == odds.ladder[0].native_ids
+
     # A 200 MW battery: 97 batteries of 150-300 MW reached an outcome but only 6 were built,
     # so size is dropped. Batteries of any size have enough.
     battery = odds_for(conn, project_type=ProjectType.BATTERY, mw=200, within_years=10)
@@ -119,8 +136,9 @@ def test_every_figure_comes_with_the_exact_rows_it_was_worked_out_from(conn: Con
     odds = odds_for(conn, project_type=ProjectType.WIND, within_years=10)
     rows = {row.native_id: row for row in odds.chance.rows}
 
-    # Exactly the projects in the group it used: no more, no fewer.
+    # Exactly the projects in the group it used: no more, no fewer, each naming its dataset.
     assert set(rows) == odds.used.native_ids
+    assert {row.source for row in rows.values()} == {"caiso_raw"}
     assert len(rows) == odds.chance.projects
 
     # Montezuma (queue 22), wind + battery, isn't a wind-only project.
@@ -183,8 +201,12 @@ def test_realistic_mw_ahead_counts_each_waiting_project_by_its_chance_given_its_
     }  # fmt: skip
     assert {p.native_id: p.mw_to_grid for p in ahead.projects} == in_the_files
     assert ahead.waiting_mw == pytest.approx(sum(in_the_files.values()))
-    # Each counts only by its chance of still being built, so the total is well below.
+    # Each counts only by its chance of still being built, so the total is well below,
+    # and it comes with its likely range.
     assert 0 < ahead.realistic_mw < ahead.waiting_mw
+    low, high = ahead.likely_range
+    assert low <= ahead.realistic_mw <= high and low < high
+    assert ahead.left_out == ()  # every waiting project here states its MW and queue date
     assert all(p.chance_still_built is not None for p in ahead.projects)
     assert all(0 <= (p.chance_still_built or 0) <= 1 for p in ahead.projects)
 
@@ -241,6 +263,7 @@ def test_realistic_mw_ahead_reproduces_from_its_rows(conn: Conn) -> None:
     assert ahead.realistic_mw == pytest.approx(
         sum(p.mw_to_grid * (p.chance_still_built or 0) for p in ahead.projects)
     )
+    assert {p.source for p in ahead.projects} == {"caiso_raw"}
     for p in ahead.projects:
         # Each chance names the past projects it was worked out from, which include this
         # project itself (watched for as long as it has waited), and has enough history.

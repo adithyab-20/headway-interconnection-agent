@@ -113,7 +113,8 @@ _Avoid_: effective queue, adjusted MW
 Replaying the history as it stood on past cut-off days, predicting each waiting project's
 chance of being built in the next five years, and comparing with what happened. What it
 reports is calibration (of the projects given about 20%, were about 20% built?), not
-accuracy. CI fails if it gets worse than the accepted level.
+accuracy. The automatic checks run on every change fail if it gets worse than the
+accepted level.
 
 **Saturation**:
 How crowded a substation is: MW still waiting to connect there, compared with MW that has

@@ -5,6 +5,10 @@ known to be waiting for the years it has been watched, so it counts for those ye
 then leaves the count: never as a success, never as a failure. This is the Aalen-Johansen
 estimate (decision #26): walk forward through time and, at each moment a project is built
 or withdraws, take the share of the projects still being watched that it represents.
+
+It pools every year projects joined into one estimate. ADR 0002's per-year rates exist
+because a single rate over all years ignores the projects still waiting; this estimate counts
+them for the years they were watched instead, which is why decision #26 chose it.
 """
 
 from __future__ import annotations
@@ -35,6 +39,7 @@ class PastProject:
     if it's still waiting, to the day the data was taken.
     """
 
+    source: str  # the dataset the row came from (always "caiso_raw" so far, decision #38)
     native_id: str
     years: float
     outcome: Outcome
@@ -137,7 +142,8 @@ def _typical_wait(steps: list[_Step]) -> float | None:
     return next(step.years for step in steps if step.built >= eventually / 2 - _ROUNDING)
 
 
-def _middle_95(values: Sequence[float]) -> tuple[float, float]:
+def middle_95(values: Sequence[float]) -> tuple[float, float]:
+    """The range holding the middle 95% of the values."""
     ordered = sorted(values)
     return ordered[int(0.025 * (len(ordered) - 1))], ordered[round(0.975 * (len(ordered) - 1))]
 
@@ -170,10 +176,10 @@ def chance_of_reaching_operation(group: Sequence[PastProject], within_years: flo
     return Chance(
         within_years=within_years,
         chance=_built_by(steps, within_years),
-        likely_range=_middle_95(chances),
+        likely_range=middle_95(chances),
         watched_to_n_years=watched,
         typical_wait_years=typical_wait,
-        typical_wait_range=_middle_95(waits) if typical_wait is not None and waits else None,
+        typical_wait_range=middle_95(waits) if typical_wait is not None and waits else None,
         projects=len(group),
         built=count[Outcome.BUILT],
         withdrawn=count[Outcome.WITHDRAWN],
@@ -193,8 +199,12 @@ class ChanceGivenWait:
     def __init__(self, group: Sequence[PastProject]) -> None:
         self._size = len(group)
         self._watched = sorted(p.years for p in group)
-        self._steps = _Ordered(group).curve()
-        self._step_years = [step.years for step in self._steps]
+        self._ordered = _Ordered(group)
+        self._curve = _Curve(self._ordered.curve())
+
+    def redrawn(self, rng: random.Random) -> _Curve:
+        """The estimate from the group redrawn at random, for a likely range."""
+        return _Curve(self._ordered.curve(self._ordered.redrawn(rng)))
 
     def after(self, waited_years: float, within_more_years: float | None = None) -> float:
         """The chance of being built within ``within_more_years`` more or, by default, at any
@@ -210,12 +220,25 @@ class ChanceGivenWait:
                 + f": the longest any of these {self._size} projects has been watched is "
                 f"{self._watched[-1] if self._watched else 0.0:.1f} years."
             )
+        return self._curve.after(waited_years, until)
+
+
+class _Curve:
+    def __init__(self, steps: list[_Step]) -> None:
+        self._steps = steps
+        self._step_years = [step.years for step in steps]
+
+    def after(self, waited_years: float, until: float = math.inf) -> float:
+        """The share built after ``waited_years`` and by ``until``, over the share still
+        waiting at ``waited_years``. Zero if nobody was still waiting then."""
         before = bisect.bisect_left(self._step_years, waited_years)
         built_then, waiting_then = (
             (self._steps[before - 1].built, self._steps[before - 1].still_waiting)
             if before
             else (0.0, 1.0)
         )
+        if waiting_then <= 0:
+            return 0.0
         by = bisect.bisect_right(self._step_years, until)
         built_by = self._steps[by - 1].built if by else 0.0
         return min(1.0, max(0.0, (built_by - built_then) / waiting_then))
