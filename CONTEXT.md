@@ -109,6 +109,12 @@ applied under the old rules are counted: the old-rules history can't give a chan
 MW, labelled "chance not known". The two are never added together.
 _Avoid_: effective queue, adjusted MW
 
+**Backtest**:
+Replaying the history as it stood on past cut-off days, predicting each waiting project's
+chance of being built in the next five years, and comparing with what happened. What it
+reports is calibration (of the projects given about 20%, were about 20% built?), not
+accuracy. CI fails if it gets worse than the accepted level.
+
 **Saturation**:
 How crowded a substation is: MW still waiting to connect there, compared with MW that has
 actually been connected there before. Needs CAISO's own file (`caiso_raw`); LBNL's data
