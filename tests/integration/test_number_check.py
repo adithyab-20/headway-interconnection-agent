@@ -14,7 +14,14 @@ from pathlib import Path
 import psycopg
 import pytest
 
-from interconnection_agent.assessment import FactualClaim, Lookup, Lookups, Value, check
+from interconnection_agent.assessment import (
+    FactualClaim,
+    Lookup,
+    LookupRefused,
+    Lookups,
+    Value,
+    check,
+)
 from interconnection_agent.db import connect
 from interconnection_agent.load import load_all
 
@@ -176,6 +183,12 @@ def test_deliberately_broken_claims_are_all_caught(whirlwind: Whirlwind) -> None
         "a figure citing only some of its rows": (
             replace(good["a figure, rounded to the whole point"],
                     values=(replace(chance, source_row_ids=("CAISO-0001",)),)), "uses"),
+        "a count of nothing, from a lookup that lists no projects": (
+            claim("{0} are waiting.", from_rows(w.chance, 0, "projects", "count", "projects", ())),
+            "cites no rows"),
+        "a number the lookup was asked for, used as something else": (
+            replace(good["a figure, rounded to the whole point"],
+                    text="{0} were built within 10 years, 10% of them early."), "aren't checked"),
         "a number in the sentence that isn't in a slot": (
             replace(total_, text="{0} is waiting, across 40 projects."), "aren't checked"),
         "a slot with no number": (replace(total_, text="{0} and {1} are waiting."), "no number"),
@@ -185,3 +198,11 @@ def test_deliberately_broken_claims_are_all_caught(whirlwind: Whirlwind) -> None
         result = check(bad, w.lookups)
         assert not result.passed, f"not caught: {name}"
         assert any(why in p for p in result.problems), f"{name}: {result.problems}"
+
+
+def test_a_lookup_refuses_anything_it_does_not_take(whirlwind: Whirlwind) -> None:
+    # Otherwise "note": "1,200" would make 1,200 a name the text may repeat.
+    with pytest.raises(LookupRefused, match="note"):
+        whirlwind.lookups.run(
+            "list_projects", {"site": "Whirlwind", "status": "waiting", "note": "1,200"}
+        )

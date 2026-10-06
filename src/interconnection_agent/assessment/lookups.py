@@ -89,11 +89,12 @@ class Lookup:
     @property
     def labels(self) -> frozenset[str]:
         """Names the lookup was asked for or returned ("Whirlwind 230 kV", a comparison
-        group, "10" years): text a claim may repeat, digits and all."""
+        group, "10 years"): text a claim may repeat, digits and all."""
         asked = [
-            f"{v:g}" if isinstance(v, float) else str(v)
-            for v in self.arguments.values()
-            if isinstance(v, (str, int, float)) and not isinstance(v, bool)
+            f"{v:g} {ASKED_WITH_UNIT[k]}" if isinstance(v, (int, float)) else v
+            for k, v in self.arguments.items()
+            if isinstance(v, str)
+            or (k in ASKED_WITH_UNIT and isinstance(v, (int, float)) and not isinstance(v, bool))
         ]
         noted = [x for n in self.notes.values() for x in ((n,) if isinstance(n, str) else n)]
         return frozenset(asked + noted)
@@ -125,6 +126,16 @@ class LookupRefused(ValueError):
     """A lookup was asked for something it can't do; the message goes back to the model."""
 
 
+# What each lookup takes. Anything else is refused: an argument is text a claim may repeat.
+ARGUMENTS: dict[str, frozenset[str]] = {
+    "chance_of_being_built": frozenset({"place", "project_type", "mw", "within_years", "group"}),
+    "realistic_mw_ahead": frozenset({"place", "site"}),
+    "list_projects": frozenset({"place", "site", "status", "rules", "project_type"}),
+}
+# Numbers a lookup is asked for, with the unit they may be repeated with ("within 10 years"):
+# on its own, "10" could be passed off as any number.
+ASKED_WITH_UNIT = {"within_years": "years", "mw": "MW"}
+
 STATUSES = {"waiting": "Active", "built": "Operational", "withdrawn": "Withdrawn"}
 RULES = {
     "old": "p.batch IS DISTINCT FROM 'C15'",
@@ -150,6 +161,11 @@ class Lookups:
         }.get(tool)
         if runner is None:
             raise LookupRefused(f"There is no lookup called {tool!r}.")
+        unknown = set(arguments) - ARGUMENTS[tool]
+        if unknown:
+            raise LookupRefused(
+                f"{tool} doesn't take {sorted(unknown)}; it takes {sorted(ARGUMENTS[tool])}."
+            )
         tool_call_id = f"tc_{len(self.log) + 1:03d}"
         try:
             figures, rows, notes = runner(dict(arguments))
@@ -167,9 +183,9 @@ class Lookups:
         self.log[tool_call_id] = lookup
         return lookup
 
-    def again(self, lookup: Lookup) -> Lookup:
-        """Run a logged lookup again (after an Adjustment), as a new entry in the log."""
-        return self.run(lookup.tool, lookup.arguments)
+    def leave(self, native_ids: frozenset[str]) -> None:
+        """Leave these projects out of every lookup from now on (an Adjustment)."""
+        self.leave_out = self.leave_out | native_ids
 
     # --- the lookups ---
 

@@ -87,8 +87,10 @@ plain code (`interconnection_agent.assessment.check`) confirms, for every number
 - its rows are rows of the dataset it names, and its lookup is in the log;
 - the sentence holds no number outside its slots.
 
-A claim that fails isn't shown. A Judgement is never shown as checked, and can't state a
-number of its own. The tests feed the checker correct claims and deliberately broken copies
+A claim that fails isn't shown, and leaving projects out later never brings it back. A
+Judgement is never shown as checked, and can't state a number of its own. Two things code
+can't catch, so the writing skill rules them out: numbers written as words ("half"), and
+interpretation slipped into a Factual Claim's sentence. The tests feed the checker correct claims and deliberately broken copies
 (`tests/integration/test_number_check.py`); every broken one is caught.
 
 What it can't prove is that the lookup was the *right* one: the wrong substation or a missing
@@ -143,7 +145,8 @@ The agent calls the model, and these guards apply to every call it makes.
    and fill in `ANTHROPIC_API_KEY`. Git ignores `.env`, and CI scans every commit for
    anything that looks like a key and fails the build if it finds one.
 3. **Per-assessment limits are enforced in code** (`interconnection_agent.budget`). One
-   assessment may make at most `AGENT_MAX_TURNS` model calls (default 10) and use at most
+   assessment, writing it and answering questions about it, may make at most
+   `AGENT_MAX_TURNS` model calls (default 10) and use at most
    `AGENT_MAX_TOKENS_PER_ASSESSMENT` tokens in total (default 200,000). Each call may write
    at most `AGENT_MAX_OUTPUT_TOKENS_PER_CALL` tokens (default 16,000). Going over any of these
    stops the assessment with an error that names the limit. An answer the model could not

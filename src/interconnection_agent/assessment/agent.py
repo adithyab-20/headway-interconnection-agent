@@ -8,21 +8,15 @@ limits (``interconnection_agent.budget``).
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
 from anthropic.types.beta import BetaMessage
 
-from interconnection_agent.assessment.check import check, unchecked_numbers
-from interconnection_agent.assessment.claims import (
-    Claim,
-    FactualClaim,
-    Parsed,
-    Rejected,
-    parse_claims,
-)
-from interconnection_agent.assessment.lookups import LookupRefused, Lookups, places_at
+from interconnection_agent.assessment.check import MARGINS, SOURCES, checked, problems_in
+from interconnection_agent.assessment.claims import Claim, Parsed, Rejected
+from interconnection_agent.assessment.lookups import Derivation, LookupRefused, Lookups, places_at
 from interconnection_agent.assessment.review import Adjustment, Assessment, Project
 from interconnection_agent.budget import AssessmentBudget, Limits
 from interconnection_agent.chances import ProjectType
@@ -32,7 +26,7 @@ from interconnection_agent.settings import Settings
 SKILL = Path(__file__).resolve().parents[1] / "skills/writing-an-assessment/SKILL.md"
 MODEL = "claude-opus-5-5"
 # A submission with rejected claims is sent back once to be fixed; the next is final.
-SUBMISSIONS = 2
+MOST_SUBMISSIONS = 2
 
 
 class Model(Protocol):
@@ -68,10 +62,10 @@ _VALUE = {
     "type": "object",
     "properties": {
         "value": {"type": "number"},
-        "unit": {"type": "string", "enum": ["MW", "years", "%", "projects"]},
-        "derivation": {"type": "string", "enum": ["direct", "sum", "count", "median", "ratio"]},
+        "unit": {"type": "string", "enum": list(MARGINS)},
+        "derivation": {"type": "string", "enum": [d.value for d in Derivation]},
         "of": {"type": "string"},
-        "source": {"type": "string", "enum": ["caiso_raw", "lbnl"]},
+        "source": {"type": "string", "enum": list(SOURCES)},
         "tool_call_id": {"type": "string"},
         "source_row_ids": {"type": "array", "items": {"type": "string"}},
     },
@@ -164,7 +158,6 @@ def write_assessment(
     site: str,
     project: Project,
     limits: Limits | None = None,
-    model_id: str = MODEL,
 ) -> Assessment:
     """Have the model write an assessment for ``project`` at ``site``, checked claim by
     claim. Raises a :class:`~interconnection_agent.budget.BudgetExceeded` if it goes over
@@ -176,16 +169,10 @@ def write_assessment(
         f"The data was taken on {data_as_of(conn).isoformat()}. Look things up, then submit "
         "with submit_assessment."
     )
-    outcome = _run(
-        model,
-        lookups,
-        brief,
-        tools=[*LOOKUP_TOOLS, SUBMIT_ASSESSMENT],
-        limits=limits or Limits(),
-        model_id=model_id,
-    )
+    budget = AssessmentBudget(limits or Limits())
+    outcome = _run(model, budget, lookups, brief, tools=[*LOOKUP_TOOLS, SUBMIT_ASSESSMENT])
     parsed = outcome.parsed or Parsed()
-    assessment = Assessment(site, project, lookups, parsed.claims, parsed.rejected)
+    assessment = Assessment(site, project, lookups, parsed.claims, parsed.rejected, budget=budget)
     assessment.log("the agent", "wrote the assessment")
     return assessment
 
@@ -206,16 +193,10 @@ class Answer:
     proposal: ProposedAdjustment | None = None
 
 
-def ask(
-    assessment: Assessment,
-    model: Model,
-    request: str,
-    *,
-    limits: Limits | None = None,
-    model_id: str = MODEL,
-) -> Answer:
+def ask(assessment: Assessment, model: Model, request: str) -> Answer:
     """Answer a person's plain request about an assessment: with new checked claims, which
-    are added to it, or with a proposed Adjustment, which isn't applied."""
+    are added to it, or with a proposed Adjustment, which isn't applied. Its model calls
+    count against the assessment's own spending limits."""
     assessment.still_open()
     shown = "\n".join(f"- {c.id}: {c.text}" for c in assessment.claims)
     brief = (
@@ -228,20 +209,21 @@ def ask(
     )
     outcome = _run(
         model,
+        assessment.budget,
         assessment.lookups,
         brief,
         tools=[*LOOKUP_TOOLS, SUBMIT_ASSESSMENT, PROPOSE_ADJUSTMENT],
-        limits=limits or Limits(),
-        model_id=model_id,
         existing=assessment.claims,
         site=assessment.site,
     )
     if outcome.proposal is not None:
+        assessment.log("the agent", f"proposed: {outcome.proposal.description}", request)
         return Answer(proposal=outcome.proposal)
     parsed = outcome.parsed or Parsed()
     assessment.claims.extend(parsed.claims)
     assessment.rejected.extend(parsed.rejected)
-    assessment.log("the agent", f"answered: {request}")
+    added = ", ".join(c.id for c in parsed.claims) or "nothing"
+    assessment.log("the agent", f"answered: {request}", f"added {added}")
     return Answer(tuple(parsed.claims), tuple(parsed.rejected))
 
 
@@ -249,14 +231,13 @@ def ask(
 class _Conversation:
     model: Model
     budget: AssessmentBudget
-    model_id: str
     tools: list[dict[str, Any]]
     messages: list[dict[str, Any]]
 
     def next(self) -> BetaMessage:
         self.budget.before_call()
         response = self.model.create(
-            model=self.model_id,
+            model=MODEL,
             max_tokens=self.budget.limits.max_output_tokens_per_call,
             system=SKILL.read_text(),
             tools=self.tools,
@@ -284,28 +265,21 @@ class _Outcome:
 
 def _run(
     model: Model,
+    budget: AssessmentBudget,
     lookups: Lookups,
     brief: str,
     *,
     tools: list[dict[str, Any]],
-    limits: Limits,
-    model_id: str,
     existing: Sequence[Claim] = (),
     site: str | None = None,
 ) -> _Outcome:
-    talk = _Conversation(
-        model,
-        AssessmentBudget(limits),
-        model_id,
-        tools,
-        [{"role": "user", "content": brief}],
-    )
+    conversation = _Conversation(model, budget, tools, [{"role": "user", "content": brief}])
     submissions = 0
     while True:
-        response = talk.next()
+        response = conversation.next()
         calls = [b for b in response.content if b.type == "tool_use"]
         if not calls:
-            talk.messages.append(
+            conversation.messages.append(
                 {"role": "user", "content": "Submit your claims with submit_assessment."}
             )
             continue
@@ -316,7 +290,7 @@ def _run(
                 submissions += 1
                 parsed = checked(arguments.get("claims"), lookups, existing)
                 problems = problems_in(parsed)
-                if problems and submissions < SUBMISSIONS:
+                if problems and submissions < MOST_SUBMISSIONS:
                     results.append(_result(block.id, _sent_back(problems), error=True))
                 else:
                     final = _Outcome(parsed=parsed)
@@ -335,7 +309,7 @@ def _run(
                 )
             except LookupRefused as e:
                 results.append(_result(block.id, str(e), error=True))
-        talk.messages.append({"role": "user", "content": results})
+        conversation.messages.append({"role": "user", "content": results})
         if final is not None:
             return final
 
@@ -384,44 +358,6 @@ def _proposal(lookups: Lookups, site: str, arguments: dict[str, Any]) -> Propose
     return ProposedAdjustment(
         Adjustment(frozenset(ids), why), f"Leave out {' and '.join(said)}. Reason: {why}"
     )
-
-
-def checked(items: Any, lookups: Lookups, existing: Sequence[Claim] = ()) -> Parsed:
-    """Parse what was submitted, then check every Factual Claim. A Judgement stating a
-    number its claims don't is rejected: no number appears unless code checked it.
-    ``existing`` are claims already in the assessment, which new ones may build on."""
-    if not isinstance(items, list):
-        return Parsed(rejected=[Rejected(items, "claims must be a list")])
-    parsed = parse_claims(items, existing)
-    claims: list[Claim] = []
-    for claim in parsed.claims:
-        if isinstance(claim, FactualClaim):
-            claims.append(replace(claim, check=check(claim, lookups)))
-            continue
-        cited = [
-            lookups.log[v.tool_call_id]
-            for c in [*existing, *parsed.claims]
-            if isinstance(c, FactualClaim) and c.id in claim.based_on
-            for v in c.values
-            if v.tool_call_id in lookups.log
-        ]
-        stray = unchecked_numbers(claim.text, cited)
-        if stray:
-            parsed.rejected.append(
-                Rejected(claim, f"{claim.id}: a Judgement states numbers: {stray}")
-            )
-        else:
-            claims.append(claim)
-    return Parsed(claims, parsed.rejected)
-
-
-def problems_in(parsed: Parsed) -> list[str]:
-    return [r.reason for r in parsed.rejected] + [
-        p
-        for c in parsed.claims
-        if isinstance(c, FactualClaim) and c.check is not None
-        for p in c.check.problems
-    ]
 
 
 def _sent_back(problems: list[str]) -> str:

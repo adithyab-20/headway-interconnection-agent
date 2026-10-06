@@ -21,7 +21,8 @@ from interconnection_agent.assessment.claims import (
     Rejected,
     Value,
 )
-from interconnection_agent.assessment.lookups import Lookup, LookupRefused, Lookups
+from interconnection_agent.assessment.lookups import Derivation, Lookup, LookupRefused, Lookups
+from interconnection_agent.budget import AssessmentBudget, Limits
 from interconnection_agent.chances import ProjectType
 
 
@@ -74,6 +75,9 @@ class Assessment:
     rejected: list[Rejected] = field(default_factory=list)
     changes: list[Change] = field(default_factory=list)
     final: bool = False
+    # Every model call for this assessment, writing it and answering questions about it,
+    # counts against one set of limits.
+    budget: AssessmentBudget = field(default_factory=lambda: AssessmentBudget(Limits()))
 
     @property
     def factual_claims(self) -> list[FactualClaim]:
@@ -101,22 +105,27 @@ class Assessment:
 
     def adjust(self, adjustment: Adjustment, *, by: str) -> None:
         """Leave projects out, then work out every number again and check it again. A
-        Judgement resting on a number that changed goes back to awaiting a decision."""
+        Judgement resting on a number that changed goes back to awaiting a decision. A claim
+        the checker rejected stays rejected: working its numbers out again would only make
+        them right, not the claim."""
         self.still_open()
-        self.lookups.leave_out = self.lookups.leave_out | adjustment.leave_out
-        again: dict[str, Lookup | str] = {}
+        self.lookups.leave(adjustment.leave_out)
+        rerun: dict[str, Lookup | str] = {}
         changed: list[str] = []
+        moved: set[str] = set()
         for i, claim in enumerate(self.claims):
-            if not isinstance(claim, FactualClaim):
+            if not isinstance(claim, FactualClaim) or claim.check is None or not claim.check.passed:
                 continue
-            values = tuple(self._recalculated(v, again) for v in claim.values)
+            values = tuple(self._recalculated(v, rerun) for v in claim.values)
             redone = replace(claim, values=values, check=None)
             redone = replace(redone, check=check(redone, self.lookups))
             self.claims[i] = redone
             before, after = _numbers(claim.check), _numbers(redone.check)
             if before != after:
+                moved.add(claim.id)
                 changed.append(f"{claim.id}: {_listed(before)} -> {_listed(after)}")
-        moved = {line.split(":")[0] for line in changed}
+            if redone.check is not None and not redone.check.passed:
+                changed.append(f"{claim.id}: now rejected ({'; '.join(redone.check.problems)})")
         for i, claim in enumerate(self.claims):
             if (
                 isinstance(claim, Judgement)
@@ -167,22 +176,24 @@ class Assessment:
                 return i, claim
         raise KeyError(f"No Judgement called {judgement_id!r}.")
 
-    def _recalculated(self, v: Value, again: dict[str, Lookup | str]) -> Value:
+    def _recalculated(self, v: Value, rerun: dict[str, Lookup | str]) -> Value:
         """The value worked out again from its lookup, run again with the projects now
         left out. A value whose lookup can't be run again is left as it was, and fails."""
-        if v.tool_call_id not in again:
+        if v.tool_call_id not in rerun:
             old = self.lookups.log.get(v.tool_call_id)
             if old is None:
                 return v
             try:
-                again[v.tool_call_id] = self.lookups.again(old)
+                rerun[v.tool_call_id] = self.lookups.run(old.tool, old.arguments)
             except LookupRefused as e:
-                again[v.tool_call_id] = str(e)
-        new = again[v.tool_call_id]
+                rerun[v.tool_call_id] = str(e)
+        new = rerun[v.tool_call_id]
         if isinstance(new, str):
             return v
         rows = v.source_row_ids
-        if rows is not None and v.of not in new.figures and v.derivation != "direct":
+        if rows is not None and v.of in new.figures:
+            rows = tuple(sorted(new.figures[v.of].rows))
+        elif rows is not None and v.derivation != Derivation.DIRECT:
             rows = tuple(sorted(new.row_ids))
         redone = replace(v, tool_call_id=new.tool_call_id, source_row_ids=rows)
         found, _, _ = work_out(replace(redone, value=0), self.lookups)

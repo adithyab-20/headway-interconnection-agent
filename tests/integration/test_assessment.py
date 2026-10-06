@@ -58,7 +58,8 @@ Turn = Callable[[dict[str, Any]], list[dict[str, Any]]]
 
 class ScriptedModel:
     """Answers each request with the next turn of a script. A turn is a function from the
-    request to the content blocks of the reply; tool calls end the turn with ``tool_use``."""
+    request to the content blocks of the reply; a reply that runs lookups or submits ends
+    with ``tool_use``."""
 
     def __init__(self, *turns: Turn) -> None:
         self.turns = list(turns)
@@ -276,6 +277,40 @@ def test_an_adjustment_recalculates_and_rechecks_the_numbers_it_affects(conn: Co
     assert biggest in change.what and "waiting" in change.what and change.when is not None
 
 
+def test_an_adjustment_never_brings_back_a_rejected_claim(conn: Conn) -> None:
+    lookups: list[dict[str, Any]] = []
+
+    def with_some_rows(request: dict[str, Any]) -> list[dict[str, Any]]:
+        """Both drafts count only some of the waiting projects: the second is accepted, with
+        that claim rejected."""
+        lookups.extend([] if lookups else results(request))
+        claims = claims_from(lookups)
+        waiting = claims[2]["values"][0]
+        waiting["source_row_ids"] = waiting["source_row_ids"][1:]
+        waiting["value"] = len(waiting["source_row_ids"])
+        return submit(claims)
+
+    model = ScriptedModel(lookups_at_whirlwind, with_some_rows, with_some_rows)
+    assessment = write_assessment(conn, model, site="Whirlwind", project=SOLAR_100_MW)
+    biggest, _ = biggest_waiting_at_whirlwind(conn)
+
+    assessment.adjust(Adjustment(frozenset({biggest}), why="A duplicate."), by="Dana")
+
+    waiting = next(c for c in assessment.factual_claims if c.id == "waiting")
+    assert waiting.check is not None and not waiting.check.passed
+    assert "are waiting at Whirlwind" not in assessment.text()
+
+
+def test_questions_share_the_assessments_spending_limits(conn: Conn) -> None:
+    model = ScriptedModel(lookups_at_whirlwind, lambda r: submit(claims_from(results(r))))
+    assessment = write_assessment(
+        conn, model, site="Whirlwind", project=SOLAR_100_MW, limits=Limits(max_turns=2)
+    )
+
+    with pytest.raises(TurnLimitExceeded):
+        ask(assessment, ScriptedModel(), "How many projects have withdrawn here?")
+
+
 def test_judgements_are_decided_by_a_person_and_final_needs_every_one_decided(
     conn: Conn,
 ) -> None:
@@ -357,8 +392,9 @@ def test_a_plain_request_becomes_a_proposed_adjustment_that_applies_only_once_co
     assert answer.proposal.adjustment.leave_out == stuck
     assert answer.proposal.adjustment.why == why
     assert all(native_id in answer.proposal.description for native_id in stuck)
-    # Nothing has changed yet.
-    assert assessment.text() == before and len(assessment.changes) == 1
+    # Nothing has changed yet; the proposal is logged.
+    assert assessment.text() == before
+    assert assessment.changes[-1].what == f"proposed: {answer.proposal.description}"
 
     assessment.adjust(answer.proposal.adjustment, by="Dana")
 

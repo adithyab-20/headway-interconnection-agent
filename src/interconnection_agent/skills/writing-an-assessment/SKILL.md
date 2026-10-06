@@ -36,7 +36,9 @@ numbered slot, `{0}`, `{1}`, ..., and give one entry in `values` per slot. Code 
 slots with the checked numbers, number and unit together ("1,234 MW", "38 projects",
 "12%", "6.2 years"), so don't write the unit after a slot. Write no other numbers in the
 sentence, except names (such as "Whirlwind 230 kV" or "the 2023 batch") and numbers you
-asked a lookup for (such as "within 10 years").
+asked a lookup for, with their unit (such as "within 10 years"). Don't write numbers as
+words ("half", "twice", "most") either, and keep interpretation out: "so the site is
+crowded" belongs in a Judgement.
 
 Each value names:
 

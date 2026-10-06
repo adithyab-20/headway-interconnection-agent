@@ -21,12 +21,24 @@ from __future__ import annotations
 
 import re
 import statistics
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
+from dataclasses import replace
+from typing import Any
 
-from interconnection_agent.assessment.claims import Check, FactualClaim, Value
+from interconnection_agent.assessment.claims import (
+    Check,
+    Claim,
+    FactualClaim,
+    Parsed,
+    Rejected,
+    Value,
+    parse_claims,
+)
 from interconnection_agent.assessment.lookups import COLUMNS, Derivation, Lookup, Lookups
 
-SOURCES = ("caiso_raw", "lbnl")
+# Each dataset, and the view that reads only its rows (ADR 0001).
+VIEWS = {"caiso_raw": "caiso_projects", "lbnl": "lbnl_projects"}
+SOURCES = tuple(VIEWS)
 # How close a stated number must be to the number the data gives, per unit. Written down
 # here so "close enough" is a rule, not a feeling (ADR 0003).
 MARGINS: dict[str, Callable[[float, float], bool]] = {
@@ -105,7 +117,12 @@ def _check_rows(
     v: Value, lookup: Lookup, lookups: Lookups
 ) -> tuple[float | None, frozenset[str], list[str]]:
     if not v.source_row_ids:
-        if lookup.rows or v.of != "projects" or v.derivation != Derivation.COUNT:
+        if (
+            lookup.tool != "list_projects"
+            or lookup.rows
+            or v.of != "projects"
+            or v.derivation != Derivation.COUNT
+        ):
             return None, frozenset(), ["cites no rows"]
         # "None are waiting": a count of nothing, from a lookup that returned nothing.
         return 0.0, frozenset(), _within(v, 0)
@@ -184,8 +201,7 @@ def _within(v: Value, data: float) -> list[str]:
 
 def _rows_in(lookups: Lookups, source: str, ids: Iterable[str]) -> set[str]:
     found = lookups.conn.execute(
-        "SELECT native_id FROM projects WHERE source = %s AND native_id = ANY(%s)",
-        (source, sorted(ids)),
+        f"SELECT native_id FROM {VIEWS[source]} WHERE native_id = ANY(%s)", (sorted(ids),)
     ).fetchall()
     return {str(r[0]) for r in found}
 
@@ -193,8 +209,8 @@ def _rows_in(lookups: Lookups, source: str, ids: Iterable[str]) -> set[str]:
 def _column_in(lookups: Lookups, source: str, column: str, ids: Iterable[str]) -> dict[str, object]:
     assert column in COLUMNS and COLUMNS[column].from_the_data  # never a name from the model
     found = lookups.conn.execute(
-        f"SELECT native_id, {column} FROM projects WHERE source = %s AND native_id = ANY(%s)",
-        (source, sorted(ids)),
+        f"SELECT native_id, {column} FROM {VIEWS[source]} WHERE native_id = ANY(%s)",
+        (sorted(ids),),
     ).fetchall()
     return {str(native_id): x for native_id, x in found}
 
@@ -215,13 +231,13 @@ def _text_problems(claim: FactualClaim, log: dict[str, Lookup]) -> list[str]:
 
 
 def unchecked_numbers(text: str, lookups: Iterable[Lookup]) -> list[str]:
-    """Numbers in ``text`` that aren't a name or description the lookups used, or a number
-    the lookups were asked for (``within_years=10``: "within 10 years")."""
+    """Numbers in ``text`` that aren't part of a name or description the lookups used, or of
+    a number they were asked for, with its unit ("10 years"). Numbers written as words
+    ("half", "twice") can't be caught this way; the writing skill rules them out."""
     labels = {x for lookup in lookups for x in lookup.labels} | set(NAMES)
-    asked = {x for x in labels if NUMBER.fullmatch(x)}
-    for label in sorted(labels - asked, key=len, reverse=True):
+    for label in sorted(labels, key=len, reverse=True):
         text = text.replace(label, " ")
-    return [n for n in NUMBER.findall(text) if n.rstrip(".,") not in asked]
+    return NUMBER.findall(text)
 
 
 NUMBER = re.compile(r"\d[\d,.]*")
@@ -232,3 +248,41 @@ NAMES = ("2023 batch", "2023 rule change")
 def _some(ids: Iterable[str]) -> str:
     ordered = sorted(ids)
     return ", ".join(ordered[:5]) + (f" and {len(ordered) - 5} more" if len(ordered) > 5 else "")
+
+
+def checked(items: Any, lookups: Lookups, existing: Sequence[Claim] = ()) -> Parsed:
+    """Parse what was submitted, then check every Factual Claim. A Judgement stating a
+    number its claims don't is rejected: no number appears unless code checked it.
+    ``existing`` are claims already in the assessment, which new ones may build on."""
+    if not isinstance(items, list):
+        return Parsed(rejected=[Rejected(items, "claims must be a list")])
+    parsed = parse_claims(items, existing)
+    claims: list[Claim] = []
+    for claim in parsed.claims:
+        if isinstance(claim, FactualClaim):
+            claims.append(replace(claim, check=check(claim, lookups)))
+            continue
+        cited = [
+            lookups.log[v.tool_call_id]
+            for c in [*existing, *parsed.claims]
+            if isinstance(c, FactualClaim) and c.id in claim.based_on
+            for v in c.values
+            if v.tool_call_id in lookups.log
+        ]
+        stray = unchecked_numbers(claim.text, cited)
+        if stray:
+            parsed.rejected.append(
+                Rejected(claim, f"{claim.id}: a Judgement states numbers: {stray}")
+            )
+        else:
+            claims.append(claim)
+    return Parsed(claims, parsed.rejected)
+
+
+def problems_in(parsed: Parsed) -> list[str]:
+    return [r.reason for r in parsed.rejected] + [
+        p
+        for c in parsed.claims
+        if isinstance(c, FactualClaim) and c.check is not None
+        for p in c.check.problems
+    ]
