@@ -36,7 +36,9 @@ from interconnection_agent.chances.groups import Conn, data_as_of
 from interconnection_agent.settings import Settings
 
 SKILL = Path(__file__).resolve().parents[1] / "skills/writing-an-assessment/SKILL.md"
-MODEL = "claude-opus-5-5"
+# Models that can hand a request declined on safety grounds to a fallback model. Haiku 5.5
+# has no fallback, and asking for one is refused.
+FALLBACK_MODELS = frozenset({"claude-sonnet-5-5", "claude-opus-5-5"})
 # A submission with rejected claims is sent back once to be fixed; the next is final.
 MOST_SUBMISSIONS = 2
 
@@ -48,17 +50,30 @@ class Model(Protocol):
 
 
 class Claude:
-    """The real model, through the Anthropic API. If a request is declined on safety
-    grounds, the API retries it on a fallback model it picks (``fallbacks="default"``)."""
+    """The real model, through the Anthropic API, as chosen in the settings.
 
-    def __init__(self, settings: Settings) -> None:
-        import anthropic
+    Each call asks for the conversation so far to be cached, since every turn sends it
+    again. Where the model offers one, a request declined on safety grounds is retried on a
+    fallback model the API picks (``fallbacks="default"``). ``messages`` replaces the
+    Anthropic client in tests.
+    """
 
-        self._messages = anthropic.Anthropic(api_key=settings.api_key).beta.messages
+    def __init__(self, settings: Settings, messages: Any = None) -> None:
+        if messages is None:
+            import anthropic
+
+            messages = anthropic.Anthropic(api_key=settings.api_key).beta.messages
+        self._messages = messages
+        self.model = settings.model
 
     def create(self, **request: Any) -> BetaMessage:
+        fallback: dict[str, Any] = (
+            {"betas": ["server-side-fallback-2026-07-01"], "fallbacks": "default"}
+            if self.model in FALLBACK_MODELS
+            else {}
+        )
         message: BetaMessage = self._messages.create(
-            **request, betas=["server-side-fallback-2026-07-01"], fallbacks="default"
+            model=self.model, cache_control={"type": "ephemeral"}, **request, **fallback
         )
         return message
 
@@ -253,7 +268,6 @@ class _Conversation:
     def next(self) -> BetaMessage:
         self.budget.before_call()
         response = self.model.create(
-            model=MODEL,
             max_tokens=self.budget.limits.max_output_tokens_per_call,
             system=SKILL.read_text(),
             tools=self.tools,
@@ -261,8 +275,13 @@ class _Conversation:
             thinking={"type": "adaptive"},
             output_config={"effort": "high"},
         )
+        usage = response.usage
         self.budget.record(
-            input_tokens=response.usage.input_tokens,
+            # With caching on, most of the prompt is reported as written to or read from
+            # the cache rather than as input; it's still the prompt, so it all counts.
+            input_tokens=usage.input_tokens
+            + (usage.cache_creation_input_tokens or 0)
+            + (usage.cache_read_input_tokens or 0),
             output_tokens=response.usage.output_tokens,
             stop_reason=response.stop_reason or "",
         )

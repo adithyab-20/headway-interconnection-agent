@@ -1,7 +1,8 @@
 """Assessments as the website sees them: written by the agent, then reviewed on the page.
 
 Each assessment keeps its own database connection, because its lookups are run again when a
-person adjusts it. They live in memory for now; saving and sharing them is ticket 5.
+person adjusts it. Writing one takes a minute or two, so it happens in the background and the
+page checks back. They live in memory for now; saving and sharing them is ticket 5.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from interconnection_agent.assessment import (
     FactualClaim,
     Judgement,
     Model,
+    NotReady,
     Project,
     ask,
     write_assessment,
@@ -47,8 +49,26 @@ class Assessments:
         self._connect = connect
         self._limits = limits
         self._kept: dict[str, _Kept] = {}
+        self._writing: set[str] = set()
+        self._failed: dict[str, Exception] = {}
 
-    def write(self, model: Model, *, site: str, project: Project) -> str:
+    def start(self, model: Model, *, site: str, project: Project) -> str:
+        """Start writing an assessment in the background and return its id straight away."""
+        assessment_id = uuid.uuid4().hex[:12]
+        self._writing.add(assessment_id)
+
+        def write() -> None:
+            try:
+                self._kept[assessment_id] = self._write(model, site=site, project=project)
+            except Exception as e:
+                self._failed[assessment_id] = e
+            finally:
+                self._writing.discard(assessment_id)
+
+        threading.Thread(target=write, daemon=True).start()
+        return assessment_id
+
+    def _write(self, model: Model, *, site: str, project: Project) -> _Kept:
         conn = self._connect()
         conn.autocommit = True
         try:
@@ -58,11 +78,18 @@ class Assessments:
         except BaseException:
             conn.close()
             raise
-        assessment_id = uuid.uuid4().hex[:12]
-        self._kept[assessment_id] = _Kept(assessment, conn)
-        return assessment_id
+        return _Kept(assessment, conn)
+
+    def writing(self, assessment_id: str) -> bool:
+        """Whether the assessment is still being written."""
+        return assessment_id in self._writing
 
     def get(self, assessment_id: str) -> _Kept:
+        """The written assessment. Raises why, if writing it failed."""
+        if assessment_id in self._failed:
+            raise self._failed[assessment_id]
+        if assessment_id in self._writing:
+            raise NotReady("This write-up is still being written.")
         if assessment_id not in self._kept:
             raise KeyError(f"No assessment called {assessment_id!r}.")
         return self._kept[assessment_id]

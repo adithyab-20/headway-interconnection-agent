@@ -28,7 +28,7 @@ from interconnection_agent.assessment import (
     ask,
     write_assessment,
 )
-from interconnection_agent.budget import Limits, TurnLimitExceeded
+from interconnection_agent.budget import Limits, TokenLimitExceeded, TurnLimitExceeded
 from interconnection_agent.chances import ProjectType
 from interconnection_agent.db import connect
 from interconnection_agent.load import load_all
@@ -62,9 +62,10 @@ class ScriptedModel:
     request to the content blocks of the reply; a reply that runs lookups or submits ends
     with ``tool_use``."""
 
-    def __init__(self, *turns: Turn) -> None:
+    def __init__(self, *turns: Turn, usage: dict[str, int] | None = None) -> None:
         self.turns = list(turns)
         self.requests: list[dict[str, Any]] = []
+        self.usage = usage or {"input_tokens": 1_000, "output_tokens": 200}
 
     def create(self, **request: Any) -> BetaMessage:
         # The conversation as it was when sent: the agent keeps adding to its own list.
@@ -81,7 +82,7 @@ class ScriptedModel:
                 "content": content,
                 "stop_reason": "tool_use" if calls else "end_turn",
                 "stop_sequence": None,
-                "usage": {"input_tokens": 1_000, "output_tokens": 200},
+                "usage": self.usage,
             }
         )
 
@@ -222,6 +223,33 @@ def test_every_model_call_goes_through_the_spending_limits(conn: Conn) -> None:
         )
     assert len(model.requests) == 1
     assert model.requests[0]["max_tokens"] == Limits().max_output_tokens_per_call
+
+
+def test_tokens_read_from_or_written_to_the_cache_count_toward_the_spending_limits(
+    conn: Conn,
+) -> None:
+    # Once caching is on, most of each request is reported as read from the cache, apart
+    # from the uncached input.
+    model = ScriptedModel(
+        lookups_at_whirlwind,
+        lambda r: submit(claims_from(results(r))),
+        usage={
+            "input_tokens": 1_000,
+            "output_tokens": 200,
+            "cache_creation_input_tokens": 10_000,
+            "cache_read_input_tokens": 50_000,
+        },
+    )
+
+    with pytest.raises(TokenLimitExceeded):
+        write_assessment(
+            conn,
+            model,
+            site="Whirlwind",
+            project=SOLAR_100_MW,
+            limits=Limits(max_tokens_per_assessment=100_000),
+        )
+    assert len(model.requests) == 2
 
 
 # --- 3. Reviewing an assessment --------------------------------------------------------
