@@ -206,7 +206,7 @@ body:not(.leaflet-dragging) .leaflet-container.over-county{cursor:pointer}
 .dotfield{width:100%;display:block}
 /* Stepping through the story: the new colours sweep across the years, left to right and
    bottom to top, rather than every dot changing at once. */
-.dotfield circle{transition:fill .45s ease calc(var(--c,0) * 14ms + var(--r,0) * 3ms),stroke-opacity .45s ease calc(var(--c,0) * 14ms + var(--r,0) * 3ms)}
+.dotfield circle{transition:fill .3s ease calc(var(--c,0) * 8ms + var(--r,0) * 2ms),stroke-opacity .3s ease calc(var(--c,0) * 8ms + var(--r,0) * 2ms)}
 .dotfield text{fill:var(--muted);font-size:12px;font-family:var(--sans)}
 .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .three .c{background:var(--panel);border-radius:20px;box-shadow:var(--shadow);padding:22px;display:grid;gap:8px;align-content:start}
@@ -530,7 +530,7 @@ table.t .r{text-align:right}
   .results{animation:drop .16s ease-out}
   /* The story's dots drop into their stacks when it first scrolls into view, one year after another. */
   .dotfield circle{opacity:0;transform:translateY(-14px);transform-box:fill-box;transform-origin:center}
-  .dotfield.in circle{opacity:1;transform:none;transition:opacity .35s ease calc(var(--c,0) * 45ms + var(--r,0) * 9ms),transform .5s cubic-bezier(.3,1.4,.5,1) calc(var(--c,0) * 45ms + var(--r,0) * 9ms),fill .45s ease calc(var(--c,0) * 14ms + var(--r,0) * 3ms),stroke-opacity .45s ease calc(var(--c,0) * 14ms + var(--r,0) * 3ms)}
+  .dotfield.in circle{opacity:1;transform:none;transition:opacity .35s ease calc(var(--c,0) * 22ms + var(--r,0) * 4ms),transform .5s cubic-bezier(.3,1.4,.5,1) calc(var(--c,0) * 22ms + var(--r,0) * 4ms),fill .3s ease calc(var(--c,0) * 8ms + var(--r,0) * 2ms),stroke-opacity .3s ease calc(var(--c,0) * 8ms + var(--r,0) * 2ms)}
   .story .caption p{animation:tab-in .35s ease-out}
   .key span{animation:tab-in .3s ease-out}
   @keyframes drop{from{opacity:0;transform:translateY(-4px)}}

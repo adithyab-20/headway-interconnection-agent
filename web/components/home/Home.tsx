@@ -370,7 +370,7 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
                   // The step's timer: when this fills up, the story moves on.
                   <i
                     key={step}
-                    style={{ animationDuration: `${step === 0 ? 5500 : 4500}ms` }}
+                    style={{ animationDuration: `${step === 0 ? 3000 : 2500}ms` }}
                     onAnimationEnd={() => (step === steps.length - 1 ? setPlaying(false) : setStep(step + 1))}
                   />
                 )}
