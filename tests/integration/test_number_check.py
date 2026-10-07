@@ -72,12 +72,16 @@ class Whirlwind:
         ).fetchone()
         assert median is not None
         self.median_mw = float(str(median[0]))
-        # Berkeley Lab's copy of one of these projects ("CAISO / 1234" for CAISO-1234).
-        copies = conn.execute(
-            "SELECT native_id FROM projects WHERE source = 'lbnl' AND native_id = ANY(%s)",
-            ([f"CAISO / {int(i.removeprefix('CAISO-'))}" for i in self.mw if i[6:].isdigit()],),
-        ).fetchall()
-        self.lbnl_copy = str(copies[0][0])
+        # A row of the other dataset: Berkeley Lab's copy of one of these projects ("CAISO /
+        # 1234" for CAISO-1234). Added here, because Berkeley Lab's file isn't committed and CI
+        # loads without it; it goes with the rest when the module's transaction rolls back.
+        first = next(i for i in sorted(self.mw) if i[6:].isdigit())
+        self.lbnl_copy = f"CAISO / {int(first.removeprefix('CAISO-'))}"
+        conn.execute(
+            "INSERT INTO projects (source, native_id, status, iso) "
+            "VALUES ('lbnl', %s, 'Active', 'CAISO') ON CONFLICT DO NOTHING",
+            (self.lbnl_copy,),
+        )
 
     @property
     def rows(self) -> tuple[str, ...]:
