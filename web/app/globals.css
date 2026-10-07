@@ -196,6 +196,13 @@ body:not(.leaflet-dragging) .leaflet-container.over-county{cursor:pointer}
 .stepper .pips{display:flex;gap:6px}
 .stepper .pips button{width:10px;height:10px;border-radius:50%;border:0;padding:0;background:var(--rule-2);cursor:pointer;transition:width .3s cubic-bezier(.2,.8,.2,1),background .3s ease}
 .stepper .pips button[aria-current="true"]{background:var(--accent);width:24px;border-radius:5px}
+/* While the story plays, the current step's dot fills up like a timer. */
+.stepper .pips button{position:relative;overflow:hidden}
+.stepper .pips.playing button[aria-current="true"]{background:var(--accent-wash)}
+.stepper .pips button i{position:absolute;inset:0;background:var(--accent);transform-origin:left;animation:pip-fill linear both}
+.stepper .pips.held button i{animation-play-state:paused}
+@keyframes pip-fill{from{transform:scaleX(0)}}
+.stepper .btn.sm[aria-label]{padding-inline:10px}
 .dotfield{width:100%;display:block}
 /* Stepping through the story: the new colours sweep across the years, left to right and
    bottom to top, rather than every dot changing at once. */

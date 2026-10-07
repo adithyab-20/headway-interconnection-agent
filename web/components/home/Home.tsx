@@ -10,7 +10,7 @@ import { Term } from "@/components/Term";
 import { api, type Overview, type SiteSummary, type YearCounts } from "@/shared/api";
 import { NAME } from "@/shared/brand";
 import { classOf, classVar, dateLong, in100, mw } from "@/shared/format";
-import { Arrow, Back, Search } from "@/shared/icons";
+import { Arrow, Back, Pause, Play, Search } from "@/shared/icons";
 
 const TYPES: [string, string][] = [
   ["Solar", "Solar only"],
@@ -81,7 +81,7 @@ export function Home() {
           <h2>Most projects leave the queue before they&apos;re built</h2>
           <p>
             Each dot below is one project that applied to connect to California&apos;s grid, placed by the year it
-            applied. Step through to see what happened to them.
+            applied. It plays through what happened to them; pause or step through at any point.
           </p>
         </div>
         <div className="story">{overview ? <Story years={overview.years} /> : <p className="muted">Loading…</p>}</div>
@@ -257,16 +257,34 @@ type Kind = "built" | "waiting" | "new" | "withdrawn" | "newGone";
 function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
   const [step, setStep] = useState(0);
   const [tip, setTip] = useState<{ y: number; x: number; top: number } | null>(null);
-  // The dots stack up, year by year, the first time the chart scrolls into view.
+  // The story plays itself once it scrolls into view: the dots stack up year by year, then
+  // each step lights up what happened to them. It waits while the chart is off screen or
+  // the pointer is on it (to read a year), and stops for good once the reader takes over.
   const field = useRef<SVGSVGElement | null>(null);
   const [seen, setSeen] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [pointing, setPointing] = useState(false);
   useEffect(() => {
     const el = field.current;
-    if (!el || seen) return;
-    const watch = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.25 });
+    if (!el) return;
+    const watch = new IntersectionObserver(
+      ([e]) => {
+        setOnScreen(e.isIntersecting);
+        if (e.isIntersecting && !seen) {
+          setSeen(true);
+          setPlaying(!matchMedia("(prefers-reduced-motion: reduce)").matches);
+        }
+      },
+      { threshold: 0.25 },
+    );
     watch.observe(el);
     return () => watch.disconnect();
   }, [seen]);
+  const go = (to: number) => {
+    setPlaying(false);
+    setStep(to);
+  };
   const years = Object.keys(byYear)
     .map(Number)
     .sort((a, b) => a - b);
@@ -331,15 +349,35 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
           <span>{sub}</span>
         </p>
         <div className="stepper">
-          <button className="btn sm" aria-label="Previous" disabled={step === 0} onClick={() => setStep(step - 1)}>
+          <button
+            className="btn sm"
+            aria-label={playing ? "Pause" : step === steps.length - 1 ? "Play again" : "Play"}
+            onClick={() => {
+              if (playing) return setPlaying(false);
+              if (step === steps.length - 1) setStep(0);
+              setPlaying(true);
+            }}
+          >
+            {playing ? <Pause /> : <Play />}
+          </button>
+          <button className="btn sm" aria-label="Previous" disabled={step === 0} onClick={() => go(step - 1)}>
             <Back />
           </button>
-          <div className="pips">
+          <div className={`pips${playing ? " playing" : ""}${pointing || !onScreen ? " held" : ""}`}>
             {steps.map((_, i) => (
-              <button key={i} aria-label={`Step ${i + 1}`} aria-current={i === step} onClick={() => setStep(i)} />
+              <button key={i} aria-label={`Step ${i + 1}`} aria-current={i === step} onClick={() => go(i)}>
+                {playing && i === step && (
+                  // The step's timer: when this fills up, the story moves on.
+                  <i
+                    key={step}
+                    style={{ animationDuration: `${step === 0 ? 5500 : 4500}ms` }}
+                    onAnimationEnd={() => (step === steps.length - 1 ? setPlaying(false) : setStep(step + 1))}
+                  />
+                )}
+              </button>
             ))}
           </div>
-          <button className="btn p sm" onClick={() => setStep(step === steps.length - 1 ? 0 : step + 1)}>
+          <button className="btn p sm" onClick={() => go(step === steps.length - 1 ? 0 : step + 1)}>
             {step === steps.length - 1 ? (
               "Start again"
             ) : (
@@ -356,7 +394,11 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
         viewBox={`0 0 ${Wd} ${Hd}`}
         role="img"
         aria-label="One dot per project, by year applied, coloured by what happened to it"
-        onPointerLeave={() => setTip(null)}
+        onPointerEnter={() => setPointing(true)}
+        onPointerLeave={() => {
+          setTip(null);
+          setPointing(false);
+        }}
       >
         {years.map((y, ci) => {
           const x0 = ci * (colW + colGap);
