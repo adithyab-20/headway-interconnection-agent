@@ -86,6 +86,9 @@ body:not(.leaflet-dragging) .leaflet-container.over-county{cursor:pointer}
 .leaflet-container .site{stroke:var(--panel);stroke-width:1.5;fill-opacity:1;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .18s cubic-bezier(.2,.8,.2,1),stroke .18s}
 .leaflet-container .site:hover,.leaflet-container .site.lit{transform:scale(1.35)}
 .leaflet-container .site.lit{stroke:var(--ink)}
+/* A clicked dot takes focus (Leaflet shows its tooltip on focus), and the browser would draw
+   a blue box around it. The selection ring already marks the picked one. */
+.leaflet-container path:focus{outline:none}
 .leaflet-container .site.k0{fill:var(--t1)} .leaflet-container .site.k1{fill:var(--t2)} .leaflet-container .site.k2{fill:var(--t3)} .leaflet-container .site.k3{fill:var(--t5)}
 .leaflet-container .site.onlynew{fill:var(--lav)}
 .leaflet-container .site.planned{fill:var(--panel);stroke-width:3}
@@ -255,7 +258,10 @@ body:not(.leaflet-dragging) .leaflet-container.over-county{cursor:pointer}
 
 .madlib{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 22px;font-size:17px;line-height:2.1;color:var(--ink-2)}
 .madlib select,.madlib input{border:0;background:var(--accent-wash);color:var(--ink);border-radius:999px;padding:3px 12px;font-weight:650;cursor:pointer}
-.madlib input{width:84px;cursor:text}
+.madlib input{width:84px;cursor:text;text-align:center;line-height:1.3}
+/* No browser up/down arrows squeezed into the pill; typing and the arrow keys still work. */
+.madlib input[type=number]{appearance:textfield;-moz-appearance:textfield}
+.madlib input[type=number]::-webkit-inner-spin-button,.madlib input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .madlib select:hover,.madlib input:hover{background:var(--t1)}
 
 .answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
@@ -537,7 +543,7 @@ table.t .r{text-align:right}
   /* The map fades in, then the substations appear in a sweep from west to east. */
   #lmap .leaflet-map-pane{animation:map-in .5s ease-out backwards}
   @keyframes map-in{from{opacity:0}}
-  .leaflet-container .site,.leaflet-container .halo{animation:dot-in .5s cubic-bezier(.2,.8,.2,1) var(--d,0ms) backwards}
+  #lmap:not(.settled) .site,#lmap:not(.settled) .halo{animation:dot-in .5s cubic-bezier(.2,.8,.2,1) var(--d,0ms) backwards}
   @keyframes dot-in{from{opacity:0;transform:scale(.2)}}
   .leaflet-container .sel-ring{animation:ring-in .45s cubic-bezier(.2,.8,.2,1) backwards}
   @keyframes ring-in{from{opacity:0;transform:scale(1.9)}}
