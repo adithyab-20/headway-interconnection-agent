@@ -321,6 +321,25 @@ def test_each_substation_gets_a_map_position_or_falls_back_to_its_county(
     assert 0.85 < report.share_of_waiting_mw_placed <= 1
 
 
+def test_a_substation_is_in_the_county_it_stands_in_not_where_its_projects_are(
+    loaded: tuple[Conn, LoadReport],
+) -> None:
+    conn, _ = loaded
+
+    # Projects in Mexico connect at these three, and the operator's file gives the projects'
+    # own location. The substations themselves stand in California.
+    counties = conn.execute(
+        "SELECT DISTINCT site, county, state FROM places "
+        "WHERE site IN ('Imperial Valley', 'East County', 'Miguel') ORDER BY site"
+    ).fetchall()
+    assert counties == [
+        ("East County", "San Diego", "CA"),
+        ("Imperial Valley", "Imperial", "CA"),
+        ("Miguel", "San Diego", "CA"),
+    ]
+    assert one(conn, "SELECT count(*) FROM places WHERE state = 'MX'") == (0,)
+
+
 def test_planned_upgrades_and_cost_to_add_room_are_attached_to_substations(
     loaded: tuple[Conn, LoadReport],
 ) -> None:

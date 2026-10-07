@@ -247,3 +247,6 @@ review/
 
 # Throwaway worktrees made by background agents.
 .claude/worktrees/
+
+# Kept out of iCloud Drive: macOS never syncs or evicts names ending in .nosync.
+*.nosync

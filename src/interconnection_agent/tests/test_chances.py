@@ -13,6 +13,7 @@ from interconnection_agent.chances import (
     PastProject,
     chance_of_reaching_operation,
     chance_of_still_being_built,
+    outcomes_by_year,
 )
 
 BUILT, WITHDRAWN, WAITING = Outcome.BUILT, Outcome.WITHDRAWN, Outcome.WAITING
@@ -126,3 +127,28 @@ def test_a_project_that_has_already_waited_is_judged_only_against_those_that_wai
     # Nobody has been watched for 1.5 + 4 years.
     with pytest.raises(NotEnoughHistory):
         chance_of_still_being_built(group, waited_years=1.5, within_more_years=4)
+
+
+def test_year_by_year_it_gives_the_share_built_withdrawn_and_still_waiting() -> None:
+    group = [
+        project("A", 1, BUILT),
+        project("B", 2, WITHDRAWN),
+        project("C", 3, WAITING),
+        project("D", 4, BUILT),
+    ]
+
+    # Year 1: A is 1 of the 4 watched, built: 1/4 built, 3/4 waiting. Year 2: B withdraws, 1
+    # of the 3 watched: 3/4 x 1/3 = 1/4 withdrawn, 1/2 waiting. C leaves the count at year 3
+    # with no outcome. Year 4: D is the only one watched, built: another 1/2 built.
+    years = outcomes_by_year(group, [0, 2, 4])
+
+    assert [y.years for y in years] == [0, 2, 4]
+    assert [(y.built, y.withdrawn, y.still_waiting) for y in years] == [
+        pytest.approx((0, 0, 1)),
+        pytest.approx((1 / 4, 1 / 4, 1 / 2)),
+        pytest.approx((3 / 4, 1 / 4, 0)),
+    ]
+    assert all(y.built_range[0] <= y.built <= y.built_range[1] for y in years)
+    # Past the longest any project was watched, there's nothing to say.
+    with pytest.raises(NotEnoughHistory):
+        outcomes_by_year(group, [5])

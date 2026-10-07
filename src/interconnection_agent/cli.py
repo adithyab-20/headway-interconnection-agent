@@ -7,7 +7,9 @@ Subcommands:
   * ``ingest-lbnl <workbook>`` — load LBNL's national Complete Queue Data sheet, tagged
     ``source = lbnl`` and never aggregated with CAISO's rows (ADR-0001);
   * ``projects --county <county>`` — list the active projects in a county;
-  * ``projects --poi <name>`` — list the projects at a normalized (reviewed) POI.
+  * ``projects --poi <name>`` — list the projects at a normalized (reviewed) POI;
+  * ``load [data folder]`` — load everything the product needs (``load_all``) and keep it,
+    for the API and the website.
 
 Both listings read through the ``caiso_projects`` view, never the base table, so a project
 that also appears in LBNL's national file cannot leak into a CAISO listing — the
@@ -26,6 +28,8 @@ from psycopg.rows import class_row
 
 from interconnection_agent.db import connect
 from interconnection_agent.ingest import run_caiso_ingest, run_lbnl_ingest
+from interconnection_agent.load import load_all
+from interconnection_agent.migrate import apply_migrations
 
 Conn = psycopg.Connection[tuple[object, ...]]
 
@@ -166,6 +170,19 @@ def _cmd_projects(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_load(args: argparse.Namespace) -> int:
+    with connect() as conn:
+        apply_migrations(conn)
+        report = load_all(Path(args.data), conn)
+        conn.commit()
+    unrecognised = sum(len(v) for v in report.unrecognised.values())
+    print(
+        f"Loaded {args.data}. {report.share_of_waiting_mw_placed:.1%} of waiting MW has a map "
+        f"point; {unrecognised} values the reviewed tables don't recognise were reported."
+    )
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="interconnection-agent")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -179,6 +196,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     ingest_lbnl.add_argument("workbook", help="path to LBNL_Ix_Queue_Data_File_thru2025.xlsx")
     ingest_lbnl.set_defaults(func=_cmd_ingest_lbnl)
+
+    load = sub.add_parser("load", help="load everything the product needs and keep it")
+    load.add_argument("data", nargs="?", default="data", help="the data folder (default: data)")
+    load.set_defaults(func=_cmd_load)
 
     projects = sub.add_parser("projects", help="list CAISO projects by county or normalized POI")
     scope = projects.add_mutually_exclusive_group(required=True)

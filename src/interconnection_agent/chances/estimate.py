@@ -127,12 +127,7 @@ class _Ordered:
 
 
 def _built_by(steps: list[_Step], years: float) -> float:
-    built = 0.0
-    for step in steps:
-        if step.years > years:
-            break
-        built = step.built
-    return built
+    return _state_at(steps, years)[0]
 
 
 def _typical_wait(steps: list[_Step]) -> float | None:
@@ -186,6 +181,58 @@ def chance_of_reaching_operation(group: Sequence[PastProject], within_years: flo
         waiting=count[Outcome.WAITING],
         rows=tuple(sorted(group, key=lambda p: p.native_id)),
     )
+
+
+@dataclass(frozen=True)
+class YearOutcome:
+    """Out of every project like these, the share built, withdrawn and still waiting a
+    number of years after applying."""
+
+    years: float
+    built: float
+    withdrawn: float
+    still_waiting: float
+    built_range: tuple[float, float]  # the likely range of ``built``
+
+
+def _state_at(steps: list[_Step], years: float) -> tuple[float, float]:
+    """The share built, and the share still waiting, ``years`` after applying."""
+    built, still_waiting = 0.0, 1.0
+    for step in steps:
+        if step.years > years:
+            break
+        built, still_waiting = step.built, step.still_waiting
+    return built, still_waiting
+
+
+def outcomes_by_year(group: Sequence[PastProject], years: Sequence[float]) -> list[YearOutcome]:
+    """The share built, withdrawn and still waiting at each of ``years`` after applying, from
+    the same estimate as :func:`chance_of_reaching_operation`, with the likely range of the
+    share built. Raises :class:`NotEnoughHistory` past the longest any project was watched."""
+    longest = max((p.years for p in group), default=0.0)
+    beyond = [y for y in years if y > longest]
+    if beyond:
+        raise NotEnoughHistory(
+            f"No figure for {max(beyond):g} years: the longest any of these {len(group)} "
+            f"projects has been watched is {longest:.1f} years."
+        )
+    ordered = _Ordered(group)
+    steps = ordered.curve()
+    rng = random.Random(SEED)
+    redrawn = [ordered.curve(ordered.redrawn(rng)) for _ in range(RESAMPLES)]
+    found = []
+    for y in years:
+        built, still_waiting = _state_at(steps, y)
+        found.append(
+            YearOutcome(
+                years=y,
+                built=built,
+                withdrawn=max(0.0, 1 - built - still_waiting),
+                still_waiting=still_waiting,
+                built_range=middle_95([_built_by(r, y) for r in redrawn]),
+            )
+        )
+    return found
 
 
 class ChanceGivenWait:

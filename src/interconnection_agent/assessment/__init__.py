@@ -5,10 +5,8 @@ See docs/specs/product-spec.md, ticket "The agent writes a checked assessment", 
 
 from interconnection_agent.assessment.agent import (
     AgentStopped,
-    Answer,
     Claude,
     Model,
-    ProposedAdjustment,
     ask,
     write_assessment,
 )
@@ -25,11 +23,13 @@ from interconnection_agent.assessment.claims import (
 from interconnection_agent.assessment.lookups import Lookup, LookupRefused, Lookups
 from interconnection_agent.assessment.review import (
     Adjustment,
+    Answer,
     Assessment,
     AssessmentIsFinal,
     Change,
     NotReady,
     Project,
+    ProposedAdjustment,
 )
 
 __all__ = [

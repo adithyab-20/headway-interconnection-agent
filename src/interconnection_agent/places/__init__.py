@@ -9,6 +9,8 @@ here is applied through reviewed tables in this folder, by exact match only:
   * ``positions.csv``       - each site -> its coordinates and what they come from: a
                               substation OpenStreetMap names, or a public document (see the
                               README).
+  * ``site_counties.csv``   - each site whose projects' own county isn't where the
+                              substation stands (projects in Mexico) -> its county.
   * ``bottleneck_names.csv``- each bottleneck as the bottleneck list names it -> the name
                               the cost file uses, and a short name.
   * ``upgrade_places.csv``  - each planned upgrade -> the places it's at.
@@ -121,8 +123,12 @@ def apply_places(conn: Conn, sources: Sources) -> dict[Unrecognised, list[str]]:
                 counties[place][(_county(str(county)), str(state or ""))] += 1
 
     positions = {r["site"]: r for r in _rows("positions.csv")}
+    stands_in = {r["site"]: (r["county"], r["state"]) for r in _rows("site_counties.csv")}
     for place, (site, kv) in sites.items():
+        # A place is in the county most of its projects give, unless the reviewed table
+        # says where the substation itself stands.
         (county, state), _ = (counties[place].most_common(1) or [(("", ""), 0)])[0]
+        county, state = stands_in.get(site, (county, state))
         pos = positions.get(site)
         conn.execute(
             "INSERT INTO places (place, site, voltage_kv, county, state, latitude, longitude, "

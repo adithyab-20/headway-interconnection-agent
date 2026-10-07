@@ -70,7 +70,20 @@ Built so far:
   finalise once every Judgement is decided. Every change is logged. A plain request ("ignore projects stuck since 2019") becomes a proposed
   change that applies only when a person confirms it.
 
-Not built yet: the map app, and saving assessments. See the
+- **The map app, Headway** (ticket "The map app"): a website (`web/`, Next.js and Leaflet)
+  over a small API (`interconnection_agent.api`). A landing page explains the queue before
+  showing any substation. The map shows California's counties from US Census boundaries,
+  every substation with projects waiting coloured by realistic MW ahead, planned substations
+  as hollow rings, and substations without an exact position as "+N" badges on their county,
+  never as guessed dots. A substation page answers three plain questions first (will it get
+  built, how long does it take, how crowded is it), with charts, the projects ahead, upgrades
+  and costs, and the groups of past projects it was compared with, in tabs. Every number opens the rows it came from.
+  **Ask** answers questions with checked facts, held until you add them to the write-up, and
+  says plainly when the data can't answer something; changes to what's counted are shown
+  first and apply only once confirmed. **Write-up** is where a person agrees with, disagrees
+  with or rewords each Judgement, then finalises.
+
+Not built yet: saving and sharing assessments, and the public site. See the
 [product spec](docs/specs/product-spec.md).
 
 ## What the checking proves, and what it doesn't
@@ -134,6 +147,24 @@ Docker exposes Postgres on **port 5433** of your machine (not the usual 5432), s
 clash with a Postgres you may already have installed. CI uses the same port, so the default
 address works the same way there.
 
+## Run the website
+
+```bash
+# 1. Load the data into the database and keep it (about 30 seconds).
+uv run python -m interconnection_agent.cli load
+
+# 2. Start the API on port 8000. Written assessments use Claude if ANTHROPIC_API_KEY is
+#    set (see below); everything else works without it.
+uv run python -m interconnection_agent.api
+
+# 3. In another terminal, start the website, then open http://localhost:3000.
+cd web && npm install && npm run dev
+```
+
+The website sends `/api` requests to `http://127.0.0.1:8000`; set `HEADWAY_API` to point it
+elsewhere. The first visit to the map takes about 15 seconds while every substation's
+realistic MW ahead is worked out; after that it's kept until the API restarts.
+
 ## Before the first model call: API key and spending cap
 
 The agent calls the model, and these guards apply to every call it makes.
@@ -164,15 +195,23 @@ uv run ruff check           # lint
 uv run ruff format --check  # formatting
 uv run mypy                 # type check (strict)
 uv run pytest               # tests (needs Postgres running)
+cd web && npm run typecheck # the website's types
 ```
+
+The browser tests (`tests/e2e/test_map_app.py`) run the website, the API and the database
+together in Chromium, with a scripted stand-in for the model. They need the data loaded
+(`cli load`), `npm install` in `web/` and `uv run playwright install chromium`, and are
+skipped otherwise.
 
 ## Layout
 
 ```
 src/interconnection_agent/        # the application code
+src/interconnection_agent/api/    # the API the website reads (FastAPI)
 src/interconnection_agent/tests/  # fast tests for that code (no database)
+web/                              # the website, Headway (Next.js and Leaflet)
 tests/integration/                # tests against the real Postgres
-tests/e2e/                        # answer-key tests against the real model (need a key)
+tests/e2e/                        # the website in a browser, and tests of the real model
 data/                             # the saved source spreadsheets, and their credits
 docker-compose.yml                # the local Postgres
 .github/workflows/ci.yml          # CI: checks, tests, and the key scan
@@ -226,7 +265,9 @@ projects that appear in both. Any disagreement is reported for review by
 The `data/` folder holds saved copies of the public datasets this project loads: CAISO's
 Public Queue Report and LBNL's "Queued Up" file. They're used for educational and research
 purposes and aren't covered by this repository's software license. Each source's credit and
-terms are in [`data/README.md`](data/README.md). Substation positions come from
+terms are in [`data/README.md`](data/README.md). County and state outlines on the map come
+from the US Census Bureau's cartographic boundary files (2023, public domain). Substation
+positions come from
 OpenStreetMap: © OpenStreetMap contributors, under the
 [Open Database License](https://www.openstreetmap.org/copyright). Neither CAISO, LBNL, nor GridTracker
 endorses this project.

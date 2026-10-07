@@ -22,6 +22,7 @@ from interconnection_agent.assessment import (
     Assessment,
     AssessmentIsFinal,
     Decision,
+    FactualClaim,
     NotReady,
     Project,
     ask,
@@ -427,7 +428,7 @@ def test_a_plain_request_becomes_a_proposed_adjustment_that_applies_only_once_co
     assert assessment.text() == before
     assert assessment.changes[-1].what == f"proposed: {answer.proposal.description}"
 
-    assessment.adjust(answer.proposal.adjustment, by="Dana")
+    assessment.confirm(answer.id, by="Dana")
 
     after_2019 = conn.execute(
         "SELECT count(*), sum(mw_to_grid) FROM projects p WHERE p.source = 'caiso_raw' "
@@ -440,10 +441,13 @@ def test_a_plain_request_becomes_a_proposed_adjustment_that_applies_only_once_co
     count, mw = worked_out(assessment, "waiting")
     assert count == after_2019[0] and mw == pytest.approx(after_2019[1])
     assert assessment.changes[-1].who == "Dana" and assessment.changes[-1].why == why
+    with pytest.raises(KeyError):
+        assessment.confirm(answer.id, by="Dana")  # once only
 
 
-def test_a_question_gets_new_checked_claims(conn: Conn) -> None:
+def test_a_question_gets_new_checked_claims_held_until_a_person_adds_them(conn: Conn) -> None:
     assessment = written(conn)
+    before = assessment.text()
 
     def answer(request: dict[str, Any]) -> list[dict[str, Any]]:
         (withdrawn,) = results(request)
@@ -458,7 +462,7 @@ def test_a_question_gets_new_checked_claims(conn: Conn) -> None:
     model = ScriptedModel(
         lambda _: [call("list_projects", site="Whirlwind", status="withdrawn")], answer
     )
-    ask(assessment, model, "How many projects have withdrawn here?")
+    held = ask(assessment, model, "How many projects have withdrawn here?")
 
     (withdrawn,) = conn.execute(
         "SELECT count(*) FROM projects p WHERE p.source = 'caiso_raw' "
@@ -466,8 +470,19 @@ def test_a_question_gets_new_checked_claims(conn: Conn) -> None:
         "  SELECT native_id FROM project_places JOIN places USING (place) "
         "  WHERE places.site = 'Whirlwind')"
     ).fetchone() or (None,)
-    assert f"{withdrawn} projects have withdrawn at Whirlwind. [checked]" in assessment.text()
+    # Checked, but held: the write-up doesn't change until a person adds the answer.
+    (claim,) = held.claims
+    assert isinstance(claim, FactualClaim) and claim.check is not None and claim.check.passed
+    assert claim.check.worked_out == (withdrawn,)
+    assert assessment.text() == before
     assert assessment.changes[-1].what == "answered: How many projects have withdrawn here?"
+
+    assessment.add(held.id, by="Dana")
+
+    assert f"{withdrawn} projects have withdrawn at Whirlwind. [checked]" in assessment.text()
+    assert assessment.changes[-1].who == "Dana" and "withdrawn" in assessment.changes[-1].what
+    with pytest.raises(KeyError):
+        assessment.add(held.id, by="Dana")  # once only
 
 
 def test_a_request_to_compare_more_narrowly_becomes_a_proposed_adjustment(conn: Conn) -> None:
@@ -488,3 +503,27 @@ def test_a_request_to_compare_more_narrowly_becomes_a_proposed_adjustment(conn: 
     assert answer.proposal.adjustment.comparison_group == AT_THE_WHIRLWIND_SUBSTATION
     assert AT_THE_WHIRLWIND_SUBSTATION in answer.proposal.description
     assert assessment.changes[-1].what.startswith("proposed:")
+
+
+def test_a_question_the_data_cant_answer_gets_a_plain_reason_instead_of_a_guess(
+    conn: Conn,
+) -> None:
+    assessment = written(conn)
+    before, turns = assessment.text(), assessment.budget.turns_used
+    reason = "The queue report doesn't say what a project pays to connect."
+    model = ScriptedModel(
+        # A reason may not state numbers no code checked: sent back.
+        lambda _: [call("cant_answer", reason="It would cost about $40 million to connect.")],
+        lambda _: [call("cant_answer", reason=reason)],
+    )
+
+    answer = ask(assessment, model, "What would it cost to connect here?")
+
+    assert model.requests[1]["messages"][-1]["content"][0]["is_error"]
+    assert answer.cant_answer == reason
+    assert not answer.claims and answer.proposal is None
+    assert assessment.text() == before
+    # It stops there: two model calls, nowhere near the spending limit.
+    assert assessment.budget.turns_used == turns + 2
+    assert "cant_answer" in SKILL.read_text()
+    assert reason in assessment.changes[-1].what
