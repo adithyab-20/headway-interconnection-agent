@@ -19,6 +19,8 @@ type Inner = Leaflet.Map & {
   _limitZoom(zoom: number): number;
   _getCenterOffset(center: Leaflet.LatLng): Leaflet.Point;
   _tryAnimatedZoom(center: Leaflet.LatLng, zoom: number, options?: { animate?: boolean }): boolean;
+  _getBoundsCenterZoom(bounds: Leaflet.LatLngBoundsExpression, options: Leaflet.FitBoundsOptions): { center: Leaflet.LatLng; zoom: number };
+  _flyToFrame: number;
 };
 
 // How quickly a zoom settles: about two thirds of the way there every SETTLE_MS.
@@ -106,4 +108,48 @@ export function smoothMotion(map: Leaflet.Map): void {
     },
     { passive: false },
   );
+}
+
+// Going somewhere the reader picked. A long journey keeps Leaflet's flight, which pulls back
+// to show where it's heading. A short one glides straight there: on a short hop that pull-back
+// just makes the dots shrink and regrow and the names blink out and back.
+export function travel(map: Leaflet.Map, center: Leaflet.LatLngExpression, zoom: number): void {
+  const m = map as Inner;
+  const to = toLatLng(m, center);
+  const z0 = m.getZoom();
+  zoom = m._limitZoom(zoom);
+  const size = Math.max(m.getSize().x, m.getSize().y);
+  const low = Math.min(z0, zoom);
+  const far = m.project(m.getCenter(), low).distanceTo(m.project(to, low)) / size;
+  if (far > 1) {
+    m.flyTo(to, zoom, { duration: 0.9 });
+    return;
+  }
+  const ms = Math.min(420 + far * 300 + Math.abs(zoom - z0) * 100, 800);
+  const p0 = m.project(m.getCenter(), z0);
+  const p1 = m.project(to, z0);
+  const zooming = Math.abs(zoom - z0) > 0.001;
+  m._stop();
+  m._moveStart(zooming, false);
+  const start = performance.now();
+  const frame = (now: number) => {
+    const t = Math.min(Math.max((now - start) / ms, 0), 1);
+    const s = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+    if (t < 1) {
+      m._move(m.unproject(p0.add(p1.subtract(p0).multiplyBy(s)), z0), z0 + (zoom - z0) * s);
+      // Kept where Leaflet keeps its own flight, so a drag or a new journey cancels this one.
+      m._flyToFrame = requestAnimationFrame(frame);
+    } else m._move(to, zoom)._moveEnd(zooming);
+  };
+  m._flyToFrame = requestAnimationFrame(frame);
+}
+
+export function travelToBounds(map: Leaflet.Map, bounds: Leaflet.LatLngBoundsExpression, options: Leaflet.FitBoundsOptions): void {
+  const target = (map as Inner)._getBoundsCenterZoom(bounds, options);
+  travel(map, target.center, target.zoom);
+}
+
+// A LatLng from any of the ways Leaflet accepts one, without importing Leaflet here.
+function toLatLng(m: Inner, at: Leaflet.LatLngExpression): Leaflet.LatLng {
+  return m.unproject(m.project(at, 0), 0);
 }

@@ -12,7 +12,7 @@ import { api, type SiteSummary } from "@/shared/api";
 import { CLASS_LABEL, classOf, classVar, mw, plural } from "@/shared/format";
 import { Arrow, Back, Search } from "@/shared/icons";
 import { TOWNS, type Town } from "@/shared/towns";
-import { smoothMotion } from "./motion";
+import { smoothMotion, travel, travelToBounds } from "./motion";
 
 type Feature = { type: "Feature"; properties: Record<string, string>; geometry: Geometry };
 type Geometry = { type: "Polygon"; coordinates: number[][][] } | { type: "MultiPolygon"; coordinates: number[][][][] };
@@ -29,7 +29,6 @@ const CALIFORNIA: Leaflet.LatLngBoundsExpression = [
 const RADIUS = [4.5, 6, 7.5, 9.5];
 const NEAR_MILES = 60;
 const START_TOWNS = ["Bakersfield", "Fresno", "Lancaster", "Palm Springs", "Blythe", "El Centro", "Los Banos", "Las Vegas"];
-const FLY = { duration: 0.8 };
 // Flying to a county stops short of filling the screen with it, so its neighbours still show.
 const COUNTY_ZOOM = 9;
 
@@ -58,11 +57,11 @@ function uncovered(map: Leaflet.Map, pad = 0): { paddingTopLeft: [number, number
     : { paddingTopLeft: [pad, pad], paddingBottomRight: [pad, box.bottom - panel.top + pad] };
 }
 
-// Fly so that `at` ends up in the middle of the uncovered part.
-function flyToPlace(map: Leaflet.Map, at: Leaflet.LatLngExpression, zoom: number) {
+// Go so that `at` ends up in the middle of the uncovered part.
+function goToPlace(map: Leaflet.Map, at: Leaflet.LatLngExpression, zoom: number) {
   const { paddingTopLeft: tl, paddingBottomRight: br } = uncovered(map);
   const shift = map.project(at, zoom).subtract([(tl[0] - br[0]) / 2, (tl[1] - br[1]) / 2]);
-  map.flyTo(map.unproject(shift, zoom), zoom, FLY);
+  travel(map, map.unproject(shift, zoom), zoom);
 }
 
 // The panel slides forward as you go deeper (a place, then a substation) and back as you
@@ -382,6 +381,8 @@ function useLeafletMap(
           )
           .on("mouseover", () => toFront(marker))
           .on("click", () => {
+            // The map is about to move out from under the pointer: don't carry the label along.
+            marker.closeTooltip();
             const first = countiesOf(s)[0];
             setView({
               view: "site",
@@ -485,13 +486,13 @@ function useLeafletMap(
     m.ring = null;
     if (view.view === "welcome") {
       pick(null);
-      map.flyToBounds(CALIFORNIA, { ...uncovered(map), ...FLY });
+      travelToBounds(map, CALIFORNIA, uncovered(map));
     } else if (view.view === "area") {
       pick(view.area);
-      if (view.area.kind === "town") flyToPlace(map, [view.area.lat, view.area.lon], 8.5);
+      if (view.area.kind === "town") goToPlace(map, [view.area.lat, view.area.lon], 8.5);
       else {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 30), maxZoom: COUNTY_ZOOM, ...FLY });
+        if (c) travelToBounds(map, c.getBounds(), { ...uncovered(map, 30), maxZoom: COUNTY_ZOOM });
       }
     } else {
       const s = sites.find((x) => x.site === view.site);
@@ -499,7 +500,7 @@ function useLeafletMap(
       if (s && placed(s)) {
         const at: [number, number] = [s.latitude as number, s.longitude as number];
         const k = classOf(s.realistic_mw);
-        flyToPlace(map, at, Math.max(map.getZoom(), 8.5));
+        goToPlace(map, at, Math.max(map.getZoom(), 8.5));
         const marker = L.circleMarker(at, {
           pane: "sites",
           radius: RADIUS[k] * m.size() + 5,
@@ -511,7 +512,7 @@ function useLeafletMap(
         if (dot) toFront(dot);
       } else if (view.area?.kind === "county") {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 40), maxZoom: COUNTY_ZOOM, ...FLY });
+        if (c) travelToBounds(map, c.getBounds(), { ...uncovered(map, 40), maxZoom: COUNTY_ZOOM });
       }
     }
   }, [view, sites, ready]);
