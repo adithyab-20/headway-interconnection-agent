@@ -7,6 +7,7 @@ These tables are applied by exact match only. They were drafted by
 |---|---|
 | `spellings.csv` | each spelling of a connection point (tidied) → site and voltage, or a line's two end sites |
 | `positions.csv` | each site → its coordinates and what they come from (`positioned_by`, `source`) |
+| `site_counties.csv` | each site whose projects give a county the substation isn't in (projects in Mexico) → the county it stands in, with its source |
 | `bottleneck_names.csv` | each bottleneck in CAISO's 2024 list → its entry in the 2026 cost estimates |
 | `upgrade_places.csv` | each planned upgrade → the places it's at |
 | `fact_sheet_names.csv` | each upgrade fact sheet the tracker names differently → the tracker's plan id (written by hand) |

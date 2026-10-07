@@ -59,6 +59,29 @@ class Adjustment:
     comparison_group: str | None = None  # one the assessment's chance lookups offer
 
 
+@dataclass(frozen=True)
+class ProposedAdjustment:
+    """An Adjustment the agent proposes from a person's request. It does nothing until a
+    person confirms it with ``Assessment.adjust``."""
+
+    adjustment: Adjustment
+    description: str  # in plain words, naming every project it would leave out
+
+
+@dataclass(frozen=True)
+class Answer:
+    """The agent's answer to one request. Its claims are checked, but held: they join the
+    assessment only when a person adds them (``Assessment.add``)."""
+
+    id: str
+    request: str
+    claims: tuple[Claim, ...] = ()
+    rejected: tuple[Rejected, ...] = ()
+    proposal: ProposedAdjustment | None = None
+    # The data can't answer the request: why, in plain words.
+    cant_answer: str | None = None
+
+
 class NotReady(ValueError):
     """Asked to finalise while a Judgement is still waiting for a decision."""
 
@@ -77,6 +100,10 @@ class Assessment:
     rejected: list[Rejected] = field(default_factory=list)
     changes: list[Change] = field(default_factory=list)
     final: bool = False
+    # Answers to requests, by id, whose claims a person hasn't added yet, or whose proposed
+    # Adjustment they haven't confirmed.
+    held: dict[str, Answer] = field(default_factory=dict)
+    answers_given: int = 0
     # Every model call for this assessment, writing it and answering questions about it,
     # counts against one set of limits.
     budget: AssessmentBudget = field(default_factory=lambda: AssessmentBudget(Limits()))
@@ -103,7 +130,40 @@ class Assessment:
     def log(self, who: str, what: str, why: str = "") -> None:
         self.changes.append(Change(datetime.datetime.now(datetime.UTC), who, what, why))
 
+    @property
+    def held_claims(self) -> list[Claim]:
+        return [c for answer in self.held.values() for c in answer.claims]
+
+    def next_answer_id(self) -> str:
+        self.answers_given += 1
+        return f"answer-{self.answers_given}"
+
+    def hold(self, answer: Answer) -> Answer:
+        """Keep an answer's claims, or its proposal, aside until a person acts on it."""
+        if answer.claims or answer.proposal:
+            self.held[answer.id] = answer
+        return answer
+
     # --- what a person can do ---
+
+    def add(self, answer_id: str, *, by: str) -> None:
+        """Add a held answer's claims to the assessment. Its Judgements wait for a decision
+        like any other."""
+        self.still_open()
+        if not (answer_id in self.held and self.held[answer_id].claims):
+            raise KeyError(f"No answer called {answer_id!r} is waiting to be added.")
+        answer = self.held.pop(answer_id)
+        self.claims.extend(answer.claims)
+        added = ", ".join(c.id for c in answer.claims)
+        self.log(by, f"added {added} from the answer to: {answer.request}")
+
+    def confirm(self, answer_id: str, *, by: str) -> None:
+        """Make the Adjustment an answer proposed."""
+        proposal = self.held[answer_id].proposal if answer_id in self.held else None
+        if proposal is None:
+            raise KeyError(f"No proposed change called {answer_id!r} is waiting.")
+        self.adjust(proposal.adjustment, by=by)
+        del self.held[answer_id]
 
     def adjust(self, adjustment: Adjustment, *, by: str) -> None:
         """Leave projects out, then work out every number again and check it again. A
@@ -117,19 +177,10 @@ class Assessment:
         rerun: dict[str, Lookup | str] = {}
         changed: list[str] = []
         moved: set[str] = set()
-        for i, claim in enumerate(self.claims):
-            if not isinstance(claim, FactualClaim) or claim.check is None or not claim.check.passed:
-                continue
-            values = tuple(self._recalculated(v, rerun) for v in claim.values)
-            redone = replace(claim, values=values, check=None)
-            redone = replace(redone, check=check(redone, self.lookups))
-            self.claims[i] = redone
-            before, after = _numbers(claim.check), _numbers(redone.check)
-            if before != after:
-                moved.add(claim.id)
-                changed.append(f"{claim.id}: {_listed(before)} -> {_listed(after)}")
-            if redone.check is not None and not redone.check.passed:
-                changed.append(f"{claim.id}: now rejected ({'; '.join(redone.check.problems)})")
+        self.claims = self._redone(self.claims, rerun, changed, moved)
+        for answer_id, answer in self.held.items():
+            claims = self._redone(list(answer.claims), rerun, [], moved)
+            self.held[answer_id] = replace(answer, claims=tuple(claims))
         for i, claim in enumerate(self.claims):
             if (
                 isinstance(claim, Judgement)
@@ -177,6 +228,33 @@ class Assessment:
     def still_open(self) -> None:
         if self.final:
             raise AssessmentIsFinal("This assessment is final and can't be changed.")
+
+    def _redone(
+        self,
+        claims: list[Claim],
+        rerun: dict[str, Lookup | str],
+        changed: list[str],
+        moved: set[str],
+    ) -> list[Claim]:
+        """Every Factual Claim that passed, worked out again and checked again. Notes in
+        ``changed`` what moved or now fails, and adds the ids whose numbers moved to
+        ``moved``."""
+        redone_claims: list[Claim] = []
+        for claim in claims:
+            if not isinstance(claim, FactualClaim) or claim.check is None or not claim.check.passed:
+                redone_claims.append(claim)
+                continue
+            values = tuple(self._recalculated(v, rerun) for v in claim.values)
+            redone = replace(claim, values=values, check=None)
+            redone = replace(redone, check=check(redone, self.lookups))
+            redone_claims.append(redone)
+            before, after = _numbers(claim.check), _numbers(redone.check)
+            if before != after:
+                moved.add(claim.id)
+                changed.append(f"{claim.id}: {_listed(before)} -> {_listed(after)}")
+            if redone.check is not None and not redone.check.passed:
+                changed.append(f"{claim.id}: now rejected ({'; '.join(redone.check.problems)})")
+        return redone_claims
 
     def _judgement(self, judgement_id: str) -> tuple[int, Judgement]:
         for i, claim in enumerate(self.claims):

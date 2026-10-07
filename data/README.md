@@ -64,3 +64,13 @@ fetched through the Overpass API; data as of the timestamp inside the file)
 [Open Database License (ODbL) 1.0](https://opendatacommons.org/licenses/odbl/1-0/); see
 https://www.openstreetmap.org/copyright. The substation positions table derived from it,
 `src/interconnection_agent/places/positions.csv`, is published under the same licence.
+
+## US Census county and state outlines
+
+Files: `web/public/geo/counties.json` and `web/public/geo/states.json`, the map's outlines.
+
+Made from the US Census Bureau's 2023 cartographic boundary files `cb_2023_us_county_5m` and
+`cb_2023_us_state_5m` (https://www2.census.gov/geo/tiger/GENZ2023/shp/): counties of
+California, Nevada and Arizona, and those states with their neighbours, simplified to a
+quarter of their points with mapshaper. Public domain; the US Census Bureau is credited on
+the map.

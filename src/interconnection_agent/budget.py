@@ -65,6 +65,11 @@ class AssessmentBudget:
         self.turns_used = 0
         self.tokens_used = 0
 
+    @property
+    def calls_left(self) -> int:
+        """Model calls this assessment may still make."""
+        return max(0, self.limits.max_turns - self.turns_used)
+
     def before_call(self) -> None:
         """Raise if one more model call would go past a limit."""
         if self.turns_used >= self.limits.max_turns:

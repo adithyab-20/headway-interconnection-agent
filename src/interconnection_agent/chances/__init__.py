@@ -10,8 +10,10 @@ from interconnection_agent.chances.estimate import (
     NotEnoughHistory,
     Outcome,
     PastProject,
+    YearOutcome,
     chance_of_reaching_operation,
     chance_of_still_being_built,
+    outcomes_by_year,
 )
 from interconnection_agent.chances.groups import (
     AreaKind,
@@ -42,4 +44,6 @@ __all__ = [
     "PastProject",
     "chance_of_reaching_operation",
     "chance_of_still_being_built",
+    "outcomes_by_year",
+    "YearOutcome",
 ]

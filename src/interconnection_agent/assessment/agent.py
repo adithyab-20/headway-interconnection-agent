@@ -14,10 +14,22 @@ from typing import Any, Protocol
 
 from anthropic.types.beta import BetaMessage
 
-from interconnection_agent.assessment.check import MARGINS, SOURCES, checked, problems_in
-from interconnection_agent.assessment.claims import Claim, Parsed, Rejected
+from interconnection_agent.assessment.check import (
+    MARGINS,
+    SOURCES,
+    checked,
+    problems_in,
+    unchecked_numbers,
+)
+from interconnection_agent.assessment.claims import Claim, Parsed
 from interconnection_agent.assessment.lookups import Derivation, LookupRefused, Lookups, places_at
-from interconnection_agent.assessment.review import Adjustment, Assessment, Project
+from interconnection_agent.assessment.review import (
+    Adjustment,
+    Answer,
+    Assessment,
+    Project,
+    ProposedAdjustment,
+)
 from interconnection_agent.budget import AssessmentBudget, Limits
 from interconnection_agent.chances import ProjectType
 from interconnection_agent.chances.groups import Conn, data_as_of
@@ -146,6 +158,16 @@ PROPOSE_ADJUSTMENT = {
         "required": ["why"],
     },
 }
+CANT_ANSWER = {
+    "name": "cant_answer",
+    "description": "Say that the queue data can't answer this request, and why, in plain "
+    "words a newcomer follows. Use it instead of guessing. State no numbers.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"reason": {"type": "string"}},
+        "required": ["reason"],
+    },
+}
 SUBMIT_ASSESSMENT = {
     "name": "submit_assessment",
     "description": "Submit the assessment: Factual Claims and Judgements only.",
@@ -179,26 +201,11 @@ def write_assessment(
     return assessment
 
 
-@dataclass(frozen=True)
-class ProposedAdjustment:
-    """An Adjustment the agent proposes from a person's request. It does nothing until a
-    person confirms it with ``Assessment.adjust``."""
-
-    adjustment: Adjustment
-    description: str  # in plain words, naming every project it would leave out
-
-
-@dataclass(frozen=True)
-class Answer:
-    claims: tuple[Claim, ...] = ()  # new claims, checked and added to the assessment
-    rejected: tuple[Rejected, ...] = ()
-    proposal: ProposedAdjustment | None = None
-
-
 def ask(assessment: Assessment, model: Model, request: str) -> Answer:
     """Answer a person's plain request about an assessment: with new checked claims, which
-    are added to it, or with a proposed Adjustment, which isn't applied. Its model calls
-    count against the assessment's own spending limits."""
+    are held until a person adds them (``Assessment.add``), or with a proposed Adjustment,
+    which isn't applied. Its model calls count against the assessment's own spending
+    limits."""
     assessment.still_open()
     shown = "\n".join(f"- {c.id}: {c.text}" for c in assessment.claims)
     brief = (
@@ -206,27 +213,34 @@ def ask(assessment: Assessment, model: Model, request: str) -> Answer:
         f"{assessment.site} substation (voltage sections: "
         f"{', '.join(places_at(assessment.lookups.conn, site=assessment.site))}). Its claims:\n"
         f"{shown}\n\nA person asks: {request!r}\n\nIf they want something left out of "
-        "the assessment, call propose_adjustment. Otherwise look things up and submit new "
-        "claims with submit_assessment, with ids not used above."
+        "the assessment, call propose_adjustment. If the data can't answer it, call "
+        "cant_answer with the reason. Otherwise look things up and submit new claims with "
+        "submit_assessment, with ids not used above."
     )
     outcome = _run(
         model,
         assessment.budget,
         assessment.lookups,
         brief,
-        tools=[*LOOKUP_TOOLS, SUBMIT_ASSESSMENT, PROPOSE_ADJUSTMENT],
-        existing=assessment.claims,
+        tools=[*LOOKUP_TOOLS, SUBMIT_ASSESSMENT, PROPOSE_ADJUSTMENT, CANT_ANSWER],
+        existing=[*assessment.claims, *assessment.held_claims],
         site=assessment.site,
     )
+    if outcome.cant_answer is not None:
+        assessment.log("the agent", f"can't answer: {outcome.cant_answer}", request)
+        return Answer(assessment.next_answer_id(), request, cant_answer=outcome.cant_answer)
     if outcome.proposal is not None:
         assessment.log("the agent", f"proposed: {outcome.proposal.description}", request)
-        return Answer(proposal=outcome.proposal)
+        proposed = Answer(assessment.next_answer_id(), request, proposal=outcome.proposal)
+        return assessment.hold(proposed)
     parsed = outcome.parsed or Parsed()
-    assessment.claims.extend(parsed.claims)
     assessment.rejected.extend(parsed.rejected)
-    added = ", ".join(c.id for c in parsed.claims) or "nothing"
-    assessment.log("the agent", f"answered: {request}", f"added {added}")
-    return Answer(tuple(parsed.claims), tuple(parsed.rejected))
+    found = ", ".join(c.id for c in parsed.claims) or "nothing"
+    assessment.log("the agent", f"answered: {request}", f"found {found}")
+    answer = Answer(
+        assessment.next_answer_id(), request, tuple(parsed.claims), tuple(parsed.rejected)
+    )
+    return assessment.hold(answer)
 
 
 @dataclass
@@ -263,6 +277,7 @@ class _Conversation:
 class _Finished:
     parsed: Parsed | None = None
     proposal: ProposedAdjustment | None = None
+    cant_answer: str | None = None
 
 
 def _run(
@@ -281,9 +296,12 @@ def _run(
         response = conversation.next()
         calls = [b for b in response.content if b.type == "tool_use"]
         if not calls:
-            conversation.messages.append(
-                {"role": "user", "content": "Submit your claims with submit_assessment."}
+            nudge = "Submit your claims with submit_assessment" + (
+                ", or call cant_answer if the data can't answer this."
+                if CANT_ANSWER in tools
+                else "."
             )
+            conversation.messages.append({"role": "user", "content": nudge})
             continue
         results, final = [], None
         for block in calls:
@@ -297,6 +315,16 @@ def _run(
                 else:
                     final = _Finished(parsed=parsed)
                     results.append(_result(block.id, "Accepted."))
+                continue
+            if block.name == CANT_ANSWER["name"] and CANT_ANSWER in tools:
+                reason = str(arguments.get("reason") or "").strip()
+                stray = unchecked_numbers(reason, [])
+                if not reason or stray:
+                    why = f"it states numbers no code checked: {stray}" if stray else "it's empty"
+                    results.append(_result(block.id, f"Give the reason again: {why}.", error=True))
+                else:
+                    final = _Finished(cant_answer=reason)
+                    results.append(_result(block.id, "Noted; the person will see the reason."))
                 continue
             if block.name == PROPOSE_ADJUSTMENT["name"] and site is not None:
                 try:

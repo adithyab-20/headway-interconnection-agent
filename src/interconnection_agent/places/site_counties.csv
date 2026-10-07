@@ -1,0 +1,4 @@
+site,county,state,source
+East County,San Diego,CA,"SDG&E's East County (ECO) Substation, near Jacumba in San Diego County (CPUC approval of the ECO Substation project, 2012)"
+Imperial Valley,Imperial,CA,"OpenStreetMap way/52183964 (positions.csv), in Imperial County"
+Miguel,San Diego,CA,"OpenStreetMap relation/12331797 (positions.csv), in San Diego County"

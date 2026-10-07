@@ -6,10 +6,12 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "anthropic>=1.11.0",
+    "fastapi>=0.142.2",
     "openpyxl>=3.1.5",
     "psycopg[binary]>=3.2",
     "pypdf>=6.19.0",
     "python-dotenv>=1.2.4",
+    "uvicorn[standard]>=0.54.0",
 ]
 
 [dependency-groups]
@@ -22,6 +24,8 @@ dev = [
     # dependency, never a runtime one: fuzzy matching must never be reachable from code
     # that runs beneath a verified claim. test_poi_offline_only guards the boundary.
     "rapidfuzz>=3.0",
+    "httpx>=0.28.1",
+    "playwright>=1.63.0",
 ]
 
 [build-system]

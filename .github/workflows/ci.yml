@@ -46,8 +46,51 @@ jobs:
       - name: Type check (mypy)
         run: uv run mypy
 
+      # The browser tests (tests/e2e/test_map_app.py) need the website's packages, Chromium,
+      # and the data loaded and kept, since the API reads it on its own connections.
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install the website's packages
+        run: npm ci
+        working-directory: web
+
+      - name: Install Chromium for the browser tests
+        run: uv run playwright install --with-deps chromium
+
+      - name: Load the data
+        run: uv run python -m interconnection_agent.cli load
+
       - name: Test (pytest)
         run: uv run pytest
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Type check (tsc)
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
 
   secret-scan:
     # Fails the build if any commit in the repository's history contains something that
