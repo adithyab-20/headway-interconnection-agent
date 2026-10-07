@@ -123,28 +123,29 @@ def propose_spellings(conn) -> list[dict[str, str]]:  # type: ignore[no-untyped-
         "GROUP BY 1"
     ).fetchall()
     sources = load_sources(ROOT / "data")
-    by_key: dict[str, dict[str, object]] = defaultdict(lambda: {"n": 0, "examples": set()})
+    counts: Counter[str] = Counter()
+    examples: defaultdict[str, set[str]] = defaultdict(set)
     for text, n in raw:
         k = normalize_station(text)
-        by_key[k]["n"] += n  # type: ignore[operator]
-        by_key[k]["examples"].add(text)  # type: ignore[union-attr]
+        counts[k] += n
+        examples[k].add(text)
     for point in sources.behind:
-        by_key[normalize_station(point)]["examples"].add(point)  # type: ignore[union-attr]
+        examples[normalize_station(point)].add(point)
 
     rows = []
-    for key, info in by_key.items():
+    for key in examples:
         p = parse(key)
         rows.append(
             {
-                "station_key": key,
+                "poi_key": key,
                 **p,
-                "projects": str(info["n"]),
-                "examples": " | ".join(sorted(info["examples"]))[:200],
+                "projects": str(counts[key]),
+                "examples": " | ".join(sorted(examples[key]))[:200],
             }
-        )  # type: ignore[arg-type]
+        )
 
     # Sites spelled almost the same are probably one site: propose the commoner spelling.
-    weight = Counter()
+    weight: Counter[str] = Counter()
     for r in rows:
         weight[r["site"]] += int(r["projects"]) + 1
     names = sorted(weight, key=lambda s: -weight[s])
@@ -179,7 +180,7 @@ def propose_spellings(conn) -> list[dict[str, str]]:  # type: ignore[no-untyped-
         if re.search(r"line with [3-9] named ends", d):
             ends = [
                 tidy_site(x)
-                for x in re.sub(r"\d{2,3}\s*kv", " ", clean_key(r["station_key"])).split("-")
+                for x in re.sub(r"\d{2,3}\s*kv", " ", clean_key(r["poi_key"])).split("-")
                 if tidy_site(x)
             ]
             r["kind"], r["site"], r["other_end_site"] = "line", ends[0], ends[-1]
@@ -222,7 +223,7 @@ def propose_positions(conn, spellings: list[dict[str, str]]) -> list[dict[str, s
         name = e.get("tags", {}).get("name")
         if name:
             named[tidy_site(normalize_station(name))].append(e)
-    site_of = {r["station_key"]: (r["site"], r["other_end_site"]) for r in spellings}
+    site_of = {r["poi_key"]: (r["site"], r["other_end_site"]) for r in spellings}
     counties: dict[str, Counter[str]] = defaultdict(Counter)
     for raw, county in conn.execute(
         "SELECT raw_poi, county FROM projects WHERE source = 'caiso_raw' AND county IS NOT NULL"
@@ -262,9 +263,10 @@ def _from_openstreetmap(  # type: ignore[no-untyped-def]
 ):
     located = []
     for cand in candidates[:6]:
-        lat = cand.get("lat") or cand.get("center", {}).get("lat")  # type: ignore[union-attr]
-        lon = cand.get("lon") or cand.get("center", {}).get("lon")  # type: ignore[union-attr]
-        located.append((cand, lat, lon, county_of(lat, lon).removesuffix(" County")))  # type: ignore[arg-type]
+        middle = cand.get("center") or cand
+        assert isinstance(middle, dict)
+        lat, lon = float(middle["lat"]), float(middle["lon"])
+        located.append((cand, lat, lon, county_of(lat, lon).removesuffix(" County")))
     same = [c for c in located if ours and c[3].lower() == ours.lower()]
     e, lat, lon, point_county = (same or located)[0]
     doubts = []
@@ -365,9 +367,9 @@ def write(name: str, rows: list[dict[str, str]]) -> None:
 
 
 KEEP = {
-    "spellings.csv": ["station_key", "kind", "site", "voltage_kv", "other_end_site"],
-    # positions.csv is no longer drafted here: it now also holds federal-dataset and
-    # document positions, reviewed by hand (see places/README.md).
+    "spellings.csv": ["poi_key", "kind", "site", "voltage_kv", "other_end_site"],
+    # positions.csv is no longer drafted here: it now also holds positions read off public
+    # documents, reviewed by hand (see places/README.md).
     "bottleneck_names.csv": ["bottleneck_list_name", "cost_file_name", "bottleneck"],
     "upgrade_places.csv": ["plan_id", "site", "voltage_kv"],
 }

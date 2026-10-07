@@ -1,4 +1,4 @@
-station_key,kind,site,voltage_kv,other_end_site
+poi_key,kind,site,voltage_kv,other_end_site
 0.2-mile from moro hill tap on the moro hill tap-monserate 69 kv line,line,Morro Hill,69,Monserate
 230/138/69 kv south bay (650 mw cc),substation,South Bay,230,
 substation 5 (aka whirlwind),substation,Whirlwind,230,

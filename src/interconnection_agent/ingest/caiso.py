@@ -39,11 +39,14 @@ indices, so a reviewer can see which CAISO field feeds which canonical column.
 
 from __future__ import annotations
 
+import datetime
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 import openpyxl
 import psycopg
+from openpyxl.worksheet.worksheet import Worksheet
 
 from interconnection_agent.ingest import _cells
 from interconnection_agent.ingest.report import DroppedRow, IngestReport, SheetReport
@@ -129,6 +132,16 @@ def _native_id(queue_position: object) -> str:
     return f"CAISO-{str(queue_position).strip()}"
 
 
+def _run_date(sheet: Worksheet) -> datetime.date | None:
+    """The day the report was taken, from its top row ("Report Run Date: 07/24/2026")."""
+    top = " ".join(str(v) for v in next(sheet.iter_rows(max_row=1, values_only=True)) if v)
+    found = re.search(r"Report Run Date:\s*(\d{2})/(\d{2})/(\d{4})", top)
+    if not found:
+        return None
+    month, day, year = (int(g) for g in found.groups())
+    return datetime.date(year, month, day)
+
+
 def _mw(value: object) -> float:
     """A Net-MW quantity for coverage sums; a blank or non-numeric cell contributes zero."""
     return _cells.mw_or_none(value) or 0.0
@@ -138,12 +151,14 @@ _UPSERT = """
     INSERT INTO projects (
         source, native_id, status, q_date, proposed_online_date, actual_online_date,
         withdrawn_date, county, state, iso, study_region, raw_poi, normalized_poi,
-        poi_unmapped, utility, batch, furthest_step, deliverability, agreement_status
+        poi_unmapped, utility, batch, furthest_step, deliverability, agreement_status,
+        mw_to_grid
     ) VALUES (
         'caiso_raw', %(native_id)s, %(status)s, %(q_date)s, %(proposed_online_date)s,
         %(actual_online_date)s, %(withdrawn_date)s, %(county)s, %(state)s, 'CAISO',
         %(study_region)s, %(raw_poi)s, %(normalized_poi)s, %(poi_unmapped)s, %(utility)s,
-        %(batch)s, %(furthest_step)s, %(deliverability)s, %(agreement_status)s
+        %(batch)s, %(furthest_step)s, %(deliverability)s, %(agreement_status)s,
+        %(mw_to_grid)s
     )
     ON CONFLICT (source, native_id) DO UPDATE SET
         status               = EXCLUDED.status,
@@ -161,7 +176,8 @@ _UPSERT = """
         batch                = EXCLUDED.batch,
         furthest_step        = EXCLUDED.furthest_step,
         deliverability       = EXCLUDED.deliverability,
-        agreement_status     = EXCLUDED.agreement_status
+        agreement_status     = EXCLUDED.agreement_status,
+        mw_to_grid           = EXCLUDED.mw_to_grid
 """
 
 _UPSERT_RESOURCE = """
@@ -185,7 +201,8 @@ def run_caiso_ingest(
     workbook = openpyxl.load_workbook(workbook_path, read_only=True, data_only=True)
     try:
         return IngestReport(
-            sheets=tuple(_ingest_sheet(workbook, spec, alias_table, conn) for spec in SHEETS)
+            sheets=tuple(_ingest_sheet(workbook, spec, alias_table, conn) for spec in SHEETS),
+            run_date=_run_date(workbook[ACTIVE_SHEET]),
         )
     finally:
         workbook.close()
@@ -302,6 +319,7 @@ def _ingest_sheet(
                 "furthest_step": step,
                 "deliverability": _cells.clean(cell(row, DELIVERABILITY)),
                 "agreement_status": agreement,
+                "mw_to_grid": _cells.mw_or_none(cell(row, NET_MW_TO_GRID)),
             },
         )
         rows_written += 1

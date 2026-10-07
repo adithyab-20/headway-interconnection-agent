@@ -54,6 +54,8 @@ class Sources:
     room_left_mw: dict[str, float]
     # Bottleneck name (as the cost file writes it) -> (MW the next upgrade adds, cost $M 2022).
     cost_to_add_room: dict[str, tuple[float, float]]
+    # Bottlenecks the cost file lists whose next upgrade has no added MW or no cost.
+    uncosted_bottlenecks: list[str]
     upgrades: list[Upgrade]
     # Fact sheets whose cost couldn't be read, or whose name isn't in the upgrade tracker.
     unread_upgrade_costs: list[str]
@@ -62,10 +64,12 @@ class Sources:
 def load_sources(data_dir: Path) -> Sources:
     behind, room = _bottleneck_list(data_dir / BOTTLENECK_LIST)
     upgrades, unread = _upgrades(data_dir / UPGRADE_TRACKER, data_dir / UPGRADE_FACT_SHEETS)
+    costs, uncosted = _cost_to_add_room(data_dir / COST_TO_ADD_ROOM)
     return Sources(
         behind=behind,
         room_left_mw=room,
-        cost_to_add_room=_cost_to_add_room(data_dir / COST_TO_ADD_ROOM),
+        cost_to_add_room=costs,
+        uncosted_bottlenecks=uncosted,
         upgrades=upgrades,
         unread_upgrade_costs=unread,
     )
@@ -107,10 +111,12 @@ def _bottleneck_list(path: Path) -> tuple[dict[str, list[str]], dict[str, float]
     return behind, room
 
 
-def _cost_to_add_room(path: Path) -> dict[str, tuple[float, float]]:
+def _cost_to_add_room(path: Path) -> tuple[dict[str, tuple[float, float]], list[str]]:
     """Rows: bottleneck, places affected, condition, room now (MW), MW the next upgrade adds,
-    its description, its cost ($M, 2022 dollars), ... Section titles have no numbers."""
+    its description, its cost ($M, 2022 dollars), ... Section titles have nothing past the
+    name. A bottleneck with no added MW or no cost ("N/A") is returned in the second list."""
     costs: dict[str, tuple[float, float]] = {}
+    uncosted: list[str] = []
     workbook = openpyxl.load_workbook(path, read_only=True, data_only=True)
     try:
         sheet = workbook["TxCapabilityEstimates_2026"]
@@ -126,11 +132,18 @@ def _cost_to_add_room(path: Path) -> dict[str, tuple[float, float]]:
             name = _cells.clean(row[0])
             added = _cells.mw_or_none(row[4]) if len(row) > 6 else None
             cost = _cells.mw_or_none(row[6]) if len(row) > 6 else None
-            if name and added and cost is not None:
+            if not name or all(_cells.clean(c) is None for c in row[1:]):
+                continue  # a blank row or a section title
+            if added and cost is not None:
                 costs[name] = (added, cost)
+            else:
+                missing = " or ".join(
+                    what for what, gap in (("added MW", not added), ("cost", cost is None)) if gap
+                )
+                uncosted.append(f"{name}: no {missing}")
     finally:
         workbook.close()
-    return costs
+    return costs, sorted(uncosted)
 
 
 def _upgrades(tracker: Path, fact_sheets: Path) -> tuple[list[Upgrade], list[str]]:

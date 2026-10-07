@@ -11,6 +11,7 @@ so their unmapped shares are expected to be high and are not judged against the 
 
 from __future__ import annotations
 
+import datetime
 from dataclasses import dataclass, field
 
 
@@ -82,6 +83,8 @@ class IngestReport:
     """
 
     sheets: tuple[SheetReport, ...] = field(default_factory=tuple)
+    # The day the report was taken, from its "Report Run Date" line; None if it's missing.
+    run_date: datetime.date | None = None
 
     def for_sheet(self, sheet: str) -> SheetReport:
         """Return the sub-report for ``sheet``; raise ``KeyError`` if it was not ingested."""

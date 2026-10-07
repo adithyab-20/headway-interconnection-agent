@@ -30,6 +30,7 @@ import psycopg
 
 from interconnection_agent.places.sources import Sources, load_sources
 from interconnection_agent.poi import normalize_station
+from interconnection_agent.unrecognised import Unrecognised
 
 __all__ = ["Sources", "apply_places", "load_sources", "place_id", "voltage_class"]
 
@@ -73,13 +74,13 @@ def _spellings() -> dict[str, Spelling]:
         spelling = Spelling(
             r["kind"], r["site"], voltage_class(_int(r["voltage_kv"])), r["other_end_site"] or None
         )
-        if table.get(r["station_key"], spelling) != spelling:
-            raise ValueError(f"spellings.csv: conflicting entries for {r['station_key']!r}")
-        table[r["station_key"]] = spelling
+        if table.get(r["poi_key"], spelling) != spelling:
+            raise ValueError(f"spellings.csv: conflicting entries for {r['poi_key']!r}")
+        table[r["poi_key"]] = spelling
     return table
 
 
-def apply_places(conn: Conn, sources: Sources) -> dict[str, list[str]]:
+def apply_places(conn: Conn, sources: Sources) -> dict[Unrecognised, list[str]]:
     """Rebuild places and their links from the reviewed tables.
 
     Returns what the reviewed tables didn't recognise, by kind: project spellings with no
@@ -148,9 +149,11 @@ def apply_places(conn: Conn, sources: Sources) -> dict[str, list[str]]:
         )
 
     return {
-        "substation spelling": sorted(unplaced),
-        "bottleneck-list point": _apply_bottlenecks(conn, sources, spellings, set(sites)),
-        "upgrade link": _apply_upgrades(conn, sources, set(sites)),
+        Unrecognised.SUBSTATION_SPELLING: sorted(unplaced),
+        Unrecognised.BOTTLENECK_LIST_POINT: _apply_bottlenecks(
+            conn, sources, spellings, set(sites)
+        ),
+        Unrecognised.UPGRADE_LINK: _apply_upgrades(conn, sources, set(sites)),
     }
 
 
