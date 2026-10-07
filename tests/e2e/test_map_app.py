@@ -59,7 +59,7 @@ def _free(port: int) -> bool:
 
 
 @pytest.fixture(scope="module")
-def site() -> Iterator[str]:
+def site(tmp_path_factory: pytest.TempPathFactory) -> Iterator[str]:
     """The website, talking to the API, which talks to the database and the stand-in."""
     if not _loaded():
         pytest.skip("The data isn't loaded: run load_all first.")
@@ -73,6 +73,7 @@ def site() -> Iterator[str]:
         uvicorn.Config(create_app(lambda: model), port=API_PORT, log_level="warning")
     )
     threading.Thread(target=api.run, daemon=True).start()
+    log = tmp_path_factory.mktemp("web") / "next.log"
     web = subprocess.Popen(
         ["npx", "next", "dev", "--port", str(WEB_PORT)],
         cwd=WEB,
@@ -81,8 +82,8 @@ def site() -> Iterator[str]:
             "HEADWAY_API": f"http://127.0.0.1:{API_PORT}",
             "HEADWAY_DIST_DIR": ".next-e2e",
         },
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        stdout=log.open("w"),
+        stderr=subprocess.STDOUT,
         start_new_session=True,
     )
     url = f"http://localhost:{WEB_PORT}"
@@ -92,9 +93,11 @@ def site() -> Iterator[str]:
             try:
                 urllib.request.urlopen(url + "/map", timeout=60)
                 break
-            except OSError:
+            except OSError as e:
                 if time.monotonic() > deadline:
-                    raise
+                    pytest.fail(
+                        f"The website didn't come up ({e}). Its output:\n{log.read_text()[-4000:]}"
+                    )
                 time.sleep(1)
         yield url
     finally:
