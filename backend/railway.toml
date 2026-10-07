@@ -1,0 +1,13 @@
+# Railway settings for the API. In the service's settings, set the root directory to
+# /backend and the config file to /backend/railway.toml (it doesn't follow the root directory).
+
+[build]
+builder = "DOCKERFILE"
+# Only changes to the API start a new deploy, not changes to the website or the docs.
+watchPatterns = ["/backend/**"]
+
+[deploy]
+# Before each deploy goes live, load the committed data into the database. Loading again
+# gives the same rows, so this is safe on every deploy, and the data always matches the code.
+preDeployCommand = ["python -m interconnection_agent.cli load"]
+restartPolicyType = "ON_FAILURE"

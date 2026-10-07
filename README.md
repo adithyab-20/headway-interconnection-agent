@@ -190,6 +190,38 @@ The agent calls the model, and these guards apply to every call it makes.
    A call's token count is only known once it returns, so the call that crosses the total
    is still paid for: the total can go over by at most one call, and then everything stops.
 
+## Deploy
+
+The API runs on [Railway](https://railway.com) and the website on [Vercel](https://vercel.com).
+Each deploys from its own folder of this repository.
+
+**The API, on Railway**
+
+1. Create a project with a **Postgres** database, then add a service from this GitHub
+   repository.
+2. In the service's settings, set the root directory to `/backend` and the config file to
+   `/backend/railway.toml`. Railway then builds `backend/Dockerfile`.
+3. Give the service these variables:
+   - `DATABASE_URL`: `${{Postgres.DATABASE_URL}}`, which points at the project's database.
+   - `ANTHROPIC_API_KEY`: only if the site should write assessments. Set the spending cap
+     in the Anthropic console first (see above). Without a key, everything else works.
+   - Optionally, the `AGENT_MAX_*` limits from `.env.example`.
+4. Under networking, generate a public domain for the service.
+
+Before each deploy goes live, Railway loads the committed data into the database
+(`cli load`, about 30 seconds). Loading again gives the same rows, so the data always
+matches the deployed code. Only changes under `backend/` start a new deploy.
+
+**The website, on Vercel**
+
+1. Import this repository and set the root directory to `frontend`.
+2. Set `HEADWAY_API` to the API's Railway address, for example
+   `https://headway-api.up.railway.app`, with no slash at the end.
+
+The website passes `/api` requests on to that address, so the browser only ever talks to the
+website. Writing an assessment takes a minute or two, longer than Vercel waits for one
+request, so the page starts it and then checks back every two seconds until it's done.
+
 ## Developer checks
 
 The same checks CI runs on every push and pull request (see `.github/workflows/ci.yml`).
@@ -222,6 +254,7 @@ backend/tests/integration/                # tests against the real Postgres
 backend/tests/e2e/                        # the website in a browser, and tests of the real model
 backend/data/                             # the saved source spreadsheets, and their credits
 backend/docker-compose.yml                # the local Postgres
+backend/Dockerfile, railway.toml          # how Railway builds and runs the API
 frontend/                                 # the website, Headway (Next.js and Leaflet)
 .github/workflows/ci.yml                  # CI: checks, tests, and the key scan
 docs/                                     # design decisions, plans, agent instructions

@@ -1,0 +1,7 @@
+.venv
+.venv.nosync
+.env
+**/__pycache__
+**/tests
+tests
+scripts
