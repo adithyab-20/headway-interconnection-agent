@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from interconnection_agent.settings import SettingsError, load_settings
+from interconnection_agent.settings import SettingsError, load_settings, load_site_limits
 
 KEY_ONLY = {"ANTHROPIC_API_KEY": "sk-test"}
 
@@ -70,3 +70,54 @@ def test_limits_have_defaults_can_be_changed_and_bad_values_are_refused(
 
     with pytest.raises(SettingsError, match="AGENT_MAX_TURNS"):
         load_settings(environ={**KEY_ONLY, "AGENT_MAX_TURNS": bad_value}, dotenv_path=absent)
+
+
+def test_the_model_is_sonnet_unless_set_to_another_model_the_site_can_price(
+    tmp_path: Path,
+) -> None:
+    absent = tmp_path / "absent"
+    assert load_settings(environ=KEY_ONLY, dotenv_path=absent).model == "claude-sonnet-5-5"
+    for model in ("claude-haiku-5-5", "claude-opus-5-5"):
+        chosen = load_settings(environ={**KEY_ONLY, "ANTHROPIC_MODEL": model}, dotenv_path=absent)
+        assert chosen.model == model
+
+    with pytest.raises(SettingsError, match=r"ANTHROPIC_MODEL.*claude-haiku-5-5"):
+        load_settings(environ={**KEY_ONLY, "ANTHROPIC_MODEL": "gpt-5"}, dotenv_path=absent)
+
+
+@pytest.mark.parametrize(
+    ("variable", "bad_value"),
+    [
+        ("WRITE_UPS_PER_VISITOR_PER_DAY", "-1"),
+        ("WRITE_UPS_PER_DAY", "2.5"),
+        ("SPEND_LIMIT_PER_MONTH_USD", "ten"),
+        ("SPEND_LIMIT_PER_MONTH_USD", "-1"),
+    ],
+)
+def test_the_sites_limits_have_defaults_can_be_changed_or_set_to_zero(
+    tmp_path: Path, variable: str, bad_value: str
+) -> None:
+    absent = tmp_path / "absent"
+    defaults = load_site_limits(environ={}, dotenv_path=absent)
+    assert (
+        defaults.write_ups_per_visitor_per_day,
+        defaults.write_ups_per_day,
+        defaults.spend_per_month_usd,
+    ) == (3, 20, 10.0)
+
+    changed = load_site_limits(
+        environ={
+            "WRITE_UPS_PER_VISITOR_PER_DAY": "5",
+            "WRITE_UPS_PER_DAY": "0",
+            "SPEND_LIMIT_PER_MONTH_USD": "12.50",
+        },
+        dotenv_path=absent,
+    )
+    assert (
+        changed.write_ups_per_visitor_per_day,
+        changed.write_ups_per_day,
+        changed.spend_per_month_usd,
+    ) == (5, 0, 12.5)
+
+    with pytest.raises(SettingsError, match=variable):
+        load_site_limits(environ={variable: bad_value}, dotenv_path=absent)

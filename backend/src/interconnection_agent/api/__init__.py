@@ -10,6 +10,7 @@ from __future__ import annotations
 import threading
 from collections.abc import Callable, Iterator
 from contextlib import asynccontextmanager, contextmanager
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -24,6 +25,12 @@ from interconnection_agent.api.assessments import (
     as_shown,
     decision,
 )
+from interconnection_agent.api.write_ups import (
+    WriteUpsOff,
+    WriteUpsUsedUp,
+    take_write_up,
+    visitor_of,
+)
 from interconnection_agent.assessment import (
     Adjustment,
     AgentStopped,
@@ -36,6 +43,8 @@ from interconnection_agent.budget import BudgetExceeded, Limits
 from interconnection_agent.chances import NotEnoughHistory, ProjectType
 from interconnection_agent.chances.groups import Conn
 from interconnection_agent.db import connect as connect_to_database
+from interconnection_agent.settings import SiteLimits
+from interconnection_agent.spending import SpendLimitReached
 
 NAME = "Headway"
 NO_MODEL = (
@@ -88,9 +97,15 @@ def create_app(
     connect: Callable[[], Conn] = connect_to_database,
     *,
     limits: Limits | None = None,
+    site_limits: SiteLimits | None = None,
+    clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     warm: bool = True,
 ) -> FastAPI:
-    """The API. ``model`` gives the model to write with, or None if there's none."""
+    """The API. ``model`` gives the model to write with, or None if there's none.
+
+    ``site_limits`` limits how many write-ups can be started, per visitor and per day, and
+    refuses them once the month's spend limit is reached; without it, there's no limit.
+    """
     assessments = Assessments(connect, limits)
 
     @contextmanager
@@ -124,6 +139,9 @@ def create_app(
         (NotReady, 409),
         (BudgetExceeded, 429),
         (AgentStopped, 502),
+        (WriteUpsUsedUp, 429),
+        (SpendLimitReached, 429),
+        (WriteUpsOff, 503),
     ):
 
         def handler(_: Request, e: Exception, status: int = status) -> JSONResponse:
@@ -186,9 +204,13 @@ def create_app(
         return as_shown(assessment_id, assessments.get(assessment_id).assessment)
 
     @app.post("/api/assessments", status_code=202)
-    def create(body: NewAssessment) -> dict[str, Any]:
+    def create(body: NewAssessment, request: Request) -> dict[str, Any]:
         project = Project(body.project_type, body.mw if body.project_type else None)
-        assessment_id = assessments.start(the_model(), site=body.site, project=project)
+        writer = the_model()
+        if site_limits is not None:
+            with database() as conn:
+                take_write_up(conn, visitor_of(request), site_limits, clock())
+        assessment_id = assessments.start(writer, site=body.site, project=project)
         return {"id": assessment_id, "status": "writing"}
 
     @app.get("/api/assessments/{assessment_id}")
