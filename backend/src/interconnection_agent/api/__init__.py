@@ -12,7 +12,7 @@ from collections.abc import Callable, Iterator
 from contextlib import asynccontextmanager, contextmanager
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -185,14 +185,17 @@ def create_app(
     def shown(assessment_id: str) -> dict[str, Any]:
         return as_shown(assessment_id, assessments.get(assessment_id).assessment)
 
-    @app.post("/api/assessments", status_code=201)
+    @app.post("/api/assessments", status_code=202)
     def create(body: NewAssessment) -> dict[str, Any]:
         project = Project(body.project_type, body.mw if body.project_type else None)
-        assessment_id = assessments.write(the_model(), site=body.site, project=project)
-        return shown(assessment_id)
+        assessment_id = assessments.start(the_model(), site=body.site, project=project)
+        return {"id": assessment_id, "status": "writing"}
 
     @app.get("/api/assessments/{assessment_id}")
-    def read(assessment_id: str) -> dict[str, Any]:
+    def read(assessment_id: str, response: Response) -> dict[str, Any]:
+        if assessments.writing(assessment_id):
+            response.status_code = 202
+            return {"id": assessment_id, "status": "writing"}
         return shown(assessment_id)
 
     @app.post("/api/assessments/{assessment_id}/adjust")

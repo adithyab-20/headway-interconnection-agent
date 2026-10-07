@@ -10,7 +10,7 @@ const config: NextConfig = {
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${api}/api/:path*` }];
   },
-  // Writing an assessment with the model can take a minute or two.
+  // Answering a question with the model can take a while. (Writing is started, then checked on.)
   experimental: { proxyTimeout: 300_000 },
 };
 

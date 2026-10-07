@@ -182,6 +182,13 @@ export type Assessment = {
   questions_left: number;
 };
 
+// A write-up the API is still writing.
+type Writing = { id: string; status: "writing" };
+
+const stillWriting = (a: Assessment | Writing): a is Writing => "status" in a && a.status === "writing";
+
+const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
+
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -242,8 +249,16 @@ export const api = {
       })}`,
     ),
   rows: (ids: string[]) => post<{ rows: Row[] }>("/api/rows", { ids }),
-  write: (site: string, projectType: ProjectType | null, mw: number | null) =>
-    post<Assessment>("/api/assessments", { site, project_type: projectType, mw }),
+  // Writing takes a minute or two, longer than the site's host waits for one request, so it's
+  // started, then checked on until it's done.
+  write: async (site: string, projectType: ProjectType | null, mw: number | null): Promise<Assessment> => {
+    let got: Assessment | Writing = await post<Writing>("/api/assessments", { site, project_type: projectType, mw });
+    while (stillWriting(got)) {
+      await pause(2000);
+      got = await call<Assessment | Writing>(`/api/assessments/${got.id}`);
+    }
+    return got;
+  },
   adjust: (id: string, body: { why: string; leave_out?: string[]; comparison_group?: string | null }) =>
     post<Assessment>(`/api/assessments/${id}/adjust`, body),
   decide: (id: string, judgementId: string, decision: "agree" | "disagree") =>
