@@ -168,7 +168,7 @@ export function SitePage({ site }: { site: string }) {
   if (failed) {
     return (
       <div className="page">
-        <Link className="link back" href="/map">
+        <Link className="link back" href="/map" transitionTypes={["page-back"]}>
           <Back /> All substations
         </Link>
         <p className="notice">This substation couldn&apos;t be loaded: {failed}</p>
@@ -185,7 +185,7 @@ export function SitePage({ site }: { site: string }) {
 
   return (
     <div className="page">
-      <Link className="link back" href="/map">
+      <Link className="link back" href="/map" transitionTypes={["page-back"]}>
         <Back /> All substations
       </Link>
       <div className="head">

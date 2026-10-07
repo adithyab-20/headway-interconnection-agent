@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Dots, OutcomeKey } from "@/components/Dots";
 import { Term } from "@/components/Term";
 import { api, type Overview, type SiteSummary, type YearCounts } from "@/shared/api";
@@ -62,7 +62,7 @@ export function Home() {
             be built and how long it tends to take.
           </p>
           <div className="cta">
-            <Link className="btn p lg" href="/map">
+            <Link className="btn p lg" href="/map" transitionTypes={["page-forward"]}>
               Explore the map <Arrow />
             </Link>
             <a className="btn lg" href="#history">
@@ -177,7 +177,7 @@ export function Home() {
             </p>
           </div>
         </div>
-        <Link className="link" href="/map" style={{ marginTop: 6 }}>
+        <Link className="link" href="/map" transitionTypes={["page-forward"]} style={{ marginTop: 6 }}>
           Explore the map <Arrow />
         </Link>
       </section>
@@ -243,7 +243,7 @@ function TryType({ overview }: { overview: Overview }) {
       )}
       <p className="fine">
         This is the statewide history; it varies a lot by substation.{" "}
-        <Link className="link" href="/map">
+        <Link className="link" href="/map" transitionTypes={["page-forward"]}>
           Explore the map <Arrow />
         </Link>
       </p>
@@ -257,6 +257,16 @@ type Kind = "built" | "waiting" | "new" | "withdrawn" | "newGone";
 function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
   const [step, setStep] = useState(0);
   const [tip, setTip] = useState<{ y: number; x: number; top: number } | null>(null);
+  // The dots stack up, year by year, the first time the chart scrolls into view.
+  const field = useRef<SVGSVGElement | null>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = field.current;
+    if (!el || seen) return;
+    const watch = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.25 });
+    watch.observe(el);
+    return () => watch.disconnect();
+  }, [seen]);
   const years = Object.keys(byYear)
     .map(Number)
     .sort((a, b) => a - b);
@@ -316,7 +326,7 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
   return (
     <>
       <div className="caption">
-        <p>
+        <p key={step}>
           {title}
           <span>{sub}</span>
         </p>
@@ -341,7 +351,8 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
         </div>
       </div>
       <svg
-        className="dotfield"
+        ref={field}
+        className={`dotfield${seen ? " in" : ""}`}
         viewBox={`0 0 ${Wd} ${Hd}`}
         role="img"
         aria-label="One dot per project, by year applied, coloured by what happened to it"
@@ -354,15 +365,19 @@ function Story({ years: byYear }: { years: Record<string, YearCounts> }) {
           for (const k of order)
             for (let j = 0; j < count(y, k); j++, i++) {
               const lit = on[k];
+              const row = Math.floor(i / perRow);
               dots.push(
                 <circle
                   key={`${k}${j}`}
                   cx={(x0 + (i % perRow) * (d + gap) + d / 2).toFixed(1)}
-                  cy={(top + plotH - Math.floor(i / perRow) * (d + gap) - d / 2).toFixed(1)}
+                  cy={(top + plotH - row * (d + gap) - d / 2).toFixed(1)}
                   r={d / 2}
                   fill={lit ? fill[k] : "var(--unlit)"}
-                  stroke={lit && k === "waiting" ? "var(--sky-edge)" : "none"}
-                  strokeWidth={lit && k === "waiting" ? 1.1 : 0}
+                  stroke="var(--sky-edge)"
+                  strokeWidth={1.1}
+                  strokeOpacity={lit && k === "waiting" ? 1 : 0}
+                  // Where the dot sits sets when it moves, so changes sweep across the years.
+                  style={{ "--c": ci, "--r": row } as React.CSSProperties}
                 />,
               );
             }
@@ -474,7 +489,7 @@ function Strip({ sites: all }: { sites: SiteSummary[] }) {
             fill="transparent"
             style={{ cursor: "pointer" }}
             onPointerMove={(e) => setHover({ s, x: e.clientX, y: e.clientY })}
-            onClick={() => router.push(`/substations/${encodeURIComponent(s.site)}`)}
+            onClick={() => router.push(`/substations/${encodeURIComponent(s.site)}`, { transitionTypes: ["page-forward"] })}
           />
         ))}
       </svg>
