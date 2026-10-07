@@ -12,7 +12,7 @@ import { api, type SiteSummary } from "@/shared/api";
 import { CLASS_LABEL, classOf, classVar, mw, plural } from "@/shared/format";
 import { Arrow, Back, Search } from "@/shared/icons";
 import { TOWNS, type Town } from "@/shared/towns";
-import { smoothMotion } from "./motion";
+import { smoothMotion, travel, travelToBounds } from "./motion";
 
 type Feature = { type: "Feature"; properties: Record<string, string>; geometry: Geometry };
 type Geometry = { type: "Polygon"; coordinates: number[][][] } | { type: "MultiPolygon"; coordinates: number[][][][] };
@@ -29,7 +29,6 @@ const CALIFORNIA: Leaflet.LatLngBoundsExpression = [
 const RADIUS = [4.5, 6, 7.5, 9.5];
 const NEAR_MILES = 60;
 const START_TOWNS = ["Bakersfield", "Fresno", "Lancaster", "Palm Springs", "Blythe", "El Centro", "Los Banos", "Las Vegas"];
-const FLY = { duration: 0.8 };
 // Flying to a county stops short of filling the screen with it, so its neighbours still show.
 const COUNTY_ZOOM = 9;
 
@@ -58,11 +57,11 @@ function uncovered(map: Leaflet.Map, pad = 0): { paddingTopLeft: [number, number
     : { paddingTopLeft: [pad, pad], paddingBottomRight: [pad, box.bottom - panel.top + pad] };
 }
 
-// Fly so that `at` ends up in the middle of the uncovered part.
-function flyToPlace(map: Leaflet.Map, at: Leaflet.LatLngExpression, zoom: number) {
+// Go so that `at` ends up in the middle of the uncovered part.
+function goToPlace(map: Leaflet.Map, at: Leaflet.LatLngExpression, zoom: number) {
   const { paddingTopLeft: tl, paddingBottomRight: br } = uncovered(map);
   const shift = map.project(at, zoom).subtract([(tl[0] - br[0]) / 2, (tl[1] - br[1]) / 2]);
-  map.flyTo(map.unproject(shift, zoom), zoom, FLY);
+  travel(map, map.unproject(shift, zoom), zoom);
 }
 
 // The panel slides forward as you go deeper (a place, then a substation) and back as you
@@ -258,6 +257,9 @@ function useLeafletMap(
       // Names and county badges sit below the substations, so a dot is never hidden.
       map.createPane("labels").style.zIndex = "412";
       map.createPane("badges").style.zIndex = "415";
+      // New-rules rings sit under every dot, so a small dot's ring never cuts across a
+      // neighbour drawn close by.
+      map.createPane("halos").style.zIndex = "418";
       map.createPane("sites").style.zIndex = "420";
       map.fitBounds(CALIFORNIA, uncovered(map));
       L.control.zoom({ position: "topright" }).addTo(map);
@@ -361,7 +363,7 @@ function useLeafletMap(
         const k = classOf(s.realistic_mw);
         const delay = `${Math.round(Math.min(Math.max((at[1] + 124.5) / 10.5, 0), 1) * 600)}ms`;
         if (s.new_rules_projects > 0 && !onlyNew(s)) {
-          const halo = L.circleMarker(at, { pane: "sites", radius: 1, className: "halo", interactive: false }).addTo(map);
+          const halo = L.circleMarker(at, { pane: "halos", radius: 1, className: "halo", interactive: false }).addTo(map);
           (halo.getElement() as SVGElement | undefined)?.style.setProperty("--d", delay);
           sized.push([halo, k, 3.5]);
         }
@@ -377,7 +379,10 @@ function useLeafletMap(
             }${s.positioned_by === "planned" ? `<br><span class="dim">Planned, not built yet</span>` : ""}`,
             { direction: "top", offset: [0, -6] },
           )
+          .on("mouseover", () => toFront(marker))
           .on("click", () => {
+            // The map is about to move out from under the pointer: don't carry the label along.
+            marker.closeTooltip();
             const first = countiesOf(s)[0];
             setView({
               view: "site",
@@ -410,6 +415,8 @@ function useLeafletMap(
       };
       map.on("zoom", onZoom);
       onZoom();
+      // Once the dots have swept in, stop their entrance so raising one doesn't replay it.
+      setTimeout(() => map.getContainer().classList.add("settled"), 1600);
 
       // Hovering and picking a county.
       let hovered: string | null = null;
@@ -479,13 +486,13 @@ function useLeafletMap(
     m.ring = null;
     if (view.view === "welcome") {
       pick(null);
-      map.flyToBounds(CALIFORNIA, { ...uncovered(map), ...FLY });
+      travelToBounds(map, CALIFORNIA, uncovered(map));
     } else if (view.view === "area") {
       pick(view.area);
-      if (view.area.kind === "town") flyToPlace(map, [view.area.lat, view.area.lon], 8.5);
+      if (view.area.kind === "town") goToPlace(map, [view.area.lat, view.area.lon], 8.5);
       else {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 30), maxZoom: COUNTY_ZOOM, ...FLY });
+        if (c) travelToBounds(map, c.getBounds(), { ...uncovered(map, 30), maxZoom: COUNTY_ZOOM });
       }
     } else {
       const s = sites.find((x) => x.site === view.site);
@@ -493,7 +500,7 @@ function useLeafletMap(
       if (s && placed(s)) {
         const at: [number, number] = [s.latitude as number, s.longitude as number];
         const k = classOf(s.realistic_mw);
-        flyToPlace(map, at, Math.max(map.getZoom(), 8.5));
+        goToPlace(map, at, Math.max(map.getZoom(), 8.5));
         const marker = L.circleMarker(at, {
           pane: "sites",
           radius: RADIUS[k] * m.size() + 5,
@@ -501,19 +508,30 @@ function useLeafletMap(
           interactive: false,
         }).addTo(map);
         m.ring = { marker, k };
+        const dot = m.sites.get(s.site);
+        if (dot) toFront(dot);
       } else if (view.area?.kind === "county") {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 40), maxZoom: COUNTY_ZOOM, ...FLY });
+        if (c) travelToBounds(map, c.getBounds(), { ...uncovered(map, 40), maxZoom: COUNTY_ZOOM });
       }
     }
   }, [view, sites, ready]);
 
   // A substation's dot lights up while its row in the panel is hovered.
   const light = useCallback((site: string | null) => {
-    for (const [name, marker] of ref.current?.sites ?? []) marker.getElement()?.classList.toggle("lit", name === site);
+    for (const [name, marker] of ref.current?.sites ?? []) {
+      marker.getElement()?.classList.toggle("lit", name === site);
+      if (name === site) toFront(marker);
+    }
   }, []);
 
   return { el, light };
+}
+
+// Dots close together overlap; the one being hovered, lit or picked comes to the top.
+function toFront(marker: Leaflet.CircleMarker) {
+  const el = marker.getElement();
+  if (el && el.parentNode?.lastChild !== el) marker.bringToFront();
 }
 
 function escape(s: string): string {
