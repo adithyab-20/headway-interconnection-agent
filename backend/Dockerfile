@@ -1,4 +1,5 @@
-# Headway's API, as Railway runs it (see railway.toml). Built from this folder.
+# Headway's API, as Railway runs it (settings in the README's Deploy section). Built from
+# this folder.
 FROM python:3.12-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /bin/uv
