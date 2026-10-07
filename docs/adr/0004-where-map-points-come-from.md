@@ -9,7 +9,7 @@ map, including some of the biggest substations: Trout Canyon, Manning, Tranquill
 of those aren't built yet, so no map can show them, yet their planned spot is public.
 
 **The decision.** Each site's point comes from one of these, in order. The table that holds
-them (`src/interconnection_agent/places/positions.csv`) says which one answered, in
+them (`backend/src/interconnection_agent/places/positions.csv`) says which one answered, in
 `positioned_by`, and names the exact source in `source`:
 
 | `positioned_by` | Accepted when |

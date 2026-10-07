@@ -7,6 +7,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     services:
       postgres:
@@ -33,6 +36,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+          cache-dependency-glob: backend/uv.lock
 
       - name: Install dependencies
         run: uv sync --frozen
@@ -53,11 +57,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install the website's packages
         run: npm ci
-        working-directory: web
+        working-directory: frontend
 
       - name: Install Chromium for the browser tests
         run: uv run playwright install --with-deps chromium
@@ -72,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: web
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
 
@@ -81,7 +85,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install packages
         run: npm ci
