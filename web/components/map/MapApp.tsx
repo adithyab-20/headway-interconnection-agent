@@ -7,17 +7,20 @@
 import "leaflet/dist/leaflet.css";
 import type * as Leaflet from "leaflet";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { addTransitionType, startTransition, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from "react";
 import { api, type SiteSummary } from "@/shared/api";
 import { CLASS_LABEL, classOf, classVar, mw, plural } from "@/shared/format";
 import { Arrow, Back, Search } from "@/shared/icons";
 import { TOWNS, type Town } from "@/shared/towns";
+import { smoothMotion } from "./motion";
 
-type Feature = { type: "Feature"; properties: Record<string, string>; geometry: unknown };
+type Feature = { type: "Feature"; properties: Record<string, string>; geometry: Geometry };
+type Geometry = { type: "Polygon"; coordinates: number[][][] } | { type: "MultiPolygon"; coordinates: number[][][][] };
 type Collection = { type: "FeatureCollection"; features: Feature[] };
 
 type Area = { kind: "county"; name: string; state: string } | { kind: "town"; name: string; lat: number; lon: number };
 type View = { view: "welcome" } | { view: "area"; area: Area } | { view: "site"; site: string; area: Area | null };
+type County = { name: string; state: string };
 
 const CALIFORNIA: Leaflet.LatLngBoundsExpression = [
   [32.4, -124.5],
@@ -26,6 +29,9 @@ const CALIFORNIA: Leaflet.LatLngBoundsExpression = [
 const RADIUS = [4.5, 6, 7.5, 9.5];
 const NEAR_MILES = 60;
 const START_TOWNS = ["Bakersfield", "Fresno", "Lancaster", "Palm Springs", "Blythe", "El Centro", "Los Banos", "Las Vegas"];
+const FLY = { duration: 0.8 };
+// Flying to a county stops short of filling the screen with it, so its neighbours still show.
+const COUNTY_ZOOM = 9;
 
 const onlyNew = (s: SiteSummary) => s.waiting_projects === 0 && s.new_rules_projects > 0;
 const placed = (s: SiteSummary) => s.latitude != null && s.longitude != null;
@@ -41,26 +47,63 @@ function miles(a: [number, number], b: [number, number]): number {
   return 2 * 3958.8 * Math.asin(Math.sqrt(h));
 }
 
-const panelPadding = (): Leaflet.PointExpression => [typeof innerWidth !== "undefined" && innerWidth > 760 ? 400 : 0, 0];
+// The part of the map the panel doesn't cover: beside it on a wide screen, above it on a
+// phone, where the panel sits along the bottom. Flights aim for the middle of that part.
+function uncovered(map: Leaflet.Map, pad = 0): { paddingTopLeft: [number, number]; paddingBottomRight: [number, number] } {
+  const box = map.getContainer().getBoundingClientRect();
+  const panel = map.getContainer().parentElement?.querySelector(".panel")?.getBoundingClientRect();
+  if (!panel) return { paddingTopLeft: [pad, pad], paddingBottomRight: [pad, pad] };
+  return panel.width < box.width * 0.6
+    ? { paddingTopLeft: [panel.right - box.left + pad, pad], paddingBottomRight: [pad, pad] }
+    : { paddingTopLeft: [pad, pad], paddingBottomRight: [pad, box.bottom - panel.top + pad] };
+}
+
+// Fly so that `at` ends up in the middle of the uncovered part.
+function flyToPlace(map: Leaflet.Map, at: Leaflet.LatLngExpression, zoom: number) {
+  const { paddingTopLeft: tl, paddingBottomRight: br } = uncovered(map);
+  const shift = map.project(at, zoom).subtract([(tl[0] - br[0]) / 2, (tl[1] - br[1]) / 2]);
+  map.flyTo(map.unproject(shift, zoom), zoom, FLY);
+}
+
+// The panel slides forward as you go deeper (a place, then a substation) and back as you
+// return, so it's always clear which way you went.
+const depth = (v: View) => ({ welcome: 0, area: 1, site: 2 })[v.view];
+const SLIDE = { "panel-forward": "panel-forward", "panel-back": "panel-back", "panel-swap": "panel-swap", default: "none" };
 
 export function MapApp() {
   const [sites, setSites] = useState<SiteSummary[] | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
   const [geo, setGeo] = useState<{ counties: Collection; states: Collection } | null>(null);
-  const [view, setView] = useState<View>({ view: "welcome" });
+  const [view, setViewNow] = useState<View>({ view: "welcome" });
   const [q, setQ] = useState("");
+  const [over, setOver] = useState<County | null>(null);
+  const at = useRef(0);
+
+  const setView = useCallback((next: View) => {
+    const from = at.current;
+    at.current = depth(next);
+    startTransition(() => {
+      addTransitionType(at.current > from ? "panel-forward" : at.current < from ? "panel-back" : "panel-swap");
+      setViewNow(next);
+    });
+  }, []);
 
   useEffect(() => {
     api
       .sites()
-      .then((s) => setSites(s.sites))
+      .then((s) =>
+        startTransition(() => {
+          addTransitionType("panel-swap");
+          setSites(s.sites);
+        }),
+      )
       .catch((e: Error) => setFailed(e.message));
     Promise.all([fetch("/geo/counties.json"), fetch("/geo/states.json")])
       .then(async ([c, s]) => setGeo({ counties: (await c.json()) as Collection, states: (await s.json()) as Collection }))
       .catch((e: Error) => setFailed(e.message));
   }, []);
 
-  const map = useLeafletMap(sites, geo, view, setView);
+  const map = useLeafletMap(sites, geo, view, setView, setOver);
 
   const pickSite = useCallback(
     (name: string, area?: Area | null) => {
@@ -70,30 +113,65 @@ export function MapApp() {
       const first = countiesOf(s)[0];
       setView({ view: "site", site: name, area: area ?? (first ? { kind: "county", name: first, state } : null) });
     },
-    [sites],
+    [sites, setView],
   );
+
+  const perCounty = useMemo(() => {
+    const n = new Map<string, number>();
+    for (const s of sites ?? []) for (const c of countiesOf(s)) n.set(countyKey(c, s.state ?? "CA"), (n.get(countyKey(c, s.state ?? "CA")) ?? 0) + 1);
+    return n;
+  }, [sites]);
+
+  const key = failed
+    ? "failed"
+    : !sites
+      ? "loading"
+      : view.view === "welcome"
+        ? "welcome"
+        : view.view === "area"
+          ? `area:${view.area.name}`
+          : `site:${view.site}`;
+  const hovered = over ?? { name: "", state: "" };
+  const hoveredN = perCounty.get(countyKey(hovered.name, hovered.state)) ?? 0;
+  const area = view.view === "welcome" ? null : view.area;
+  const showing = view.view === "area" && area?.kind === "county" && area.name === hovered.name && area.state === hovered.state;
 
   return (
     <div className="mapwrap">
-      <div id="lmap" ref={map} aria-label="Map of substations" />
+      <div id="lmap" ref={map.el} aria-label="Map of substations" />
+      <div className={`hoverchip${over ? " on" : ""}`} aria-hidden="true">
+        <b>{hovered.name} County</b>
+        <span>
+          {!hoveredN
+            ? "No substations with projects waiting"
+            : showing
+              ? `${plural(hoveredN, "substation")}, listed on the left`
+              : `${plural(hoveredN, "substation")} · click to see them`}
+        </span>
+      </div>
       <aside className="panel" aria-label="Find a place">
-        {failed ? (
-          <div className="ph">
-            <h1>Explore by place</h1>
-            <p className="notice">The map couldn&apos;t load: {failed}</p>
+        <ViewTransition key={key} enter={SLIDE} exit={SLIDE} default="none">
+          <div className="pview">
+            {failed ? (
+              <div className="ph">
+                <h1>Explore by place</h1>
+                <p className="notice">The map couldn&apos;t load: {failed}</p>
+              </div>
+            ) : !sites ? (
+              <div className="ph">
+                <h1>Explore by place</h1>
+                <p>Working out how crowded each substation is. The first visit takes a few seconds.</p>
+                <div className="shimmer" aria-hidden="true" />
+              </div>
+            ) : view.view === "welcome" ? (
+              <Welcome sites={sites} q={q} setQ={setQ} setView={setView} pickSite={pickSite} />
+            ) : view.view === "area" ? (
+              <AreaList sites={sites} area={view.area} setView={setView} pickSite={pickSite} light={map.light} />
+            ) : (
+              <SiteCard sites={sites} view={view} setView={setView} />
+            )}
           </div>
-        ) : !sites ? (
-          <div className="ph">
-            <h1>Explore by place</h1>
-            <p>Working out how crowded each substation is. The first visit takes a few seconds.</p>
-          </div>
-        ) : view.view === "welcome" ? (
-          <Welcome sites={sites} q={q} setQ={setQ} setView={setView} pickSite={pickSite} />
-        ) : view.view === "area" ? (
-          <AreaList sites={sites} area={view.area} setView={setView} pickSite={pickSite} />
-        ) : (
-          <SiteCard sites={sites} view={view} setView={setView} />
-        )}
+        </ViewTransition>
       </aside>
       <Legend />
     </div>
@@ -102,19 +180,59 @@ export function MapApp() {
 
 // --- The Leaflet map ---------------------------------------------------------------------
 
+// A county's outline, kept to tell which county the pointer is over. Hovering goes by where
+// the pointer is, not by which shape is under it, so it holds steady over dots and labels.
+type Shape = { key: string; box: [number, number, number, number]; rings: number[][][] };
+
+function shapeOf(key: string, g: Geometry): Shape {
+  const rings = g.type === "Polygon" ? g.coordinates : g.coordinates.flat();
+  const box: Shape["box"] = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const r of rings)
+    for (const [x, y] of r) {
+      box[0] = Math.min(box[0], x);
+      box[1] = Math.min(box[1], y);
+      box[2] = Math.max(box[2], x);
+      box[3] = Math.max(box[3], y);
+    }
+  return { key, box, rings };
+}
+
+function countyAt(shapes: Shape[], at: Leaflet.LatLng): string | null {
+  const x = at.lng;
+  const y = at.lat;
+  for (const s of shapes) {
+    if (x < s.box[0] || x > s.box[2] || y < s.box[1] || y > s.box[3]) continue;
+    let inside = false;
+    for (const r of s.rings)
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+        const [xi, yi] = r[i];
+        const [xj, yj] = r[j];
+        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+      }
+    if (inside) return s.key;
+  }
+  return null;
+}
+
+type Outlined = Leaflet.Path & { getBounds(): Leaflet.LatLngBounds };
+
 function useLeafletMap(
   sites: SiteSummary[] | null,
   geo: { counties: Collection; states: Collection } | null,
   view: View,
   setView: (v: View) => void,
+  onHover: (c: County | null) => void,
 ) {
   const el = useRef<HTMLDivElement | null>(null);
   const ref = useRef<{
     L: typeof Leaflet;
     map: Leaflet.Map;
     sites: Map<string, Leaflet.CircleMarker>;
-    counties: Map<string, Leaflet.Path & { getBounds(): Leaflet.LatLngBounds }>;
-    ring: Leaflet.CircleMarker | null;
+    counties: Map<string, Outlined>;
+    outlines: Map<string, Outlined>;
+    picked: string | null;
+    ring: { marker: Leaflet.CircleMarker; k: number } | null;
+    size: () => number;
   } | null>(null);
   const [ready, setReady] = useState(0);
 
@@ -123,34 +241,58 @@ function useLeafletMap(
     let cancelled = false;
     void import("leaflet").then(({ default: L }) => {
       if (cancelled || !el.current) return;
-      const map = L.map(el.current, { zoomControl: false, minZoom: 5, maxZoom: 11, zoomSnap: 0.25 });
-      map.fitBounds(CALIFORNIA, { paddingTopLeft: panelPadding() });
+      const map = L.map(el.current, {
+        zoomControl: false,
+        minZoom: 5,
+        maxZoom: 11,
+        zoomSnap: 0,
+        zoomAnimation: false,
+        markerZoomAnimation: false,
+        fadeAnimation: false,
+        scrollWheelZoom: false,
+      });
+      smoothMotion(map);
+      // Highlighted borders sit on a layer of their own above every county, so a neighbour
+      // never paints over them; the substations sit above both.
+      map.createPane("outlines").style.zIndex = "410";
+      // Names and county badges sit below the substations, so a dot is never hidden.
+      map.createPane("labels").style.zIndex = "412";
+      map.createPane("badges").style.zIndex = "415";
+      map.createPane("sites").style.zIndex = "420";
+      map.fitBounds(CALIFORNIA, uncovered(map));
       L.control.zoom({ position: "topright" }).addTo(map);
       map.attributionControl
         .setPrefix(false)
         .addAttribution(
           "Boundaries: US Census Bureau · Substation positions: © OpenStreetMap contributors and public filings",
         );
+      // Borders drawn with every point, so they don't shimmer as the zoom changes.
+      const exact = { smoothFactor: 0, interactive: false } as Leaflet.GeoJSONOptions;
       L.geoJSON(geo.states as never, {
+        ...exact,
         style: (f) => ({ className: `state${f?.properties.code === "CA" ? " home" : ""}`, weight: 1 }),
-        interactive: false,
       }).addTo(map);
 
-      const counties = new Map<string, Leaflet.Path & { getBounds(): Leaflet.LatLngBounds }>();
+      const counties = new Map<string, Outlined>();
+      const outlines = new Map<string, Outlined>();
+      const shapes: Shape[] = [];
       const labels: Leaflet.Marker[] = [];
       L.geoJSON(geo.counties as never, {
+        ...exact,
         style: (f) => ({ className: `county ${f?.properties.state === "CA" ? "ca" : "other"}`, weight: 0.8 }),
         onEachFeature: (f, layer) => {
           const { name, state } = f.properties as { name: string; state: string };
-          const path = layer as Leaflet.Path & { getBounds(): Leaflet.LatLngBounds };
+          const path = layer as Outlined;
           counties.set(countyKey(name, state), path);
-          layer.on("click", () => setView({ view: "area", area: { kind: "county", name, state } }));
+          shapes.push(shapeOf(countyKey(name, state), (f as unknown as Feature).geometry));
           labels.push(
             L.marker(path.getBounds().getCenter(), {
+              pane: "labels",
               interactive: false,
+              keyboard: false,
               icon: L.divIcon({
                 className: "",
-                html: `<div class="county-label">${escape(name)}</div>`,
+                html: `<div class="county-label" aria-hidden="true">${escape(name)}</div>`,
                 iconSize: [120, 14],
                 iconAnchor: [60, 7],
               }),
@@ -158,6 +300,13 @@ function useLeafletMap(
           );
         },
       }).addTo(map);
+      L.geoJSON(geo.counties as never, {
+        ...exact,
+        pane: "outlines",
+        style: () => ({ className: "outline", weight: 2 }),
+        onEachFeature: (f, layer) => outlines.set(countyKey(f.properties.name, f.properties.state), layer as Outlined),
+      }).addTo(map);
+      for (const m of labels) m.addTo(map);
 
       // Unplaced substations: a badge in their county, never a guessed point.
       const unplacedIn = new Map<string, SiteSummary[]>();
@@ -167,56 +316,59 @@ function useLeafletMap(
           unplacedIn.set(key, [...(unplacedIn.get(key) ?? []), s]);
         }
       }
-      const badges: Leaflet.Marker[] = [];
       for (const [key, list] of unplacedIn) {
         const county = counties.get(key);
         if (!county) continue;
         const [name, state] = key.split("|");
         const n = list.length;
-        badges.push(
-          L.marker(county.getBounds().getCenter(), {
-            icon: L.divIcon({
-              className: "",
-              html: `<span class="cbadge" title="${n} substation${n > 1 ? "s" : ""} somewhere in ${escape(name)} County">+${n}</span>`,
-              iconSize: [40, 20],
-              iconAnchor: [20, 22],
-            }),
-          })
-            .on("click", () => setView({ view: "area", area: { kind: "county", name, state } }))
-            .bindTooltip(
-              `${n} more substation${n > 1 ? "s" : ""} somewhere in ${escape(name)} County.<br><span class="dim">Their exact spot isn't known, so they aren't drawn as dots.</span>`,
-              { direction: "top", offset: [0, -18] },
-            ),
-        );
+        L.marker(county.getBounds().getCenter(), {
+          pane: "badges",
+          icon: L.divIcon({
+            className: "badge-icon",
+            html: `<span class="cbadge" title="${n} substation${n > 1 ? "s" : ""} somewhere in ${escape(name)} County">+${n}</span>`,
+            iconSize: [40, 20],
+            iconAnchor: [20, 22],
+          }),
+        })
+          .on("click", () => setView({ view: "area", area: { kind: "county", name, state } }))
+          .bindTooltip(
+            `${n} more substation${n > 1 ? "s" : ""} somewhere in ${escape(name)} County.<br><span class="dim">Their exact spot isn't known, so they aren't drawn as dots.</span>`,
+            { direction: "top", offset: [0, -18] },
+          )
+          .addTo(map);
       }
 
-      const towns = TOWNS.map(
-        ([n, lat, lon, major]) =>
-          [
-            major,
-            L.marker([lat, lon], {
-              interactive: false,
-              icon: L.divIcon({
-                className: "",
-                html: `<div class="city-label${major ? " major" : ""}"><i></i>${escape(n)}</div>`,
-                iconSize: [140, 16],
-                iconAnchor: [2, 8],
-              }),
-            }),
-          ] as const,
-      );
+      for (const [n, lat, lon, major] of TOWNS) {
+        L.marker([lat, lon], {
+          pane: "labels",
+          interactive: false,
+          keyboard: false,
+          icon: L.divIcon({
+            className: "",
+            html: `<div class="city-label${major ? " major" : ""}" aria-hidden="true"><i></i>${escape(n)}</div>`,
+            iconSize: [140, 16],
+            iconAnchor: [2, 8],
+          }),
+        }).addTo(map);
+      }
 
-      // Substations, biggest first so small ones stay on top.
+      // Substations, biggest first so small ones stay on top. They appear in a sweep from
+      // west to east when the map first loads.
       const markers = new Map<string, Leaflet.CircleMarker>();
-      const halos: [Leaflet.CircleMarker, SiteSummary][] = [];
+      const sized: [Leaflet.CircleMarker, number, number][] = [];
       for (const s of sites.filter(placed).sort((a, b) => b.realistic_mw - a.realistic_mw)) {
         const at: [number, number] = [s.latitude as number, s.longitude as number];
-        if (s.new_rules_projects > 0 && !onlyNew(s)) {
-          halos.push([L.circleMarker(at, { radius: 1, className: "halo", interactive: false }).addTo(map), s]);
-        }
         const k = classOf(s.realistic_mw);
+        const delay = `${Math.round(Math.min(Math.max((at[1] + 124.5) / 10.5, 0), 1) * 600)}ms`;
+        if (s.new_rules_projects > 0 && !onlyNew(s)) {
+          const halo = L.circleMarker(at, { pane: "sites", radius: 1, className: "halo", interactive: false }).addTo(map);
+          (halo.getElement() as SVGElement | undefined)?.style.setProperty("--d", delay);
+          sized.push([halo, k, 3.5]);
+        }
         const marker = L.circleMarker(at, {
+          pane: "sites",
           radius: 6,
+          bubblingMouseEvents: false,
           className: `site k${k}${onlyNew(s) ? " onlynew" : ""}${s.positioned_by === "planned" ? " planned" : ""}`,
         })
           .bindTooltip(
@@ -234,33 +386,70 @@ function useLeafletMap(
             });
           })
           .addTo(map);
-        const path = marker.getElement();
+        const path = marker.getElement() as SVGElement | undefined;
         path?.setAttribute("data-site", s.site);
         path?.setAttribute("aria-label", s.site);
+        path?.style.setProperty("--d", delay);
         markers.set(s.site, marker);
+        sized.push([marker, k, 0]);
       }
 
-      const sizeForZoom = () => {
+      // Dots grow a little as you zoom in, smoothly with the zoom itself; names fade in once
+      // there's room for them.
+      const size = () => Math.max(0.8, Math.min(1.6, 0.6 + (map.getZoom() - 5) * 0.25));
+      const onZoom = () => {
         const z = map.getZoom();
-        const f = Math.max(0.8, Math.min(1.6, 0.6 + (z - 5) * 0.25));
-        for (const [name, m] of markers) {
-          const s = sites.find((x) => x.site === name);
-          if (s) m.setRadius(RADIUS[classOf(s.realistic_mw)] * f);
-        }
-        for (const [h, s] of halos) h.setRadius(RADIUS[classOf(s.realistic_mw)] * f + 3.5);
-        for (const [major, m] of towns) (major ? z >= 5.5 : z >= 7) ? m.addTo(map) : m.remove();
-        for (const m of labels) (z >= 7.75 ? m.addTo(map) : m.remove());
-        for (const m of badges) (z >= 7 ? m.addTo(map) : m.remove());
+        const f = size();
+        for (const [m, k, extra] of sized) m.setRadius(RADIUS[k] * f + extra);
+        const ring = ref.current?.ring;
+        if (ring) ring.marker.setRadius(RADIUS[ring.k] * f + 5);
+        const c = map.getContainer().classList;
+        c.toggle("z-cities", z >= 5.5);
+        c.toggle("z-towns", z >= 7);
+        c.toggle("z-counties", z >= 7.75);
       };
-      map.on("zoomend", sizeForZoom);
-      sizeForZoom();
-      ref.current = { L, map, sites: markers, counties, ring: null };
+      map.on("zoom", onZoom);
+      onZoom();
+
+      // Hovering and picking a county.
+      let hovered: string | null = null;
+      const hover = (key: string | null) => {
+        if (key === hovered) return;
+        for (const k of [hovered, key]) {
+          if (!k) continue;
+          counties.get(k)?.getElement()?.classList.toggle("hover", k === key);
+          outlines.get(k)?.getElement()?.classList.toggle("hover", k === key);
+        }
+        hovered = key;
+        map.getContainer().classList.toggle("over-county", key != null);
+        const [name, state] = key?.split("|") ?? [];
+        onHover(key ? { name, state } : null);
+      };
+      // After a flight the map has moved under a still pointer: look again where it rests.
+      let pointer: Leaflet.Point | null = null;
+      map.on("mousemove", (e) => {
+        pointer = e.containerPoint;
+        hover(countyAt(shapes, e.latlng));
+      });
+      map.on("moveend", () => pointer && hover(countyAt(shapes, map.containerPointToLatLng(pointer))));
+      map.getContainer().addEventListener("mouseleave", () => {
+        pointer = null;
+        hover(null);
+      });
+      map.on("click", (e) => {
+        const key = countyAt(shapes, e.latlng);
+        if (!key) return;
+        const [name, state] = key.split("|");
+        setView({ view: "area", area: { kind: "county", name, state } });
+      });
+
+      ref.current = { L, map, sites: markers, counties, outlines, picked: null, ring: null, size };
       setReady((n) => n + 1);
     });
     return () => {
       cancelled = true;
     };
-  }, [sites, geo, setView]);
+  }, [sites, geo, setView, onHover]);
 
   useEffect(
     () => () => {
@@ -275,36 +464,56 @@ function useLeafletMap(
     const m = ref.current;
     if (!m || !sites) return;
     const { L, map } = m;
-    for (const c of m.counties.values()) c.getElement()?.classList.remove("picked");
-    m.ring?.remove();
-    m.ring = null;
     const pick = (a: Area | null) => {
-      if (a?.kind === "county") m.counties.get(countyKey(a.name, a.state))?.getElement()?.classList.add("picked");
+      const key = a?.kind === "county" ? countyKey(a.name, a.state) : null;
+      if (key === m.picked) return;
+      for (const k of [m.picked, key]) {
+        if (!k) continue;
+        m.counties.get(k)?.getElement()?.classList.toggle("picked", k === key);
+        m.outlines.get(k)?.getElement()?.classList.toggle("picked", k === key);
+      }
+      if (key) m.outlines.get(key)?.bringToFront();
+      m.picked = key;
     };
+    m.ring?.marker.remove();
+    m.ring = null;
     if (view.view === "welcome") {
-      map.flyToBounds(CALIFORNIA, { paddingTopLeft: panelPadding(), duration: 0.6 });
+      pick(null);
+      map.flyToBounds(CALIFORNIA, { ...uncovered(map), ...FLY });
     } else if (view.view === "area") {
       pick(view.area);
-      if (view.area.kind === "town") map.flyTo([view.area.lat, view.area.lon], 8.5, { duration: 0.7 });
+      if (view.area.kind === "town") flyToPlace(map, [view.area.lat, view.area.lon], 8.5);
       else {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { paddingTopLeft: panelPadding(), padding: [30, 30], duration: 0.7 });
+        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 30), maxZoom: COUNTY_ZOOM, ...FLY });
       }
     } else {
       const s = sites.find((x) => x.site === view.site);
       pick(view.area);
       if (s && placed(s)) {
         const at: [number, number] = [s.latitude as number, s.longitude as number];
-        map.flyTo(at, Math.max(map.getZoom(), 8.5), { duration: 0.7 });
-        m.ring = L.circleMarker(at, { radius: RADIUS[classOf(s.realistic_mw)] * 1.6 + 6, className: "sel-ring", interactive: false }).addTo(map);
+        const k = classOf(s.realistic_mw);
+        flyToPlace(map, at, Math.max(map.getZoom(), 8.5));
+        const marker = L.circleMarker(at, {
+          pane: "sites",
+          radius: RADIUS[k] * m.size() + 5,
+          className: "sel-ring",
+          interactive: false,
+        }).addTo(map);
+        m.ring = { marker, k };
       } else if (view.area?.kind === "county") {
         const c = m.counties.get(countyKey(view.area.name, view.area.state));
-        if (c) map.flyToBounds(c.getBounds(), { padding: [40, 40], duration: 0.7 });
+        if (c) map.flyToBounds(c.getBounds(), { ...uncovered(map, 40), maxZoom: COUNTY_ZOOM, ...FLY });
       }
     }
   }, [view, sites, ready]);
 
-  return el;
+  // A substation's dot lights up while its row in the panel is hovered.
+  const light = useCallback((site: string | null) => {
+    for (const [name, marker] of ref.current?.sites ?? []) marker.getElement()?.classList.toggle("lit", name === site);
+  }, []);
+
+  return { el, light };
 }
 
 function escape(s: string): string {
@@ -477,9 +686,28 @@ function SearchBox({
   );
 }
 
-function SiteRow({ s, extra, max, onPick }: { s: SiteSummary; extra: string; max: number; onPick: () => void }) {
+function SiteRow({
+  s,
+  extra,
+  max,
+  onPick,
+  light,
+}: {
+  s: SiteSummary;
+  extra: string;
+  max: number;
+  onPick: () => void;
+  light?: (site: string | null) => void;
+}) {
   return (
-    <button className="row" onClick={onPick}>
+    <button
+      className="row"
+      onClick={onPick}
+      onMouseEnter={() => light?.(s.site)}
+      onMouseLeave={() => light?.(null)}
+      onFocus={() => light?.(s.site)}
+      onBlur={() => light?.(null)}
+    >
       <span className="nm">
         {s.site} <small>{extra}</small>
       </span>
@@ -511,12 +739,16 @@ function AreaList({
   area,
   setView,
   pickSite,
+  light,
 }: {
   sites: SiteSummary[];
   area: Area;
   setView: (v: View) => void;
   pickSite: (name: string, area?: Area | null) => void;
+  light: (site: string | null) => void;
 }) {
+  // Nothing stays lit once the list goes away.
+  useEffect(() => () => light(null), [light]);
   const max = Math.max(...sites.map((s) => s.realistic_mw));
   let near: { s: SiteSummary; d?: number }[];
   let somewhere: SiteSummary[];
@@ -584,6 +816,7 @@ function AreaList({
                       : `${x.s.county} County`
                 }
                 onPick={() => pickSite(x.s.site, area)}
+                light={light}
               />
             ))}
           </section>
@@ -660,7 +893,7 @@ function SiteCard({
               + {mw(s.new_rules_mw)} MW from new-rules projects, odds unknown
             </div>
           )}
-          <Link className="btn p" href={`/substations/${encodeURIComponent(s.site)}`}>
+          <Link className="btn p" href={`/substations/${encodeURIComponent(s.site)}`} transitionTypes={["page-forward"]}>
             See the odds here <Arrow />
           </Link>
         </div>

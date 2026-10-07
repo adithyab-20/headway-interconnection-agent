@@ -281,7 +281,7 @@ export function Overview(props: {
             </button>
           ))}
         </div>
-        <div className="tabpanel" role="tabpanel">
+        <div className="tabpanel" role="tabpanel" key={tab}>
           {tab === "fared" &&
             (odds ? (
               <>

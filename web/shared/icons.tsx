@@ -74,6 +74,19 @@ export const Doc = () => (
   </svg>
 );
 
+export const Play = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+    <path d="M4 2.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L4.9 2.1a.6.6 0 0 0-.9.5z" fill="currentColor" />
+  </svg>
+);
+
+export const Pause = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+    <rect x="3.2" y="2.4" width="2.6" height="9.2" rx=".8" fill="currentColor" />
+    <rect x="8.2" y="2.4" width="2.6" height="9.2" rx=".8" fill="currentColor" />
+  </svg>
+);
+
 export const Logo = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
     <rect width="28" height="28" rx="9" fill="var(--accent)" />
