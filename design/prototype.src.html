@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Headway prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -366,6 +367,121 @@ table.t .r{text-align:right}
 .mono{font-family:var(--mono);font-size:12px}
 .scroll-x{overflow-x:auto}
 
+/* ---------------- Ask workspace ---------------- */
+.ws{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:18px;height:calc(100vh - 200px);min-height:620px}
+.ctx-pane{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);overflow:auto;display:flex;flex-direction:column}
+.ctx-pane .intro{padding:18px 18px 6px;font-size:13.5px;color:var(--muted)}
+.ctx-sec{padding:12px 18px 14px;border-top:1px solid var(--rule)}
+.ctx-sec:first-of-type{border-top:0}
+.ctx-sec h3{font-size:12.5px;font-weight:750;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ctx-sec h3 .link{text-transform:none;letter-spacing:0;font-size:12.5px}
+.ctx-proj{font-size:15px;font-weight:650}
+.knum{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:8px 10px;margin:0 -10px;border-radius:12px}
+.knum:hover,.knum:focus-within{background:var(--soft)}
+.knum .k{font-size:13px;color:var(--muted)}
+.knum .v{font-size:19px;font-weight:800;letter-spacing:-.01em}
+.knum .v small{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:3px}
+.knum .acts{grid-row:1/3;grid-column:2;display:flex;gap:4px;align-items:center;opacity:.35;transition:opacity .15s}
+.knum:hover .acts,.knum:focus-within .acts{opacity:1}
+.mini{border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:650;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.mini:hover{border-color:var(--accent);color:var(--accent)}
+.mini.p{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cgroup{font-size:14px;color:var(--ink-2)}
+.cgroup b{color:var(--ink)}
+.plist2{display:grid;gap:2px}
+.pick{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 8px;margin:0 -8px;border-radius:10px;cursor:pointer;font-size:13.5px}
+.pick:hover{background:var(--soft)}
+.pick.on{background:var(--accent-wash)}
+.pick.out{opacity:.5}
+.pick input{width:16px;height:16px;accent-color:var(--accent);margin:0}
+.pick b{font-weight:650}
+.pick small{display:block;color:var(--muted);font-size:12px}
+.pick .c{text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
+.pick .c small{font-weight:400}
+.selbar{position:sticky;bottom:0;background:var(--panel);border-top:1px solid var(--rule);padding:10px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
+.conv{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.conv-body{flex:1;overflow:auto;padding:22px 26px;display:grid;gap:18px;align-content:start}
+.caps{display:grid;gap:16px}
+.caps h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.caps>p{margin:0;color:var(--muted);max-width:60ch}
+.capgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cap{border:1px solid var(--rule);border-radius:16px;padding:14px 16px;display:grid;gap:8px;align-content:start}
+.cap .h{display:flex;gap:10px;align-items:center;font-weight:750}
+.cap .h .ic{width:30px;height:30px;border-radius:10px;background:var(--accent-wash);color:var(--accent);display:grid;place-items:center;flex:none}
+.cap p{margin:0;color:var(--muted);font-size:13.5px}
+.cap .ex{display:grid;gap:4px}
+.cap .ex button{all:unset;cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:600}
+.cap .ex button:hover{text-decoration:underline;text-underline-offset:3px}
+.cap .ex button:focus-visible{outline:2px solid var(--accent);border-radius:4px}
+.cant-list{background:var(--ground);border-radius:14px;padding:12px 16px;font-size:13.5px;color:var(--muted)}
+.cant-list b{color:var(--ink-2)}
+.msg{display:grid;gap:8px;max-width:760px}
+.msg.you{justify-items:end;max-width:none}
+.msg.you .bubble{background:var(--accent);color:var(--accent-ink);border-radius:18px 18px 4px 18px;padding:9px 14px;max-width:70%;font-weight:550}
+.msg.you .refs{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.msg.bot{background:var(--ground);border-radius:4px 18px 18px 18px;padding:14px 16px 12px}
+.msg.bot .who{font-size:12px;font-weight:700;color:var(--muted)}
+.msg.bot .fact{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:start}
+.msg.bot .fact p{margin:0;line-height:1.55}
+.msg.bot .say{margin:0;line-height:1.55;color:var(--ink-2)}
+.msg.bot .opin{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;background:var(--ask-wash);border-radius:10px;padding:8px 10px}
+.msg.bot .opin p{margin:0}
+.msg.bot .opin small{display:block;color:var(--ask);font-weight:650;margin-top:2px}
+.msg .acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.msg .done{color:var(--ok);font-weight:650;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.trace{font-size:12.5px;color:var(--muted)}
+.trace summary{cursor:pointer;list-style:none;display:inline-flex;gap:6px;align-items:center}
+.trace summary::-webkit-details-marker{display:none}
+.trace ol{margin:6px 0 2px;padding-left:18px;display:grid;gap:3px}
+.trace code{font-family:var(--mono);font-size:11.5px;background:var(--panel);padding:1px 5px;border-radius:4px}
+.working{display:grid;gap:6px;font-size:13.5px;color:var(--muted);padding-left:4px}
+.working span{display:flex;gap:8px;align-items:center}
+.working .spin{width:12px;height:12px;border-radius:50%;border:2px solid var(--rule-2);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.working .ok{width:12px;height:12px;border-radius:50%;background:var(--ok-mark)}
+.cant-reply .h{display:flex;gap:8px;align-items:center;font-weight:700}
+.cant-reply p{margin:6px 0 0;color:var(--ink-2)}
+.prop{background:var(--panel);border:1.5px solid var(--ask-mark);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.prop .lbl{font-size:12px;font-weight:700;color:var(--ask);letter-spacing:.03em;text-transform:uppercase}
+.prop ul{margin:0;padding-left:18px;font-size:13.5px}
+.prop.closed{border-color:var(--rule)}
+.choose{display:grid;gap:6px}
+.choose button.opt{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--rule);background:var(--panel);border-radius:12px;padding:9px 12px;cursor:pointer;font-size:14px}
+.choose button.opt:hover{border-color:var(--accent);background:var(--accent-wash)}
+.choose button.opt span{color:var(--muted);font-size:13px}
+.choose button.opt[disabled]{opacity:.5;cursor:not-allowed}
+.choose .pickwrap{background:var(--panel);border-radius:12px;padding:6px 14px}
+.choose input[type=text]{width:100%;border:1px solid var(--rule-2);border-radius:10px;padding:8px 10px;background:var(--panel)}
+.chips-sm{display:flex;gap:6px;flex-wrap:wrap}
+.chips-sm button{border:0;background:var(--panel);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.chips-sm button:hover{box-shadow:inset 0 0 0 1px var(--accent);color:var(--accent)}
+.composer{border-top:1px solid var(--rule);padding:12px 18px 14px;display:grid;gap:8px;background:var(--panel)}
+.qa{display:flex;gap:6px;flex-wrap:wrap}
+.qa button{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:650;cursor:pointer;color:var(--ink-2)}
+.qa button:hover{border-color:var(--accent);color:var(--accent)}
+.composer .box{display:grid;gap:6px;background:var(--ground);border-radius:16px;padding:8px 8px 8px 14px;border:1px solid var(--rule-2)}
+.composer .box:focus-within{border-color:var(--accent)}
+.composer .row3{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;border:0;background:transparent;min-height:24px;max-height:120px;padding:6px 0;resize:none;outline:none}
+.ref{display:inline-flex;gap:6px;align-items:center;background:var(--accent-wash);color:var(--accent);border-radius:999px;padding:2px 6px 2px 10px;font-size:12.5px;font-weight:650}
+.ref button{all:unset;cursor:pointer;display:grid;place-items:center;width:18px;height:18px;border-radius:50%}
+.ref button:hover{background:var(--panel)}
+.msg.you .ref{background:var(--soft);color:var(--ink-2);padding-right:10px}
+.composer .meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--faint)}
+.followups{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:4px}
+.followups button{border:0;background:transparent;color:var(--accent);font-weight:650;font-size:13px;cursor:pointer;padding:0;display:inline-flex;gap:4px;align-items:center;text-align:left}
+.followups button:hover{text-decoration:underline;text-underline-offset:3px}
+.ctx-toggle{display:none}
+@media (max-width:900px){
+  .ws{grid-template-columns:minmax(0,1fr);height:auto}
+  .ctx-pane{max-height:none}
+  .ctx-pane.closed .ctx-sec,.ctx-pane.closed .intro,.ctx-pane.closed .selbar{display:none}
+  .ctx-toggle{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border:0;background:none;width:100%;font-weight:700;cursor:pointer}
+  .conv{min-height:70vh}
+  .capgrid{grid-template-columns:minmax(0,1fr)}
+  .conv-body{padding:16px}
+}
+
 /* ---------------- Decisions ---------------- */
 .docs{max-width:960px;margin:0 auto;padding:16px 24px 72px;display:grid;gap:18px}
 .docs h1{font-size:32px;font-weight:800}
@@ -462,6 +578,8 @@ const I = {
   info:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9v5M10 6.2v.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
   arrow:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8m-3-3 3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   back:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M11 7H3m3-3L3 7l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  close:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  chat:'<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h7A2.5 2.5 0 0 1 15 4.5v5a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3H5.5A2.5 2.5 0 0 1 3 9.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
   search:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
 };
 
@@ -474,7 +592,7 @@ const RADIUS = [4.5, 6, 7.5, 9.5];
 const onlyNew = s => s.n === 0 && s.nn > 0;
 const busierThan = v => SITES.filter(s => s.realistic < v).length;
 
-const state = { screen:"home", years:10, rung:null, view:"overview", tab:"fared",
+const state = { leftOut:new Set(), screen:"home", years:10, rung:null, view:"overview", tab:"fared",
   decisions:{}, rewritten:{}, editing:null, adjusted:false, proposal:null, log:[], final:false };
 document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 function go(name){
@@ -890,26 +1008,37 @@ function highlight(){
 // ======================================================================
 const usedIdx = () => state.rung ?? M.ladder.findIndex(r => r.used);
 const odds = n => M.ladder[usedIdx()].by_n[n];
-const curAhead = () => state.adjusted ? {realistic:M.adjusted.realistic, range:M.adjusted.range, waiting:M.adjusted.waiting} : {realistic:M.ahead.realistic, range:M.ahead.range, waiting:M.ahead.waiting};
+// What's realistically ahead after the projects a person has left out. The real app works this out
+// again from the data (the projects also leave the history); the prototype takes their share off.
+const afterLeaving = ids => {
+  const set = new Set(ids);
+  if (!set.size) return { realistic:M.ahead.realistic, range:M.ahead.range, waiting:M.ahead.waiting };
+  if (set.size === M.adjusted.leave_out.length && M.adjusted.leave_out.every(i => set.has(i))) return { realistic:M.adjusted.realistic, range:M.adjusted.range, waiting:M.adjusted.waiting };
+  const gone = M.ahead.projects.filter(p => set.has(p.id)), cut = gone.reduce((t,p)=>t+p.mw*p.chance,0), k = (M.ahead.realistic-cut)/M.ahead.realistic;
+  return { realistic:M.ahead.realistic-cut, range:[M.ahead.range[0]*k, M.ahead.range[1]*k], waiting:M.ahead.waiting-gone.reduce((t,p)=>t+p.mw,0) };
+};
+const curAhead = () => afterLeaving([...state.leftOut]);
 const typeName = t => { const s = new Set(t); if (s.has("Solar") && s.has("Battery") && s.size===2) return "Solar + battery"; if (s.size===1) return {"Natural Gas":"Gas","Wind Turbine":"Wind"}[t[0]] || t[0]; return t.join(" + "); };
 const plainGroup = r => r.desc.replace("Solar + battery","solar + battery projects").replace("All projects","all projects").replace(", 150-300 MW"," of 150–300 MW").replace(/, /," ");
 
 function renderSite(){
   const el = $("#s-site");
-  const toReview = claims().filter(c => c.kind==="judgement" && !state.decisions[c.id]).length;
+  const toReview = claims().filter(c => c.kind==="opinion" && !state.decisions[c.id]).length;
   el.innerHTML = `<div class="page">
     <button class="link back" data-go="map">${I.back} All substations</button>
     <div class="head">
       <div><h1>Midway</h1><div class="sub">Substation in Kern County · ${M.places.map(p=>p.kv).join(", ").replace(/, (\d+)$/," and $1")} kV</div></div>
       <div class="views" role="tablist" aria-label="View">
         <button role="tab" data-view="overview" aria-selected="${state.view==="overview"}">The odds</button>
+        <button role="tab" data-view="ask" aria-selected="${state.view==="ask"}">${I.chat} Ask</button>
         <button role="tab" data-view="writeup" aria-selected="${state.view==="writeup"}">Write-up ${toReview&&!state.final?`<span class="badge">${toReview} to review</span>`:""}</button>
       </div>
     </div>
-    <div id="view">${state.view==="overview" ? overview() : writeup()}</div>
+    <div id="view">${state.view==="overview" ? overview() : state.view==="ask" ? askView() : writeup()}</div>
   </div>`;
   if (state.view==="overview") { drawTab(); }
   wire();
+  if (state.view==="ask") wireAskView(el);
 }
 
 function overview(){
@@ -932,6 +1061,7 @@ function overview(){
         <div class="key"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--sand)"></i>withdrew</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--sky-edge)"></i>still waiting</span></div>
         <span class="range">Likely somewhere between ${in100(o.range[0])} and ${in100(o.range[1])} in 100.</span>
         <div class="years" role="group" aria-label="Within how many years">${[3,5,7,10].map(k=>`<button data-n="${k}" aria-pressed="${k===n}">${k} yrs</button>`).join("")}</div>`}
+        <div class="followups"><button data-open-ask="How many projects have withdrawn at Midway?">${I.chat} Ask: How many projects have withdrawn at Midway?</button></div>
         <div class="foot"><span>${o.projects} past projects</span><button class="link" data-why="chance">How we know ${I.arrow}</button></div>
       </article>
 
@@ -941,6 +1071,7 @@ function overview(){
         <p class="says">is typical, from applying to running, for the projects that did get built.</p>
         ${waitScale(o)}
         <span class="range">Likely between ${Math.round(o.wait_range[0])} and ${Math.round(o.wait_range[1])} years.</span>
+        <div class="followups"><button data-open-ask="How long did battery projects wait here?">${I.chat} Ask: How long did battery projects wait here?</button></div>
         <div class="foot"><span>${o.built} built projects</span><button class="link" data-why="wait">How we know ${I.arrow}</button></div>
       </article>
 
@@ -951,6 +1082,7 @@ function overview(){
         ${crowdBar(a)}
         <span class="range">Likely between ${mw(a.range[0])} and ${mw(a.range[1])} MW, out of ${mw(a.waiting)} MW waiting.</span>
         <div class="note">${I.info}<span>Another <b>${mw(M.ahead.new)} MW</b> applied under 2023's new rules. It's too soon to know how much of it will be built, so it isn't counted above.</span></div>
+        <div class="followups"><button data-open-ask="Which waiting projects have been in line longest?">${I.chat} Ask: Which waiting projects have been in line longest?</button></div>
         <div class="foot"><span>${M.ahead.projects.length + M.ahead.new_projects.length} waiting projects</span><button class="link" data-why="ahead">How we know ${I.arrow}</button></div>
       </article>
     </div>
@@ -1035,7 +1167,7 @@ function curve(){
   $("#hit",host).addEventListener("pointerleave", () => { xh.setAttribute("opacity",0); hideTip(); });
 }
 function aheadTab(){
-  const out = new Set(state.adjusted ? M.adjusted.leave_out : []);
+  const out = state.leftOut;
   const all = [...M.ahead.projects, ...M.ahead.new_projects], max = Math.max(...all.map(p=>p.mw));
   const w = 260, sc = v => v/max*w;
   const step = s => ({"Agreement signed":"has signed its agreement","Second study done":"finished its second study","First study done":"finished its first study"}[s] || "hasn't been studied yet");
@@ -1100,9 +1232,10 @@ function claims(){
     {id:"f4", kind:"fact", parts:["Another ", {v:M.ahead.new,u:"MW",k:"ahead"}, " applied under 2023's new rules; its odds aren't known yet."]},
     {id:"j1", kind:"opinion", text:"Midway, its bottlenecks and Kern County each have too few past projects, so the California-wide figure is the best guide available. Conditions at Midway may differ."},
     {id:"j2", kind:"opinion", text:"Most of the MW ahead comes from two large projects that signed agreements in 2019 and 2021. If either stalls, the line ahead is much shorter than it looks."},
+    ...chat.extra,
   ];
 }
-const val = (v,u) => u==="%" ? pct(v) : u==="MW" ? mw(v)+" MW" : v.toLocaleString("en-US");
+const val = (v,u) => u==="%" ? pct(v) : u==="MW" ? mw(v)+" MW" : u==="years" ? yrs(v)+" years" : v.toLocaleString("en-US");
 function writeup(){
   const cl = claims(), ops = cl.filter(c=>c.kind==="opinion"), decided = ops.filter(j=>state.decisions[j.id]).length, left = ops.length - decided;
   return `<div class="writeup">
@@ -1113,8 +1246,8 @@ function writeup(){
         ${state.final ? `${I.check}<span><b>Final.</b> Every point has been reviewed.</span>` : left ? `${I.ask}<span><b>${left} point${left===1?"":"s"} need${left===1?"s":""} your review.</b> Facts are checked by code; opinions need a person.</span>` : `${I.check}<span><b>All reviewed.</b> You can finalise it.</span>`}
         <div class="bar" aria-hidden="true">${cl.map(c=>`<i style="flex:1;background:${c.kind==="fact"||state.decisions[c.id]&&state.decisions[c.id]!=="rejected"?"var(--ok-mark)":state.decisions[c.id]==="rejected"?"var(--no-mark)":"var(--ask-mark)"}"></i>`).join("")}</div>
       </div>
-      ${cl.map(c => c.kind==="fact" ? `<div class="stmt"><span>${I.check}</span><div><p>${c.parts.map(p=>typeof p==="string"?esc(p):`<button class="num t" data-why="${p.k}" title="See where this comes from">${val(p.v,p.u)}</button>`).join("")}</p>
-          <div class="meta"><span class="ok">Fact · checked against the data</span>${state.adjusted&&c.id==="f3"?`<span class="pill out">updated after your change</span>`:""}</div></div></div>` : opinion(c)).join("")}
+      ${cl.map(c => c.kind==="fact" ? `<div class="stmt"><span>${I.check}</span><div><p>${c.html ? c.html : c.parts.map(p=>typeof p==="string"?esc(p):`<button class="num t" data-why="${p.k}" title="See where this comes from">${val(p.v,p.u)}</button>`).join("")}</p>
+          <div class="meta"><span class="ok">Fact · checked against the data</span>${c.html?`<span class="pill">from your question</span>`:""}${state.leftOut.size&&c.id==="f3"?`<span class="pill out">updated after your change</span>`:""}</div></div></div>` : opinion(c)).join("")}
       <div style="display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap">
         <button class="btn p" id="finalise" ${!left&&!state.final?"":"disabled"}>${state.final?"Finalised":"Finalise"}</button>
         <span class="muted small">${state.final?"No more changes can be made.":left?`Review the ${left} remaining opinion${left===1?"":"s"} first.`:"Ready."}</span>
@@ -1122,11 +1255,9 @@ function writeup(){
     </article>
     <div class="side-cards">
       <section class="c" aria-labelledby="h-ask">
-        <h3 id="h-ask">Ask or request a change</h3>
-        ${state.proposal ? proposal() : `
-          <div class="ask-in"><input id="ask-in" placeholder="Ask anything about Midway" aria-label="Ask about Midway" ${state.final?"disabled":""}><button class="btn p sm" id="ask-go" ${state.final?"disabled":""}>Ask</button></div>
-          <div class="suggest">${["Ignore projects stuck since 2019","How long do batteries wait here?"].map(s=>`<button data-suggest="${esc(s)}" ${state.final?"disabled":""}>${esc(s)}</button>`).join("")}</div>
-          <p class="faint small" style="margin:0">If you ask to leave projects out, you'll see exactly what would change before anything does.</p>`}
+        <h3 id="h-ask">Questions and changes</h3>
+        <p class="small muted" style="margin:0">Ask about Midway in plain words. Answers are checked before you see them, and you choose which ones join the write-up. Changes to what's counted wait for you to confirm.</p>
+        <button class="btn p sm" style="justify-self:start" data-open-ask ${state.final?"disabled":""}>${I.chat} Open Ask</button>
       </section>
       <section class="c" aria-labelledby="h-log">
         <h3 id="h-log">History</h3>
@@ -1166,6 +1297,8 @@ function wire(){
   el.querySelectorAll(".basis [data-tab]").forEach(b => b.addEventListener("click", () => { state.tab = b.dataset.tab; renderSite(); $(".deeper").scrollIntoView({behavior:"smooth"}); }));
   el.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { state.years = +b.dataset.n; renderSite(); }));
   el.querySelectorAll(".answers [data-why], .doc-card [data-why]").forEach(b => b.addEventListener("click", () => why(b.dataset.why, b)));
+  el.querySelectorAll("[data-open-ask]").forEach(b => b.addEventListener("click", () => { state.view = "ask"; window.scrollTo(0,0); b.dataset.openAsk ? send(b.dataset.openAsk) : renderSite(); }));
+  el.querySelectorAll(".doc-card [data-rows-key]").forEach(b => b.addEventListener("click", () => { const m = chat.msgs.slice().reverse().find(x => x.rowsKeys && x.rowsKeys[b.dataset.rowsKey]); m && rowsDrawer(m.rowsKeys[b.dataset.rowsKey], b); }));
   el.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => { state.decisions[b.dataset.j] = b.dataset.dec; state.log.push({t:now(), w:`You ${b.dataset.dec==="approved"?"agreed with":"disagreed with"} an opinion`}); renderSite(); }));
   el.querySelectorAll("[data-undo]").forEach(b => b.addEventListener("click", () => { delete state.decisions[b.dataset.undo]; renderSite(); }));
   el.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => { state.editing = b.dataset.edit; renderSite(); $("#rw").focus(); }));
@@ -1175,7 +1308,7 @@ function wire(){
   $("#ask-go") && $("#ask-go").addEventListener("click", ask);
   $("#ask-in") && $("#ask-in").addEventListener("keydown", e => { if (e.key==="Enter") ask(); });
   el.querySelectorAll("[data-suggest]").forEach(b => b.addEventListener("click", () => { $("#ask-in").value = b.dataset.suggest; ask(); }));
-  $("#apply") && $("#apply").addEventListener("click", () => { const y = state.proposal; state.adjusted = true; state.proposal = null; delete state.decisions.j2;
+  $("#apply") && $("#apply").addEventListener("click", () => { const y = state.proposal; M.adjusted.leave_out.forEach(id => state.leftOut.add(id)); state.proposal = null; delete state.decisions.j2;
     state.log.push({t:now(), w:`You left out ${M.adjusted.leave_out.length} projects. Realistically ahead went from ${mw(M.ahead.realistic)} to ${mw(M.adjusted.realistic)} MW, checked again. One opinion came back for review.`, y}); renderSite(); });
   $("#discard") && $("#discard").addEventListener("click", () => { state.proposal = null; renderSite(); });
   $("#finalise") && $("#finalise").addEventListener("click", () => { state.final = true; state.log.push({t:now(), w:"You finalised the write-up"}); renderSite(); });
@@ -1204,7 +1337,7 @@ function why(kind, from){
   }
   $("#drawer-root").innerHTML = `<div class="scrim" data-close></div>
   <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
-    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${title}</h2></div><button class="btn q sm" data-close aria-label="Close">✕</button></header>
+    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${title}</h2></div><button class="btn q sm" data-close aria-label="Close">${I.close}</button></header>
     <div class="body">
       <p style="margin:0;color:var(--ink-2)">${say}</p>
       ${tally}
@@ -1220,6 +1353,366 @@ function escWhy(e){ if (e.key === "Escape") closeWhy(); }
 function closeWhy(){ $("#drawer-root").innerHTML = ""; document.removeEventListener("keydown", escWhy); lastFocus && lastFocus.focus && lastFocus.focus(); }
 
 // ======================================================================
+// ASK: a workspace for one substation and one project
+// ======================================================================
+// Left: the data you can point at. Right: the conversation. In the real app every reply comes
+// from the agent's lookups and is checked by code before it's shown; here the replies are
+// scripted from Midway's real rows so the flow can be tried.
+const chat = { msgs:[], busy:null, left:10, extra:[], nextFact:5, nextOp:3, refs:[], selected:new Set(), draft:"", ctxOpen:false, changes:[] };
+const OLD = () => M.site_rows.filter(r => !r.new);
+const hasBattery = r => r.types.includes("Battery");
+const median = xs => { const s = xs.slice().sort((a,b)=>a-b), n = s.length; return n ? (n%2 ? s[(n-1)/2] : (s[n/2-1]+s[n/2])/2) : null; };
+const TOOL = { list:"Listed projects at Midway", chance:"Worked out the chance of being built", ahead:"Worked out the MW realistically ahead", propose:"Drafted a change for you to confirm" };
+const QUESTIONS = ["How many projects have withdrawn at Midway?","How long did battery projects wait here?","Which waiting projects have been in line longest?"];
+const ALL_WAITING = () => [...M.ahead.projects, ...M.ahead.new_projects];
+const projById = id => ALL_WAITING().find(p => p.id === id);
+const shortType = p => typeName(p.types).toLowerCase();
+const keyNumbers = () => { const n = state.years, o = odds(n), a = curAhead(); return [
+  { key:"chance", label:`Chance of being built within ${n} years`, short:`${in100(o.chance)} in 100 built within ${n} years`, html:`${in100(o.chance)}<small>in 100</small>` },
+  { key:"wait", label:"Typical wait, if built", short:`about ${Math.round(o.wait)} years to be built`, html:`${Math.round(o.wait)}<small>years</small>` },
+  { key:"ahead", label:"Realistically ahead", short:`${mw(a.realistic)} MW realistically ahead`, html:`${mw(a.realistic)}<small>MW</small>` },
+  { key:"new", label:"New-rules projects waiting", short:`${mw(M.ahead.new)} MW of new-rules projects`, html:`${mw(M.ahead.new)}<small>MW · odds unknown</small>` },
+]; };
+
+// ---------- the workspace ----------
+function askView(){ return `<div class="ws">${ctxPane()}<section class="conv" aria-label="Conversation">${convBody()}${composer()}</section></div>`; }
+
+function ctxPane(){
+  const rung = M.ladder[usedIdx()], out = state.leftOut;
+  const sel = [...chat.selected];
+  return `<aside class="ctx-pane${chat.ctxOpen?"":" closed"}" aria-label="What we're looking at">
+    <button class="ctx-toggle" id="ctx-toggle" aria-expanded="${chat.ctxOpen}">What we're looking at <span>${chat.ctxOpen?"Hide":"Show"}</span></button>
+    <p class="intro">Point at anything here to ask about it or change it.</p>
+    <div class="ctx-sec"><h3>Project</h3><div class="ctx-proj">200 MW solar + battery at Midway 230 kV</div><div class="muted small">Data of ${dateLong(M.as_of)}</div></div>
+    <div class="ctx-sec"><h3>Key numbers</h3>
+      ${keyNumbers().map(k=>`<div class="knum"><span class="k">${esc(k.label)}</span><span class="v t">${k.html}</span>
+        <span class="acts"><button class="mini" data-explain="${k.key}">Explain</button><button class="mini" data-ref-num="${k.key}">Ask about</button></span></div>`).join("")}
+    </div>
+    <div class="ctx-sec"><h3>Compared with <button class="link" data-qa="compare">Change</button></h3>
+      <div class="cgroup"><b>${odds(state.years).projects} past ${esc(plainGroup(rung))}</b></div>
+      <div class="muted small" style="margin-top:4px">Midway itself has too few past projects to go on.</div></div>
+    <div class="ctx-sec"><h3>Projects waiting here <span class="t">${ALL_WAITING().length}</span></h3>
+      <div class="plist2">${ALL_WAITING().slice().sort((a,b)=>(b.chance==null)-(a.chance==null) || b.mw*(b.chance||0)-a.mw*(a.chance||0)).map(p => {
+        const isOut = out.has(p.id), on = chat.selected.has(p.id);
+        return `<label class="pick${on?" on":""}${isOut?" out":""}"><input type="checkbox" data-sel="${esc(p.id)}" ${on?"checked":""} ${isOut?"disabled":""}>
+          <span><b>${mw(p.mw)} MW ${esc(shortType(p))}</b><small><span class="mono">${esc(p.id)}</span> · applied ${p.q.slice(0,4)}</small></span>
+          <span class="c">${isOut ? `<small>left out</small>` : p.chance==null ? `<small style="color:var(--lav-ink)">odds unknown</small>` : `${mw(p.mw*p.chance)}<small> MW</small>`}</span></label>`; }).join("")}</div>
+      <p class="faint small" style="margin:8px 0 0">Right column: how many of its MW count as realistically ahead.</p>
+    </div>
+    ${chat.changes.length ? `<div class="ctx-sec"><h3>Changes made</h3>${chat.changes.map(c=>`<div class="small" style="display:flex;gap:6px;margin-bottom:6px">${I.check.replace('width="20" height="20"','width="16" height="16"')}<span>${esc(c)}</span></div>`).join("")}</div>` : ""}
+    ${sel.length ? `<div class="selbar"><b>${sel.length} selected</b><button class="mini" data-sel-ask>Ask about ${sel.length===1?"it":"these"}</button><button class="mini p" data-sel-leave>Leave ${sel.length===1?"it":"these"} out…</button><button class="link" data-sel-clear style="font-size:12.5px">Clear</button></div>` : ""}
+  </aside>`;
+}
+function convBody(){
+  return `<div class="conv-body" id="conv-body" aria-live="polite">${chat.msgs.length ? chat.msgs.map(msgHtml).join("") : caps()}${chat.busy ? working() : ""}</div>`;
+}
+function caps(){
+  const k = keyNumbers();
+  const card = (ic, h, p, ex) => `<div class="cap"><div class="h"><span class="ic">${ic}</span>${h}</div><p>${p}</p><div class="ex">${ex}</div></div>`;
+  return `<div class="caps">
+    <h2>What the assistant can do here</h2>
+    <p>It works only from the grid operator's queue data, for Midway and projects like this one. Every number it gives you is recalculated by code before you see it.</p>
+    <div class="capgrid">
+      ${card(I.chat, "Answer questions", "About past and waiting projects at Midway, and the odds for projects like this one.", QUESTIONS.slice(0,2).map(q=>`<button data-q="${esc(q)}">“${esc(q)}”</button>`).join(""))}
+      ${card(I.search, "Explain a number", "How any number on the page was worked out, and the exact rows behind it.", [k[0],k[2]].map(x=>`<button data-explain="${x.key}">Explain the ${esc(x.short)}</button>`).join(""))}
+      ${card(`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10M3 11h10M6 2.5 3 5l3 2.5M10 8.5l3 2.5-3 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`, "Change what's counted", "Leave projects out, or compare with a different group. You see the effect first; nothing changes until you confirm.", `<button data-qa="leave">Leave some projects out</button><button data-qa="compare">Compare with a different group</button>`)}
+      ${card(`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h6l3 3v9H4z M10 2v3h3 M6 9h5 M6 12h3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`, "Build the write-up", "Keep the answers you want. They join the write-up as checked facts; any opinion waits for your review.", `<button data-view-go="writeup">Open the write-up</button>`)}
+    </div>
+    <div class="cant-list"><b>It can't</b> say what a project would pay to connect, describe what the power lines can carry, compare Midway with other substations, or forecast beyond what past projects show. If you ask, it will say so and point you to what might help.</div>
+  </div>`;
+}
+function composer(){
+  const dis = chat.left<=0 || state.final || chat.busy ? "disabled" : "";
+  return `<div class="composer">
+    <div class="qa" role="group" aria-label="Guided actions">
+      <button data-qa="explain" ${dis}>${I.search} Explain a number</button>
+      <button data-qa="leave" ${dis}>Leave projects out</button>
+      <button data-qa="compare" ${dis}>Compare differently</button>
+    </div>
+    <div class="box">
+      ${chat.refs.length ? `<div class="chips-sm" style="gap:4px">${chat.refs.map((r,i)=>`<span class="ref">${esc(r.label)}<button data-unref="${i}" aria-label="Remove ${esc(r.label)}">${I.close.replace(/width="\d+" height="\d+"/,'width="12" height="12"')}</button></span>`).join("")}</div>` : ""}
+      <div class="row3"><textarea id="ask-text" rows="1" placeholder="${chat.refs.length ? "What would you like to know or change about this?" : "Ask about Midway, or tell the assistant what to change"}" aria-label="Your question" ${dis}>${esc(chat.draft)}</textarea>
+        <button class="btn p sm" id="ask-send" ${dis}>Ask</button></div>
+    </div>
+    <div class="meta"><span>${state.final ? "The write-up is final, so no more changes can be made." : "Uses CAISO's queue data only. Numbers are checked before they're shown."}</span><span class="t">${chat.left} questions left today</span></div>
+  </div>`;
+}
+function working(){
+  return `<div class="working" role="status">${chat.busy.steps.map((s,i)=>`<span>${i < chat.busy.at ? `<i class="ok"></i>` : `<i class="spin"></i>`}${esc(s)}</span>`).slice(0, chat.busy.at+1).join("")}</div>`;
+}
+const smallCheck = () => I.check.replace('width="20" height="20"','width="16" height="16"');
+function numBtn(v, u, key){ return `<button class="num t" data-rows-key="${key}">${val(v,u)}</button>`; }
+function traceHtml(t){
+  return `<details class="trace"><summary>${smallCheck()} ${t.lookups.length} lookup${t.lookups.length===1?"":"s"} · ${t.checked} number${t.checked===1?"":"s"} checked · how this was answered</summary>
+    <ol>${t.lookups.map(l=>`<li>${esc(TOOL[l.tool])}: <code>${esc(l.args)}</code>, ${l.rows} rows</li>`).join("")}<li>Code recalculated every number from those rows. All matched.</li></ol></details>`;
+}
+function msgHtml(m, i){
+  const who = `<span class="who">Assistant</span>`;
+  if (m.who === "you") return `<div class="msg you">${m.refs && m.refs.length ? `<div class="refs">${m.refs.map(r=>`<span class="ref">${esc(r.label)}</span>`).join("")}</div>` : ""}<div class="bubble">${esc(m.text)}</div></div>`;
+  if (m.kind === "answer") return `<div class="msg bot">${who}
+      ${m.say ? `<p class="say">${m.say}</p>` : ""}
+      ${m.facts.map(f=>`<div class="fact"><span>${I.check}</span><p>${f}</p></div>`).join("")}
+      ${m.table || ""}
+      ${(m.opinions||[]).map(o=>`<div class="opin"><span>${I.ask}</span><p>${esc(o)}<small>Opinion · not checked by code</small></p></div>`).join("")}
+      ${traceHtml(m.trace)}
+      <div class="acts">${m.added ? `<span class="done">${smallCheck()} Added to the write-up${(m.opinions||[]).length?"; the opinion is waiting for review":""}</span>` : state.final ? "" : `<button class="btn sm" data-add="${i}">Add to write-up</button>`}${m.rowsMain ? `<button class="btn q sm" data-rows-key="${m.rowsMain}">See the rows</button>` : ""}</div>
+      ${m.follow ? `<div class="followups">${m.follow.map(q=>`<button data-q="${esc(q)}">${esc(q)} ${I.arrow}</button>`).join("")}</div>` : ""}
+    </div>`;
+  if (m.kind === "proposal") return `<div class="msg bot">${who}
+      <div class="prop${m.status!=="open"?" closed":""}">
+        <span class="lbl">${m.status==="open" ? "Proposed change · nothing applied yet" : m.status==="applied" ? "Change applied" : "Change not applied"}</span>
+        ${m.body}
+        ${m.status==="open" ? (state.final ? `<span class="muted small">The write-up is final, so this can't be applied.</span>` : `<div class="acts"><button class="btn p sm" data-apply="${i}">Make this change</button><button class="btn q sm" data-skip="${i}">Never mind</button></div>`)
+          : m.status==="applied" ? `<span class="done">${smallCheck()} ${esc(m.after)}</span>` : `<span class="muted small">Nothing was changed.</span>`}
+      </div>${traceHtml(m.trace)}</div>`;
+  if (m.kind === "pick-number") return `<div class="msg bot">${who}<p class="say">Which number should I explain?</p>
+      <div class="choose">${keyNumbers().map(k=>`<button class="opt" data-explain="${k.key}" ${m.done?"disabled":""}>${esc(k.label)}<span>${esc(k.short)}</span></button>`).join("")}</div></div>`;
+  if (m.kind === "pick-group") {
+    const used = usedIdx();
+    return `<div class="msg bot">${who}<p class="say">Which group should projects like this one be compared with? Narrower groups are closer to Midway but need enough finished projects to be trusted.</p>
+      <div class="choose">${M.ladder.map((r,j)=>{ const est = r.enough && r.by_n[10]; const label = ({"voltage section":"Midway 230 kV only","site":"All of Midway","bottleneck area":`Behind ${r.area}`,"county":`${r.area} County`,"California":"Across California"})[r.kind] + (r.kind==="California" ? ` · ${r.desc.split(",").slice(0,-1).join(",").replace("150-300","150–300")}` : "");
+        return `<button class="opt" data-group="${j}" ${(!est||j===used||m.done)?"disabled":""}>${esc(label)}<span>${j===used ? "in use" : est ? `${in100(est.chance)} in 100 · ${r.projects} projects` : `too few · ${r.resolved} finished, ${r.built} built`}</span></button>`; }).join("")}</div></div>`;
+  }
+  if (m.kind === "pick-projects") return `<div class="msg bot">${who}<p class="say">Which projects should I leave out? Tick them here or in the list on the left, and say why.</p>
+      <div class="choose"><div class="pickwrap">${M.ahead.projects.filter(p=>!state.leftOut.has(p.id)).map(p=>`<label class="pick${chat.selected.has(p.id)?" on":""}"><input type="checkbox" data-sel="${esc(p.id)}" ${chat.selected.has(p.id)?"checked":""} ${m.done?"disabled":""}><span><b>${mw(p.mw)} MW ${esc(shortType(p))}</b><small><span class="mono">${esc(p.id)}</span> · applied ${p.q.slice(0,4)}, waited ${yrs(p.waited)} years</small></span><span class="c">${mw(p.mw*p.chance)}<small> MW</small></span></label>`).join("")}</div>
+        <label class="small muted" for="why-out">Why? This goes in the change log.</label><input type="text" id="why-out" placeholder="e.g. these have been stuck for years" ${m.done?"disabled":""}>
+        <div class="acts"><button class="btn p sm" data-leave-go ${m.done?"disabled":""}>Show me what would change</button></div></div></div>`;
+  return `<div class="msg bot">${who}<div class="cant-reply"><div class="h">${I.info} ${esc(m.title)}</div><p>${m.why}</p>${m.help ? `<p>${m.help}</p>` : ""}
+      <div class="chips-sm" style="margin-top:8px">${(m.instead||QUESTIONS.slice(0,2)).map(q=>`<button data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div></div></div>`;
+}
+
+// ---------- replies, scripted from Midway's real rows ----------
+function leaveProposal(ids, why){
+  const ps = ids.map(projById).filter(p => p && p.chance != null && !state.leftOut.has(p.id));
+  const after = afterLeaving([...state.leftOut, ...ps.map(p=>p.id)]);
+  return { kind:"proposal", status:"open", apply:"leaveOut", ids:ps.map(p=>p.id), why,
+    steps:["Reading your request", `Finding the ${ps.length} project${ps.length===1?"":"s"}`, "Working out what would change"],
+    body:`<p style="margin:0">Leave out <b>${ps.length} project${ps.length===1?"":"s"}</b> still waiting at Midway:</p>
+      <ul>${ps.map(p=>`<li><span class="mono">${esc(p.id)}</span> · ${mw(p.mw)} MW ${esc(shortType(p))}, applied ${p.q.slice(0,4)}</li>`).join("")}</ul>
+      <div class="change">Realistically ahead: <s class="t">${mw(curAhead().realistic)} MW</s> → <b class="t">${mw(after.realistic)} MW</b></div>
+      ${why ? `<span class="small">Reason: “${esc(why)}”</span>` : ""}
+      <span class="small muted">They'd also be left out of the history the chances come from. Every fact that uses them is worked out and checked again; opinions resting on a number that moves come back for review.</span>`,
+    after:`Left out ${ps.length} project${ps.length===1?"":"s"}. Realistically ahead is now ${mw(after.realistic)} MW, checked again.`,
+    trace:{ lookups:[{tool:"list", args:`site Midway, waiting, ${ps.length} named`, rows:ps.length},{tool:"propose", args:`leave out ${ps.map(p=>p.id).join(", ")}`, rows:ps.length}], checked:1 } };
+}
+function groupProposal(i){
+  const r = M.ladder[i], cur = odds(10), nw = r.by_n[10];
+  return { kind:"proposal", status:"open", apply:"rung", rung:i,
+    steps:["Reading your request","Finding that comparison group","Working out what would change"],
+    body:`<p style="margin:0">Compare with <b>${r.projects} past ${esc(plainGroup(r))}</b> instead of the ${cur.projects} used now.</p>
+      <div class="change">Built within 10 years: <s class="t">${in100(cur.chance)} in 100</s> → <b class="t">${in100(nw.chance)} in 100</b> <span class="muted small">(likely ${in100(nw.range[0])}–${in100(nw.range[1])})</span></div>
+      <span class="small muted">${r.projects > cur.projects ? "A bigger group gives a narrower range, but includes projects less like this one." : "A closer group is more like this project, but has fewer projects behind it."}</span>`,
+    after:`Now comparing with ${r.projects} past ${plainGroup(r)}. Every number on the page was worked out again.`,
+    trace:{ lookups:[{tool:"chance", args:`${r.desc}, 10 years`, rows:r.projects},{tool:"propose", args:"use a different comparison group", rows:r.projects}], checked:2 } };
+}
+function explainReply(key){
+  const n = state.years, o = odds(n), rung = M.ladder[usedIdx()], a = curAhead();
+  const grpRows = M.rows.map(r => ({...r, status:r.outcome}));
+  if (key === "chance" || key === "wait") return { kind:"answer", rowsKeys:{grp:grpRows}, rowsMain:"grp",
+    steps:["Reading your question", "Looking up the comparison group", "Checking the numbers against the data"],
+    say: key === "chance"
+      ? `<b>${in100(o.chance)} in 100</b> comes from following every past project like this one from the day it applied: built, withdrew, or still waiting. A project still waiting counts only for the years it has been watched, never as a failure. The likely range (${in100(o.range[0])} to ${in100(o.range[1])}) comes from redrawing the group at random 400 times.`
+      : `<b>About ${Math.round(o.wait)} years</b> is when half of the projects that got built had been built. The likely range (${Math.round(o.wait_range[0])} to ${Math.round(o.wait_range[1])} years) comes from redrawing the group at random 400 times.`,
+    facts:[`The group is ${numBtn(o.projects,"","grp")} past ${esc(plainGroup(rung))}: ${numBtn(o.built,"","grp")} were built, ${numBtn(o.withdrawn,"","grp")} withdrew and ${numBtn(o.waiting,"","grp")} are still waiting.`,
+      key === "chance" ? `${numBtn(o.watched,"","grp")} of them have been watched for ${n} years or more; the figure rests mostly on them.` : `Of the ${numBtn(o.built,"","grp")} built, half were running within ${numBtn(o.wait,"years","grp")} of applying.`],
+    follow:["Compare with a different group", "How many projects have withdrawn at Midway?"],
+    trace:{ lookups:[{tool:"chance", args:`${rung.desc}, ${n} years`, rows:o.projects}], checked:key==="chance"?5:5 } };
+  if (key === "ahead") {
+    const ps = M.ahead.projects.filter(p => !state.leftOut.has(p.id)).sort((x,y)=>y.mw*y.chance-x.mw*x.chance);
+    return { kind:"answer", rowsKeys:{ahead:ps}, rowsMain:"ahead", steps:["Reading your question","Working out the MW realistically ahead","Checking the numbers against the data"],
+      say:`Each project still waiting at Midway counts by its chance of still being built, given how long it has already waited. Those chances come from similar projects across California. Projects from the 2023 batch aren't counted, because nothing under the new rules has finished yet.`,
+      facts:[`${numBtn(ps.length,"","ahead")} old-rules projects are waiting, adding up to ${numBtn(a.waiting,"MW","ahead")}. Counted by their chances, that's ${numBtn(a.realistic,"MW","ahead")}.`,
+        `The two largest, ${esc(ps[0].id)} and ${esc(ps[1].id)}, account for ${numBtn(ps[0].mw*ps[0].chance + ps[1].mw*ps[1].chance,"MW","ahead")} of it.`],
+      table:`<table class="t" style="margin:0"><thead><tr><th>Project</th><th class="r">MW</th><th class="r">Waited</th><th class="r">Chance</th><th class="r">Counts as</th></tr></thead><tbody>${ps.slice(0,5).map(p=>`<tr><td class="mono">${esc(p.id)}</td><td class="r t">${Math.round(p.mw)}</td><td class="r t">${yrs(p.waited)} yrs</td><td class="r t">${pct(p.chance)}</td><td class="r t">${Math.round(p.mw*p.chance)} MW</td></tr>`).join("")}</tbody></table>`,
+      follow:["Leave out projects waiting since 2019 or earlier","Which waiting projects have been in line longest?"],
+      trace:{ lookups:[{tool:"ahead", args:"site Midway", rows:ps.length + M.ahead.new_projects.length}], checked:3 } };
+  }
+  return { kind:"answer", rowsKeys:{nw:M.ahead.new_projects}, rowsMain:"nw", steps:["Reading your question","Listing new-rules projects at Midway"],
+    say:`Projects that applied under the 2023 rules are shown at their full size and never added to the realistic figure: none has finished under those rules yet, so there's no history to judge their odds.`,
+    facts:[`${numBtn(M.ahead.new_projects.length,"","nw")} new-rules projects are waiting at Midway, adding up to ${numBtn(M.ahead.new,"MW","nw")}.`],
+    trace:{ lookups:[{tool:"list", args:"site Midway, waiting, 2023 rules", rows:M.ahead.new_projects.length}], checked:2 } };
+}
+function aboutProjects(ids){
+  const ps = ids.map(projById).filter(Boolean);
+  return { kind:"answer", rowsKeys:{sel:ps}, rowsMain:"sel", steps:["Reading your question", `Looking up ${ps.length} project${ps.length===1?"":"s"}`, "Checking the numbers against the data"],
+    facts: ps.slice(0,4).map(p => p.chance == null
+      ? `<span class="mono">${esc(p.id)}</span> (${mw(p.mw)} MW) applied under the 2023 rules, so it's shown at full size and its odds aren't known.`
+      : `<span class="mono">${esc(p.id)}</span> has waited ${numBtn(p.waited,"years","sel")}. Of similar projects still waiting after that long, ${numBtn(p.chance,"%","sel")} were later built, so its ${numBtn(p.mw,"MW","sel")} count as ${numBtn(p.mw*p.chance,"MW","sel")}.`),
+    follow:[`Leave ${ps.length===1?"it":"these"} out`],
+    followRefs: ids,
+    trace:{ lookups:[{tool:"list", args:`site Midway, ${ps.map(p=>p.id).join(", ")}`, rows:ps.length}], checked:ps.length*4 } };
+}
+function reply(q, refs){
+  const t = q.toLowerCase(), old = OLD();
+  const projRefs = refs.filter(r => r.kind === "proj").map(r => r.key), numRef = refs.find(r => r.kind === "num");
+  if (projRefs.length && /leave|exclude|ignore|remove|drop|without/.test(t)) return leaveProposal(projRefs, q);
+  if (projRefs.length) return aboutProjects(projRefs);
+  if (numRef) return explainReply(numRef.key);
+  if (/^explain|where does|how (is|was) .* worked out/.test(t)) return { kind:"pick-number" };
+  if (/different group|compare differently|comparison group/.test(t)) return { kind:"pick-group" };
+  if (/(leave|ignore|exclude|without|drop|remove).*(2019|stuck|old)|stuck since/.test(t)) return leaveProposal(M.adjusted.leave_out, q);
+  if (/^leave (some )?projects out$|^leave some projects out$/.test(t)) return { kind:"pick-projects" };
+  if (/any size|all sizes|wider|broader|regardless of size/.test(t)) return groupProposal(M.ladder.findIndex(r => r.kind==="California" && r.desc.startsWith("Solar + battery, across")));
+  if (/only.*(midway|here|this substation)|just (at )?midway/.test(t)) {
+    const r = M.ladder.find(x => x.kind === "site");
+    return { kind:"cant", title:"There are too few past projects at Midway to give a figure", steps:["Reading your request","Looking for projects like this one at Midway"],
+      why:`Only <b>${r.resolved}</b> solar + battery projects of 150–300 MW at Midway have finished, and <b>${r.built}</b> were built. A chance worked out from so few would swing with every new project, so it isn't given.`,
+      help:`<button class="link" data-qa="compare">See every group, from Midway outwards</button>`, instead:["How many projects have withdrawn at Midway?","Compare with solar + battery projects of any size"] };
+  }
+  if (/batter/.test(t)) {
+    const bat = old.filter(hasBattery), b = bat.filter(r=>r.status==="built"), w = bat.filter(r=>r.status==="withdrawn"), wt = bat.filter(r=>r.status==="waiting");
+    return { kind:"answer", rowsKeys:{bat}, rowsMain:"bat", steps:["Reading your question","Listing projects with a battery at Midway","Checking 5 numbers against the data"],
+      facts:[`Of ${numBtn(bat.length,"","bat")} projects with a battery that applied at Midway under the old rules, ${numBtn(b.length,"","bat")} ${b.length===1?"was":"were"} built, ${numBtn(b[0].years,"years","bat")} after applying.`,
+        `${numBtn(w.length,"","bat")} withdrew; half of them had left within ${numBtn(median(w.map(r=>r.years)),"years","bat")} of applying.`, `${numBtn(wt.length,"","bat")} are still waiting.`],
+      opinions:["With only one battery project ever built here, Midway's own history says little about how long a new one would take. The California-wide figure is the better guide."],
+      follow:["Which waiting projects have been in line longest?","Compare with solar + battery projects of any size"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, has a battery, old rules, any status", rows:bat.length}], checked:5 } };
+  }
+  if (/longest|oldest|been waiting|in line|waited/.test(t)) {
+    const wt = M.ahead.projects.slice().sort((a,b)=>b.waited-a.waited), top = wt.filter(p => +p.q.slice(0,4) < 2017);
+    return { kind:"answer", rowsKeys:{wait:wt}, rowsMain:"wait", steps:["Reading your question","Listing projects waiting at Midway","Checking 3 numbers against the data"],
+      facts:[`${numBtn(top.length,"","wait")} of the ${numBtn(wt.length,"","wait")} projects waiting at Midway applied before 2017. Together they add up to ${numBtn(top.reduce((s,p)=>s+p.mw,0),"MW","wait")}.`],
+      table:`<table class="t" style="margin:0"><thead><tr><th>Project</th><th class="r">MW</th><th>Applied</th><th class="r">Waiting</th></tr></thead><tbody>${wt.slice(0,5).map(p=>`<tr><td class="mono">${esc(p.id)}</td><td class="r t">${Math.round(p.mw)}</td><td class="t">${p.q.slice(0,4)}</td><td class="r t">${yrs(p.waited)} yrs</td></tr>`).join("")}</tbody></table>`,
+      follow:["Leave out projects waiting since 2019 or earlier","How many projects have withdrawn at Midway?"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, waiting, old rules", rows:wt.length}], checked:3 } };
+  }
+  if (/withdr|how many|built|drop/.test(t) && !/cost|pay/.test(t)) {
+    const by = s => old.filter(r => r.status === s), b = by("built"), w = by("withdrawn"), wt = by("waiting");
+    return { kind:"answer", rowsKeys:{old}, rowsMain:"old", steps:["Reading your question","Listing projects at Midway by outcome","Checking 5 numbers against the data"],
+      facts:[`Of ${numBtn(old.length,"","old")} projects that applied at Midway under the old rules, ${numBtn(w.length,"","old")} withdrew, ${numBtn(b.length,"","old")} were built and ${numBtn(wt.length,"","old")} are still waiting.`,
+        `The ${numBtn(w.length,"","old")} that withdrew added up to ${numBtn(w.reduce((s,r)=>s+(r.mw||0),0),"MW","old")}.`],
+      follow:["How long did battery projects wait here?","Which waiting projects have been in line longest?"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, withdrawn, old rules", rows:w.length},{tool:"list", args:"site Midway, built, old rules", rows:b.length},{tool:"list", args:"site Midway, waiting, old rules", rows:wt.length}], checked:5 } };
+  }
+  if (/cost|price|pay|\$|dollar|upgrade|power lines?|lines? (around|near)|transmission|capacity|power flow|curtail|congestion|fee/.test(t)) return { kind:"cant", title:"I can't answer that from the queue data", steps:["Reading your question","Checking what the data covers"],
+    why:"The grid operator's queue report doesn't say what individual projects pay to connect, or how much power the lines around Midway can carry. Anything I said about that would be a guess.",
+    help:`This page does show planned upgrades near Midway and the operator's estimate of the area's cost to add room per kW. <button class="link" data-tab-open="grid">Open Upgrades and costs</button>` };
+  if (/windhub|colorado|tesla|gates|vincent|other substation| vs |versus|compare (it )?with|nearby substation/.test(t)) return { kind:"cant", title:"This workspace is about Midway only", steps:["Reading your question"],
+    why:"Every lookup here is limited to Midway and this project, so I can't answer about another substation from here.",
+    help:`Open the other substation from the <button class="link" data-go-map>map</button>; the map also lists nearby substations side by side.` };
+  return { kind:"cant", title:"That's outside what this data can answer", steps:["Reading your question","Checking what the data covers"],
+    why:"I can only answer from the grid operator's queue data: how likely projects like this are to be built and how long they take, which projects are waiting at Midway, and what happened to past projects here.", instead:QUESTIONS };
+}
+
+function send(text, opts = {}){
+  if (chat.busy || chat.left <= 0 || state.final) return;
+  const refs = opts.refs ?? chat.refs;
+  if (state.view !== "ask") state.view = "ask";
+  chat.msgs.push({ who:"you", text, refs });
+  chat.refs = []; chat.draft = "";
+  const r = opts.reply || reply(text, refs);
+  if (r.kind.startsWith("pick")) { chat.msgs.push({ who:"bot", ...r }); renderSite(); return; }
+  chat.left--;
+  chat.busy = { steps:r.steps, at:0 }; renderSite();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, step = reduce ? 0 : 480;
+  const tick = () => {
+    if (chat.busy.at < chat.busy.steps.length - 1) { chat.busy.at++; renderSite(); setTimeout(tick, step); }
+    else { chat.busy = null; chat.msgs.push({ who:"bot", ...r }); renderSite(); }
+  };
+  setTimeout(tick, step);
+  state.log.push({ t:new Date().toTimeString().slice(0,5), w:`You asked: "${text}"` });
+}
+function startAction(kind){
+  if (kind === "explain") send("Explain a number", { reply:{ kind:"pick-number" } });
+  if (kind === "compare") send("Compare with a different group", { reply:{ kind:"pick-group" } });
+  if (kind === "leave") {
+    if (chat.selected.size) { const ids = [...chat.selected]; chat.selected.clear();
+      send(`Leave ${ids.length===1?"this":"these"} out`, { refs:ids.map(id=>({kind:"proj", key:id, label:`${id} · ${mw(projById(id).mw)} MW`})), reply:leaveProposal(ids, "") }); }
+    else send("Leave some projects out", { reply:{ kind:"pick-projects" } });
+  }
+}
+
+function wireAskView(el){
+  const now = () => new Date().toTimeString().slice(0,5);
+  const body = $("#conv-body", el); if (body && chat.msgs.length) body.scrollTop = body.scrollHeight;
+  const ta = $("#ask-text", el);
+  if (ta) {
+    const go1 = () => { const v = ta.value.trim(); if (v) send(v); };
+    $("#ask-send", el).onclick = go1;
+    ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go1(); } });
+    ta.addEventListener("input", () => { chat.draft = ta.value; ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; });
+  }
+  const focusBox = () => { const t = $("#ask-text"); if (t) { t.focus(); t.setSelectionRange(t.value.length, t.value.length); } };
+  el.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => {
+    const m = b.closest(".msg") && chat.msgs[[...el.querySelectorAll(".msg")].indexOf(b.closest(".msg"))];
+    if (m && m.followRefs && /^Leave/.test(b.dataset.q)) send(b.dataset.q, { refs:m.followRefs.map(id=>({kind:"proj", key:id, label:id})) });
+    else send(b.dataset.q);
+  }));
+  el.querySelectorAll("[data-explain]").forEach(b => b.addEventListener("click", () => {
+    const k = keyNumbers().find(x => x.key === b.dataset.explain);
+    const pick = b.closest(".msg"); if (pick) chat.msgs.forEach(m => { if (m.kind === "pick-number") m.done = true; });
+    send(`Explain the ${k.short}`, { refs:[], reply:explainReply(k.key) });
+  }));
+  el.querySelectorAll("[data-ref-num]").forEach(b => b.addEventListener("click", () => {
+    const k = keyNumbers().find(x => x.key === b.dataset.refNum);
+    if (!chat.refs.some(r => r.key === k.key)) chat.refs.push({ kind:"num", key:k.key, label:k.short });
+    renderSite(); focusBox();
+  }));
+  el.querySelectorAll("[data-unref]").forEach(b => b.addEventListener("click", () => { chat.refs.splice(+b.dataset.unref, 1); renderSite(); focusBox(); }));
+  el.querySelectorAll("[data-qa]").forEach(b => b.addEventListener("click", () => startAction(b.dataset.qa)));
+  el.querySelectorAll("[data-view-go]").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.viewGo; renderSite(); }));
+  el.querySelectorAll("[data-sel]").forEach(b => b.addEventListener("change", () => { b.checked ? chat.selected.add(b.dataset.sel) : chat.selected.delete(b.dataset.sel); renderSite(); }));
+  el.querySelectorAll("[data-sel-clear]").forEach(b => b.addEventListener("click", () => { chat.selected.clear(); renderSite(); }));
+  el.querySelectorAll("[data-sel-ask]").forEach(b => b.addEventListener("click", () => {
+    [...chat.selected].forEach(id => { if (!chat.refs.some(r=>r.key===id)) chat.refs.push({ kind:"proj", key:id, label:`${id} · ${mw(projById(id).mw)} MW` }); });
+    chat.selected.clear(); renderSite(); focusBox();
+  }));
+  el.querySelectorAll("[data-sel-leave]").forEach(b => b.addEventListener("click", () => startAction("leave")));
+  el.querySelectorAll("[data-leave-go]").forEach(b => b.addEventListener("click", () => {
+    const ids = [...chat.selected]; if (!ids.length) { b.textContent = "Tick at least one project first"; return; }
+    const why = ($("#why-out", el)||{}).value || "";
+    chat.msgs.forEach(m => { if (m.kind === "pick-projects") m.done = true; });
+    chat.selected.clear();
+    send(`Leave out ${ids.join(", ")}`, { refs:[], reply:leaveProposal(ids, why) });
+  }));
+  el.querySelectorAll("[data-group]").forEach(b => b.addEventListener("click", () => {
+    chat.msgs.forEach(m => { if (m.kind === "pick-group") m.done = true; });
+    const r = M.ladder[+b.dataset.group];
+    send(`Compare with ${plainGroup(r)}`, { refs:[], reply:groupProposal(+b.dataset.group) });
+  }));
+  el.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => {
+    const m = chat.msgs[+b.dataset.add]; m.added = true;
+    m.facts.forEach(f => chat.extra.push({ id:"f"+(chat.nextFact++), kind:"fact", html:f, rowsKeys:m.rowsKeys }));
+    (m.opinions||[]).forEach(o => chat.extra.push({ id:"j"+(chat.nextOp++), kind:"opinion", text:o }));
+    state.log.push({ t:now(), w:`You added an answer to the write-up` });
+    renderSite();
+  }));
+  el.querySelectorAll("[data-apply]").forEach(b => b.addEventListener("click", () => {
+    const m = chat.msgs[+b.dataset.apply]; m.status = "applied";
+    if (m.apply === "leaveOut") { m.ids.forEach(id => state.leftOut.add(id)); delete state.decisions.j2; }
+    if (m.apply === "rung") state.rung = m.rung;
+    chat.changes.push(m.after); state.log.push({ t:now(), w:m.after, y:m.why });
+    renderSite();
+  }));
+  el.querySelectorAll("[data-skip]").forEach(b => b.addEventListener("click", () => { chat.msgs[+b.dataset.skip].status = "skipped"; renderSite(); }));
+  el.querySelectorAll(".conv [data-rows-key]").forEach(b => b.addEventListener("click", () => {
+    const msg = b.closest(".msg"), i = [...el.querySelectorAll(".conv .msg")].indexOf(msg), m = chat.msgs[i];
+    rowsDrawer(m.rowsKeys[b.dataset.rowsKey], b);
+  }));
+  el.querySelectorAll("[data-tab-open]").forEach(b => b.addEventListener("click", () => { state.view = "overview"; state.tab = b.dataset.tabOpen; renderSite(); $(".deeper").scrollIntoView({behavior:"smooth"}); }));
+  el.querySelectorAll("[data-go-map]").forEach(b => b.addEventListener("click", () => go("map")));
+  const tg = $("#ctx-toggle", el); tg && tg.addEventListener("click", () => { chat.ctxOpen = !chat.ctxOpen; renderSite(); });
+}
+
+function rowsDrawer(rows, from){
+  lastFocus = from;
+  const label = {built:"Built", withdrawn:"Withdrew", waiting:"Still waiting"};
+  $("#drawer-root").innerHTML = `<div class="scrim" data-close></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h" style="z-index:70">
+    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${rows.length} row${rows.length===1?"":"s"} from the queue report</h2></div><button class="btn q sm" data-close aria-label="Close">${I.close}</button></header>
+    <div class="body">
+      <p style="margin:0;color:var(--ink-2)">These are the exact projects the lookup returned. Code recalculated the numbers in the answer from these rows, using all of them.</p>
+      <div class="verified">${I.check}<div><b>Checked</b><span>Every number in the answer matched these rows, from CAISO's queue report of ${dateLong(M.as_of)}.</span></div></div>
+      <div class="scroll-x"><table class="t"><thead><tr><th>Project</th><th>Applied</th><th class="r">MW</th><th>Status</th><th class="r">Years</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="mono">${esc(r.id)}</td><td class="t">${String(r.q).slice(0,4)}</td><td class="r t">${Math.round(r.mw||0)}</td><td>${label[r.status]||"Still waiting"}${r.est?' <span class="pill">date estimated</span>':""}</td><td class="r t">${r.years!=null?Number(r.years).toFixed(1):r.waited!=null?Number(r.waited).toFixed(1):"–"}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div></aside>`;
+  document.querySelectorAll("#drawer-root [data-close]").forEach(b => b.addEventListener("click", closeWhy));
+  $("#drawer-root .drawer [data-close]").focus();
+  document.addEventListener("keydown", escWhy);
+}
+
+// ======================================================================
 // DECISIONS
 // ======================================================================
 function renderDec(){
@@ -1231,6 +1724,10 @@ function renderDec(){
     ["How the page reads", "#35", `<p><b>Answers first.</b> The page opens with three questions a newcomer would ask, each answered in one plain sentence with one simple picture: <i>Will it get built? How long does it take? How crowded is it?</i> Chances are said as "17 in 100" with a grid of 100 dots, which people read more easily than percentages.</p>
       <p><b>Detail on request.</b> Charts, the list of projects ahead, upgrades and costs, and how we chose the comparison sit in four tabs below. Every answer has "How we know", which explains the method in a sentence or two, says it was checked, and only then offers the raw rows.</p>`],
     ["Review", "#35", `<p>The write-up has its own view so it never crowds the numbers; a badge on its tab shows how many points need you. Facts carry a green check and their numbers open "How we know". Opinions are tinted, asking "do you agree?", with <b>Agree · Disagree · Reword</b>. A request to leave projects out shows exactly what would change before anything does. Finalise unlocks once every opinion is answered.</p>`],
+    ["Asking the assistant", "#65, #35", `<p><b>Its own workspace.</b> "Ask" is a third view of the substation page, beside "The odds" and "Write-up". On the left is what we're looking at: the project, the key numbers, who it's compared with, the projects waiting here, and changes made so far. Anything there can be pointed at: "Explain" a number, "Ask about" it (it attaches to the question as a chip), or tick projects and ask about them or leave them out.</p>
+      <p><b>What it can do is shown up front:</b> four cards (answer questions, explain a number, change what's counted, build the write-up), each with examples you can click, and one line on what it can't do. Three guided actions sit above the box (Explain a number, Leave projects out, Compare differently) and walk you through by asking a short follow-up, so you never need to know the right words.</p>
+      <p><b>Replies.</b> Answers are facts with a green check; their numbers open the exact rows, and "how this was answered" lists each lookup. You choose which answers join the write-up. Changes come back as a proposal showing exactly what would move; nothing happens until you confirm, and applied changes show on the left. Questions the data can't answer get a plain reply saying why and what might help.</p>
+      <p class="muted">Needs two backend changes: answers held until a person adds them (today they're added at once), and an honest "can't answer" reply instead of running into the spending limit.</p>`],
     ["How the history ladder is shown", "Ticket 4", `<p>"Who we compared with": a short list that widens from Midway 230 kV out to all of California. Each step shows how close it comes to having enough finished projects, and the one in use is marked. Steps with enough history offer "Use", with their chance, so you can make the comparison wider.</p>`],
     ["The landing page", "New", `<p>Explains the problem before showing any substation. The hero states it in one sentence and lets you try it straight away: pick a project type and size and see "17 in 100" as a grid of dots. Below, a step-through chart puts every past project on screen as a dot by the year it applied, then lights up the ones built, the ones that withdrew and the ones still waiting. A ranked bar chart shows why location matters. Jargon (queue, substation, MW, the 2023 rule change) is tappable for a plain definition.</p>`],
     ["The map", "#32, #45", `<p>A real map of California's counties, drawn from public Census boundaries, with towns for orientation. No list of substation names on arrival: the panel asks "Where is your project?" and takes a town, county or substation name. Picking a town lists the substations within 60 miles, closest first, and names the least crowded one. Clicking a county lists its substations.</p>

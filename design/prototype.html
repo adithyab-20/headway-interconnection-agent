@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Headway prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -366,6 +367,121 @@ table.t .r{text-align:right}
 .mono{font-family:var(--mono);font-size:12px}
 .scroll-x{overflow-x:auto}
 
+/* ---------------- Ask workspace ---------------- */
+.ws{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:18px;height:calc(100vh - 200px);min-height:620px}
+.ctx-pane{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);overflow:auto;display:flex;flex-direction:column}
+.ctx-pane .intro{padding:18px 18px 6px;font-size:13.5px;color:var(--muted)}
+.ctx-sec{padding:12px 18px 14px;border-top:1px solid var(--rule)}
+.ctx-sec:first-of-type{border-top:0}
+.ctx-sec h3{font-size:12.5px;font-weight:750;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ctx-sec h3 .link{text-transform:none;letter-spacing:0;font-size:12.5px}
+.ctx-proj{font-size:15px;font-weight:650}
+.knum{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:8px 10px;margin:0 -10px;border-radius:12px}
+.knum:hover,.knum:focus-within{background:var(--soft)}
+.knum .k{font-size:13px;color:var(--muted)}
+.knum .v{font-size:19px;font-weight:800;letter-spacing:-.01em}
+.knum .v small{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:3px}
+.knum .acts{grid-row:1/3;grid-column:2;display:flex;gap:4px;align-items:center;opacity:.35;transition:opacity .15s}
+.knum:hover .acts,.knum:focus-within .acts{opacity:1}
+.mini{border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:650;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.mini:hover{border-color:var(--accent);color:var(--accent)}
+.mini.p{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cgroup{font-size:14px;color:var(--ink-2)}
+.cgroup b{color:var(--ink)}
+.plist2{display:grid;gap:2px}
+.pick{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 8px;margin:0 -8px;border-radius:10px;cursor:pointer;font-size:13.5px}
+.pick:hover{background:var(--soft)}
+.pick.on{background:var(--accent-wash)}
+.pick.out{opacity:.5}
+.pick input{width:16px;height:16px;accent-color:var(--accent);margin:0}
+.pick b{font-weight:650}
+.pick small{display:block;color:var(--muted);font-size:12px}
+.pick .c{text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
+.pick .c small{font-weight:400}
+.selbar{position:sticky;bottom:0;background:var(--panel);border-top:1px solid var(--rule);padding:10px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
+.conv{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.conv-body{flex:1;overflow:auto;padding:22px 26px;display:grid;gap:18px;align-content:start}
+.caps{display:grid;gap:16px}
+.caps h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.caps>p{margin:0;color:var(--muted);max-width:60ch}
+.capgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cap{border:1px solid var(--rule);border-radius:16px;padding:14px 16px;display:grid;gap:8px;align-content:start}
+.cap .h{display:flex;gap:10px;align-items:center;font-weight:750}
+.cap .h .ic{width:30px;height:30px;border-radius:10px;background:var(--accent-wash);color:var(--accent);display:grid;place-items:center;flex:none}
+.cap p{margin:0;color:var(--muted);font-size:13.5px}
+.cap .ex{display:grid;gap:4px}
+.cap .ex button{all:unset;cursor:pointer;color:var(--accent);font-size:13.5px;font-weight:600}
+.cap .ex button:hover{text-decoration:underline;text-underline-offset:3px}
+.cap .ex button:focus-visible{outline:2px solid var(--accent);border-radius:4px}
+.cant-list{background:var(--ground);border-radius:14px;padding:12px 16px;font-size:13.5px;color:var(--muted)}
+.cant-list b{color:var(--ink-2)}
+.msg{display:grid;gap:8px;max-width:760px}
+.msg.you{justify-items:end;max-width:none}
+.msg.you .bubble{background:var(--accent);color:var(--accent-ink);border-radius:18px 18px 4px 18px;padding:9px 14px;max-width:70%;font-weight:550}
+.msg.you .refs{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.msg.bot{background:var(--ground);border-radius:4px 18px 18px 18px;padding:14px 16px 12px}
+.msg.bot .who{font-size:12px;font-weight:700;color:var(--muted)}
+.msg.bot .fact{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:start}
+.msg.bot .fact p{margin:0;line-height:1.55}
+.msg.bot .say{margin:0;line-height:1.55;color:var(--ink-2)}
+.msg.bot .opin{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;background:var(--ask-wash);border-radius:10px;padding:8px 10px}
+.msg.bot .opin p{margin:0}
+.msg.bot .opin small{display:block;color:var(--ask);font-weight:650;margin-top:2px}
+.msg .acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.msg .done{color:var(--ok);font-weight:650;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.trace{font-size:12.5px;color:var(--muted)}
+.trace summary{cursor:pointer;list-style:none;display:inline-flex;gap:6px;align-items:center}
+.trace summary::-webkit-details-marker{display:none}
+.trace ol{margin:6px 0 2px;padding-left:18px;display:grid;gap:3px}
+.trace code{font-family:var(--mono);font-size:11.5px;background:var(--panel);padding:1px 5px;border-radius:4px}
+.working{display:grid;gap:6px;font-size:13.5px;color:var(--muted);padding-left:4px}
+.working span{display:flex;gap:8px;align-items:center}
+.working .spin{width:12px;height:12px;border-radius:50%;border:2px solid var(--rule-2);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.working .ok{width:12px;height:12px;border-radius:50%;background:var(--ok-mark)}
+.cant-reply .h{display:flex;gap:8px;align-items:center;font-weight:700}
+.cant-reply p{margin:6px 0 0;color:var(--ink-2)}
+.prop{background:var(--panel);border:1.5px solid var(--ask-mark);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.prop .lbl{font-size:12px;font-weight:700;color:var(--ask);letter-spacing:.03em;text-transform:uppercase}
+.prop ul{margin:0;padding-left:18px;font-size:13.5px}
+.prop.closed{border-color:var(--rule)}
+.choose{display:grid;gap:6px}
+.choose button.opt{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--rule);background:var(--panel);border-radius:12px;padding:9px 12px;cursor:pointer;font-size:14px}
+.choose button.opt:hover{border-color:var(--accent);background:var(--accent-wash)}
+.choose button.opt span{color:var(--muted);font-size:13px}
+.choose button.opt[disabled]{opacity:.5;cursor:not-allowed}
+.choose .pickwrap{background:var(--panel);border-radius:12px;padding:6px 14px}
+.choose input[type=text]{width:100%;border:1px solid var(--rule-2);border-radius:10px;padding:8px 10px;background:var(--panel)}
+.chips-sm{display:flex;gap:6px;flex-wrap:wrap}
+.chips-sm button{border:0;background:var(--panel);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.chips-sm button:hover{box-shadow:inset 0 0 0 1px var(--accent);color:var(--accent)}
+.composer{border-top:1px solid var(--rule);padding:12px 18px 14px;display:grid;gap:8px;background:var(--panel)}
+.qa{display:flex;gap:6px;flex-wrap:wrap}
+.qa button{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:650;cursor:pointer;color:var(--ink-2)}
+.qa button:hover{border-color:var(--accent);color:var(--accent)}
+.composer .box{display:grid;gap:6px;background:var(--ground);border-radius:16px;padding:8px 8px 8px 14px;border:1px solid var(--rule-2)}
+.composer .box:focus-within{border-color:var(--accent)}
+.composer .row3{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;border:0;background:transparent;min-height:24px;max-height:120px;padding:6px 0;resize:none;outline:none}
+.ref{display:inline-flex;gap:6px;align-items:center;background:var(--accent-wash);color:var(--accent);border-radius:999px;padding:2px 6px 2px 10px;font-size:12.5px;font-weight:650}
+.ref button{all:unset;cursor:pointer;display:grid;place-items:center;width:18px;height:18px;border-radius:50%}
+.ref button:hover{background:var(--panel)}
+.msg.you .ref{background:var(--soft);color:var(--ink-2);padding-right:10px}
+.composer .meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--faint)}
+.followups{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:4px}
+.followups button{border:0;background:transparent;color:var(--accent);font-weight:650;font-size:13px;cursor:pointer;padding:0;display:inline-flex;gap:4px;align-items:center;text-align:left}
+.followups button:hover{text-decoration:underline;text-underline-offset:3px}
+.ctx-toggle{display:none}
+@media (max-width:900px){
+  .ws{grid-template-columns:minmax(0,1fr);height:auto}
+  .ctx-pane{max-height:none}
+  .ctx-pane.closed .ctx-sec,.ctx-pane.closed .intro,.ctx-pane.closed .selbar{display:none}
+  .ctx-toggle{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border:0;background:none;width:100%;font-weight:700;cursor:pointer}
+  .conv{min-height:70vh}
+  .capgrid{grid-template-columns:minmax(0,1fr)}
+  .conv-body{padding:16px}
+}
+
 /* ---------------- Decisions ---------------- */
 .docs{max-width:960px;margin:0 auto;padding:16px 24px 72px;display:grid;gap:18px}
 .docs h1{font-size:32px;font-weight:800}
@@ -443,7 +559,7 @@ const LANDING = {"types":{"Solar only":{"small":{"5":{"chance":0.076271186440677
 const YEARS = {"1999": {"built": 1}, "2000": {"built": 4, "gave": 4}, "2001": {"gave": 1}, "2002": {"built": 2, "gave": 1}, "2003": {"built": 6, "gave": 4, "waiting": 1}, "2004": {"built": 8, "gave": 20, "waiting": 1}, "2005": {"built": 9, "gave": 17, "waiting": 4}, "2006": {"built": 14, "gave": 61, "waiting": 4}, "2007": {"built": 15, "gave": 116, "waiting": 3}, "2008": {"built": 17, "gave": 161, "waiting": 3}, "2009": {"built": 15, "gave": 48, "waiting": 3}, "2010": {"built": 38, "gave": 170, "waiting": 4}, "2011": {"built": 14, "gave": 188, "waiting": 5}, "2012": {"built": 5, "gave": 60, "waiting": 1}, "2013": {"built": 10, "gave": 48, "waiting": 3}, "2014": {"built": 13, "gave": 70, "waiting": 6}, "2015": {"built": 23, "gave": 92, "waiting": 11}, "2016": {"built": 18, "gave": 96, "waiting": 12}, "2017": {"built": 10, "gave": 67, "waiting": 14}, "2018": {"built": 11, "gave": 68, "waiting": 19}, "2019": {"built": 8, "gave": 98, "waiting": 33}, "2020": {"built": 6, "gave": 110, "waiting": 37}, "2021": {"built": 2, "gave": 253, "waiting": 106}, "2022": {"gave": 2}, "2023": {"gave": 4}, "2025": {"new": 86, "gave": 84}};
 // Towns for orientation and search: [name, lat, lon, major]. Approximate centres.
 const CITIES = [["Los Angeles",34.05,-118.24,1],["San Diego",32.72,-117.16,1],["San Jose",37.34,-121.89,1],["San Francisco",37.77,-122.42,1],["Fresno",36.74,-119.79,1],["Sacramento",38.58,-121.49,1],["Bakersfield",35.37,-119.02,1],["Las Vegas",36.17,-115.14,1],["Phoenix",33.45,-112.07,1],["Reno",39.53,-119.81,1],["Redding",40.59,-122.39,1],["Palm Springs",33.83,-116.55,1],["El Centro",32.79,-115.56,1],["Barstow",34.9,-117.02,1],["Long Beach",33.77,-118.19,0],["Oakland",37.8,-122.27,0],["Anaheim",33.84,-117.91,0],["Riverside",33.95,-117.4,0],["Stockton",37.96,-121.29,0],["Modesto",37.64,-120.99,0],["San Bernardino",34.11,-117.29,0],["Oxnard",34.2,-119.18,0],["Palmdale",34.58,-118.12,0],["Lancaster",34.7,-118.14,0],["Salinas",36.68,-121.66,0],["Visalia",36.33,-119.29,0],["Victorville",34.54,-117.29,0],["Santa Rosa",38.44,-122.71,0],["Merced",37.3,-120.48,0],["Chico",39.73,-121.84,0],["San Luis Obispo",35.28,-120.66,0],["Santa Barbara",34.42,-119.7,0],["Indio",33.72,-116.22,0],["Blythe",33.61,-114.6,0],["Ridgecrest",35.62,-117.67,0],["Tehachapi",35.13,-118.45,0],["Mojave",35.05,-118.17,0],["Bishop",37.36,-118.4,0],["Eureka",40.8,-124.16,0],["Hanford",36.33,-119.65,0],["Los Banos",37.06,-120.85,0],["Tracy",37.74,-121.43,0],["Livermore",37.68,-121.77,0],["Vacaville",38.36,-121.99,0],["Yuba City",39.14,-121.62,0],["Coalinga",36.14,-120.36,0],["Taft",35.14,-119.46,0],["Needles",34.85,-114.61,0],["Pahrump",36.21,-115.98,0],["Yuma",32.69,-114.63,0],["Kingman",35.19,-114.05,0],["Lake Havasu City",34.48,-114.32,0],["Monterey",36.6,-121.89,0],["Santa Cruz",36.97,-122.03,0],["Napa",38.3,-122.29,0],["Ukiah",39.15,-123.21,0],["Susanville",40.42,-120.65,0],["Lompoc",34.64,-120.46,0],["Paso Robles",35.63,-120.69,0],["Lemoore",36.3,-119.78,0],["Delano",35.77,-119.25,0],["Boulder City",35.98,-114.83,0],["Buckeye",33.37,-112.58,0]];
-const M = {"as_of":"2026-07-24","places":[{"place":"Midway 500 kV","kv":500,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"},{"place":"Midway 230 kV","kv":230,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"},{"place":"Midway 115 kV","kv":115,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"}],"curve":[{"y":0.0,"built":0,"lo":0,"hi":0,"withdrawn":0},{"y":0.25,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.087},{"y":0.5,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.1377},{"y":0.75,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.1377},{"y":1.0,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3043},{"y":1.25,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3551},{"y":1.5,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3551},{"y":1.75,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.4565},{"y":2.0,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.4638},{"y":2.25,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4638},{"y":2.5,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4638},{"y":2.75,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.471},{"y":3.0,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4783},{"y":3.25,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4855},{"y":3.5,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4928},{"y":3.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5},{"y":4.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5145},{"y":4.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5145},{"y":4.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5362},{"y":4.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5362},{"y":5.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5507},{"y":5.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":5.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":5.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":6.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.75,"built":0.0258,"lo":0.0,"hi":0.0576,"withdrawn":0.5669},{"y":7.0,"built":0.0371,"lo":0.0072,"hi":0.0763,"withdrawn":0.5669},{"y":7.25,"built":0.0484,"lo":0.0119,"hi":0.0881,"withdrawn":0.5669},{"y":7.5,"built":0.0484,"lo":0.0119,"hi":0.0881,"withdrawn":0.5669},{"y":7.75,"built":0.0613,"lo":0.0211,"hi":0.1082,"withdrawn":0.5669},{"y":8.0,"built":0.0741,"lo":0.0239,"hi":0.1345,"withdrawn":0.5669},{"y":8.25,"built":0.0869,"lo":0.0349,"hi":0.1401,"withdrawn":0.5669},{"y":8.5,"built":0.1002,"lo":0.0406,"hi":0.159,"withdrawn":0.5669},{"y":8.75,"built":0.1269,"lo":0.0543,"hi":0.1891,"withdrawn":0.5669},{"y":9.0,"built":0.1402,"lo":0.0752,"hi":0.1978,"withdrawn":0.5669},{"y":9.25,"built":0.1535,"lo":0.0759,"hi":0.2208,"withdrawn":0.5802},{"y":9.5,"built":0.1535,"lo":0.0759,"hi":0.2208,"withdrawn":0.5802},{"y":9.75,"built":0.1701,"lo":0.0945,"hi":0.2483,"withdrawn":0.5802},{"y":10.0,"built":0.1701,"lo":0.0945,"hi":0.2483,"withdrawn":0.5802},{"y":10.25,"built":0.1868,"lo":0.1115,"hi":0.2661,"withdrawn":0.5802},{"y":10.5,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":10.75,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.0,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.25,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.5,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.75,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.0,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.25,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.5,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.75,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":13.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135}],"odds":{"3":{"chance":0.007246376811594205,"range":[0.0,0.02173913043478262],"watched":71,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"5":{"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"watched":60,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"7":{"chance":0.03712136049092572,"range":[0.0072463768115942,0.08074534161490682],"watched":35,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"10":{"chance":0.17012970066638552,"range":[0.09528237111841147,0.2487922705314011],"watched":15,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"15":{"chance":0.28664526775939836,"range":[0.16976360304696145,0.4029856441480988],"watched":3,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"}},"history_from":"projects that applied before the 2023 rule change (CAISO queue report of 2026-07-24)","ladder":[{"desc":"Solar + battery, 150-300 MW, at Midway 230 kV","kind":"voltage section","area":"Midway 230 kV","projects":4,"resolved":4,"built":0,"enough":false,"longest":3.9,"used":false,"by_n":{}},{"desc":"Solar + battery, 150-300 MW, at the Midway substation","kind":"site","area":"Midway","projects":6,"resolved":5,"built":0,"enough":false,"longest":9.2,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates-Arco 230 kV Line bottleneck","kind":"bottleneck area","area":"Gates-Arco 230 kV Line","projects":9,"resolved":8,"built":0,"enough":false,"longest":9.2,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Cal Flat-Gates 230 kV line bottleneck","kind":"bottleneck area","area":"Cal Flat-Gates 230 kV line","projects":23,"resolved":20,"built":4,"enough":false,"longest":10.4,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Mustang-Henrietta 230 kV line bottleneck","kind":"bottleneck area","area":"Mustang-Henrietta 230 kV line","projects":29,"resolved":24,"built":4,"enough":false,"longest":10.4,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates 500/230kV TB #12 bottleneck","kind":"bottleneck area","area":"Gates 500/230kV TB #12","projects":47,"resolved":35,"built":5,"enough":false,"longest":15.3,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates 500/230kV TB #11 bottleneck","kind":"bottleneck area","area":"Gates 500/230kV TB #11","projects":48,"resolved":36,"built":5,"enough":false,"longest":15.3,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, in Kern County","kind":"county","area":"Kern","projects":30,"resolved":25,"built":3,"enough":false,"longest":17.0,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, across California","kind":"California","area":null,"projects":138,"resolved":99,"built":19,"enough":true,"longest":17.0,"used":true,"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"by_n":{"3":{"chance":0.007246376811594205,"range":[0.0,0.02173913043478262],"watched":71,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"5":{"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"watched":60,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"7":{"chance":0.03712136049092572,"range":[0.0072463768115942,0.08074534161490682],"watched":35,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"10":{"chance":0.17012970066638552,"range":[0.09528237111841147,0.2487922705314011],"watched":15,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39}}},{"desc":"Solar + battery, across California","kind":"California","area":null,"projects":425,"resolved":286,"built":44,"enough":true,"longest":19.9,"used":false,"chance":0.014117647058823547,"range":[0.0047058823529411795,0.02588235294117649],"by_n":{"3":{"chance":0.002352941176470589,"range":[0.0,0.007058823529411772],"watched":226,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"5":{"chance":0.014117647058823547,"range":[0.0047058823529411795,0.02588235294117649],"watched":195,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"7":{"chance":0.03518139459173505,"range":[0.016567541504860703,0.05598768204272794],"watched":113,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"10":{"chance":0.13012770651876754,"range":[0.09120770735905147,0.1753198399513027],"watched":49,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139}}},{"desc":"All projects, across California","kind":"California","area":null,"projects":2278,"resolved":2008,"built":249,"enough":true,"longest":22.7,"used":false,"chance":0.04126426690079026,"range":[0.03336259877085166,0.050043898156277376],"by_n":{"3":{"chance":0.01536435469710276,"range":[0.01097453906935911,0.021071115013169456],"watched":818,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"5":{"chance":0.04126426690079026,"range":[0.03336259877085166,0.050043898156277376],"watched":577,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"7":{"chance":0.076480927898108,"range":[0.06623401868943156,0.09017939244927954],"watched":258,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"10":{"chance":0.12382895298884694,"range":[0.10593455078478446,0.1384455298305478],"watched":108,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270}}}],"ahead":{"realistic":2035.0895730895734,"range":[976.9074672993374,2997.1019439114675],"waiting":3175.0,"new":300.0,"projects":[{"id":"CAISO-0900","name":"Midway Temblor 115 kV line","q":"2012-04-02","types":["Battery","Solar"],"step":"Agreement signed","mw":20.0,"waited":14.3,"line":true,"chance":0.10317460317460324,"group":"Solar + battery, across California"},{"id":"CAISO-0972","name":"Midway-Temblor 115kV line","q":"2013-04-30","types":["Battery","Solar"],"step":"Agreement signed","mw":20.0,"waited":13.2,"line":true,"chance":0.19708994708994704,"group":"Solar + battery, across California"},{"id":"CAISO-1260","name":"Midway-Wheeler Ridge #2 230 kV Line","q":"2016-05-02","types":["Solar"],"step":"Agreement signed","mw":100.0,"waited":10.2,"line":true,"chance":0.5714285714285717,"group":"Solar only, 50-150 MW, across California"},{"id":"CAISO-1593","name":"Gates-Midway 230 kV Line","q":"2019-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":500.0,"waited":7.3,"line":true,"chance":0.6444444444444446,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1596","name":"Midway 500 kV","q":"2019-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":800.0,"waited":7.3,"line":false,"chance":0.6444444444444446,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1745","name":"Midway 230 kV","q":"2020-04-15","types":["Natural Gas"],"step":"Second study done","mw":35.0,"waited":6.3,"line":false,"chance":0.2,"group":"Gas, under 50 MW, across California"},{"id":"CAISO-1751","name":"Midway 115 kV","q":"2020-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":200.0,"waited":6.3,"line":false,"chance":0.6501039501039502,"group":"Solar + battery, 150-300 MW, across California"},{"id":"CAISO-1949","name":"Manning-Midway 500kV Line","q":"2021-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":1150.0,"waited":5.3,"line":true,"chance":0.6647619047619049,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1987","name":"Midway 500 kV","q":"2021-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":350.0,"waited":5.3,"line":false,"chance":0.6647619047619049,"group":"Solar + battery, 300 MW and over, across California"}],"new_projects":[{"id":"CAISO-2300","name":"ARCO-MIDWAY","q":"2025-02-12","types":["Battery","Solar"],"step":null,"mw":200.0,"waited":1.4,"line":true,"chance":null,"group":null},{"id":"CAISO-2301","name":"ARCO-MIDWAY","q":"2025-02-12","types":["Battery","Solar"],"step":null,"mw":100.0,"waited":1.4,"line":true,"chance":null,"group":null}],"left_out":[]},"bottlenecks":[{"place":"Midway 115 kV","bottleneck":"Cal Flat-Gates 230 kV line","via":null,"room":0.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 115 kV","bottleneck":"Gates-Arco 230 kV Line","via":null,"room":0.0,"added":7067.0,"cost":940.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":133.01259374557804},{"place":"Midway 115 kV","bottleneck":"Midway 230/115kV TB #3","via":null,"room":1346.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 115 kV","bottleneck":"Gates 500/230kV TB #12","via":null,"room":0.0,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 115 kV","bottleneck":"Gates 500/230kV TB #11","via":null,"room":-0.1000000000003638,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 115 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302},{"place":"Midway 230 kV","bottleneck":"Cal Flat-Gates 230 kV line","via":null,"room":0.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 230 kV","bottleneck":"Gates-Arco 230 kV Line","via":null,"room":0.0,"added":7067.0,"cost":940.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":133.01259374557804},{"place":"Midway 230 kV","bottleneck":"Gates 500/230kV TB #12","via":null,"room":0.0,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 230 kV","bottleneck":"Gates 500/230kV TB #11","via":null,"room":-0.1000000000003638,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 230 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302},{"place":"Midway 500 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302}],"upgrades":[{"id":"1314-R-13","name":"Midway \u2013 Kern PP #2 230 kV Line","utility":"PG&E","finish":"2028-12-29","year":2028,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 230 kV"},{"id":"2526-R-08","name":"Midway 115 kV Bus Upgrade","utility":"PG&E","finish":"2033-05-01","year":2033,"lo":44.0,"hi":89.0,"source":"CAISO approved-projects tracker, July 2026; CAISO 2025-2026 transmission plan, Appendix H","place":"Midway 115 kV"},{"id":"1011-R-12","name":"Midway-Kern PP Nos. 1,3 and 4 230 kV Lines Capacity Increase (Kern PP 230 kV Area Reinforcement Project)","utility":"PG&E","finish":"2029-02-07","year":2029,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 230 kV"},{"id":"1213-R-19","name":"Midway-Temblor 115 kV Line Reconductor and Voltage Support","utility":"PG&E","finish":"2030-02-27","year":2030,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 115 kV"}],"rows":[{"id":"CAISO-0146","q":"2006-11-16","mw":250.0,"outcome":"built","years":2.04,"est":true},{"id":"CAISO-0467","q":"2008-06-02","mw":230.0,"outcome":"built","years":8.22,"est":false},{"id":"CAISO-0506","q":"2009-07-31","mw":299.6,"outcome":"waiting","years":16.98,"est":false},{"id":"CAISO-0576","q":"2010-02-01","mw":224.0,"outcome":"built","years":12.89,"est":false},{"id":"CAISO-0779","q":"2011-03-31","mw":200.0,"outcome":"waiting","years":15.32,"est":false},{"id":"CAISO-0877","q":"2012-04-02","mw":280.0,"outcome":"built","years":6.92,"est":false},{"id":"CAISO-0897","q":"2012-04-02","mw":200.0,"outcome":"withdrawn","years":12.82,"est":false},{"id":"CAISO-0954","q":"2013-04-30","mw":150.0,"outcome":"built","years":10.42,"est":false},{"id":"CAISO-0971","q":"2013-04-30","mw":200.0,"outcome":"built","years":8.3,"est":false},{"id":"CAISO-1062","q":"2014-04-30","mw":200.0,"outcome":"waiting","years":12.23,"est":false},{"id":"CAISO-1120","q":"2015-04-30","mw":150.0,"outcome":"built","years":8.62,"est":false},{"id":"CAISO-1129","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1139","q":"2015-04-30","mw":250.0,"outcome":"built","years":8.62,"est":false},{"id":"CAISO-1161","q":"2015-04-30","mw":180.5,"outcome":"withdrawn","years":0.21,"est":false},{"id":"CAISO-1198","q":"2015-04-30","mw":150.0,"outcome":"built","years":9.63,"est":false},{"id":"CAISO-1200","q":"2015-04-30","mw":200.0,"outcome":"built","years":8.91,"est":false},{"id":"CAISO-1203","q":"2015-04-30","mw":167.55,"outcome":"withdrawn","years":1.01,"est":false},{"id":"CAISO-1204","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1207","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1215","q":"2015-04-30","mw":150.0,"outcome":"built","years":10.02,"est":false},{"id":"CAISO-1230","q":"2016-05-02","mw":152.2,"outcome":"withdrawn","years":1.0,"est":false},{"id":"CAISO-1242","q":"2016-05-02","mw":246.4,"outcome":"waiting","years":10.23,"est":false},{"id":"CAISO-1243","q":"2016-05-02","mw":249.7,"outcome":"waiting","years":10.23,"est":false},{"id":"CAISO-1302","q":"2016-05-02","mw":213.5,"outcome":"built","years":7.92,"est":false},{"id":"CAISO-1313","q":"2016-05-02","mw":182.0,"outcome":"built","years":7.56,"est":false},{"id":"CAISO-1316","q":"2016-05-02","mw":161.05,"outcome":"withdrawn","years":1.0,"est":false},{"id":"CAISO-1319","q":"2016-05-02","mw":250.0,"outcome":"built","years":9.02,"est":false},{"id":"CAISO-1332","q":"2016-05-02","mw":205.15,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1338","q":"2016-05-02","mw":256.8,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1341","q":"2016-05-02","mw":250.0,"outcome":"built","years":3.58,"est":true},{"id":"CAISO-1379","q":"2017-05-01","mw":150.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1380","q":"2017-05-01","mw":150.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1385","q":"2017-05-01","mw":150.0,"outcome":"withdrawn","years":2.63,"est":false},{"id":"CAISO-1391","q":"2017-05-01","mw":200.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1394","q":"2017-05-01","mw":200.0,"outcome":"withdrawn","years":9.21,"est":false},{"id":"CAISO-1404","q":"2017-05-01","mw":150.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1420","q":"2017-05-01","mw":200.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1435","q":"2017-05-01","mw":250.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1471","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":1.06,"est":false},{"id":"CAISO-1477","q":"2018-04-16","mw":150.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1485","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1504","q":"2015-04-16","mw":150.0,"outcome":"withdrawn","years":3.89,"est":false},{"id":"CAISO-1506","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1509","q":"2018-04-16","mw":250.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1514","q":"2018-04-16","mw":175.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1526","q":"2018-04-16","mw":150.0,"outcome":"built","years":6.67,"est":false},{"id":"CAISO-1527","q":"2018-04-16","mw":150.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1534","q":"2018-04-16","mw":250.0,"outcome":"waiting","years":8.27,"est":false},{"id":"CAISO-1543","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1560","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1561","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.87,"est":false},{"id":"CAISO-1562","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1567","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.24,"est":false},{"id":"CAISO-1575","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1576","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1577","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1582","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1586","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":5.88,"est":false},{"id":"CAISO-1594","q":"2019-04-15","mw":250.0,"outcome":"withdrawn","years":3.14,"est":false},{"id":"CAISO-1601","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.91,"est":false},{"id":"CAISO-1603","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1604","q":"2019-04-15","mw":200.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1617","q":"2019-04-15","mw":150.0,"outcome":"built","years":7.06,"est":false},{"id":"CAISO-1618","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1621","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1622","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.87,"est":false},{"id":"CAISO-1624","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.28,"est":false},{"id":"CAISO-1626","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":1.04,"est":false},{"id":"CAISO-1630","q":"2019-04-15","mw":250.0,"outcome":"withdrawn","years":0.25,"est":false},{"id":"CAISO-1634","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.27,"est":false},{"id":"CAISO-1650","q":"2019-04-15","mw":200.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1654","q":"2019-04-15","mw":250.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1667","q":"2019-04-15","mw":150.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1710","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.99,"est":false},{"id":"CAISO-1714","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1722","q":"2020-04-15","mw":250.0,"outcome":"withdrawn","years":0.98,"est":false},{"id":"CAISO-1729","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.07,"est":false},{"id":"CAISO-1736","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1741","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.05,"est":false},{"id":"CAISO-1742","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1751","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1755","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1757","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1772","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.21,"est":false},{"id":"CAISO-1774","q":"2020-04-15","mw":150.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1777","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1779","q":"2020-04-15","mw":150.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1789","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1792","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1798","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1799","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1801","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1817","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.07,"est":false},{"id":"CAISO-1822","q":"2020-04-15","mw":215.0,"outcome":"withdrawn","years":3.98,"est":false},{"id":"CAISO-1826","q":"2020-04-15","mw":250.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1844","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":3.62,"est":false},{"id":"CAISO-1848","q":"2021-04-15","mw":210.0,"outcome":"withdrawn","years":1.66,"est":false},{"id":"CAISO-1852","q":"2021-04-15","mw":225.0,"outcome":"withdrawn","years":3.27,"est":false},{"id":"CAISO-1855","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":1.67,"est":false},{"id":"CAISO-1868","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-1870","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-1916","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":2.95,"est":false},{"id":"CAISO-1934","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1935","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1937","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.66,"est":false},{"id":"CAISO-1941","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.61,"est":false},{"id":"CAISO-1945","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":1.59,"est":false},{"id":"CAISO-1956","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1958","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1967","q":"2021-04-15","mw":189.91,"outcome":"withdrawn","years":1.7,"est":false},{"id":"CAISO-1976","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.76,"est":false},{"id":"CAISO-1984","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.63,"est":false},{"id":"CAISO-1985","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.63,"est":false},{"id":"CAISO-1992","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":4.3,"est":false},{"id":"CAISO-2013","q":"2021-04-15","mw":160.0,"outcome":"withdrawn","years":4.44,"est":false},{"id":"CAISO-2017","q":"2021-04-15","mw":160.0,"outcome":"withdrawn","years":4.88,"est":false},{"id":"CAISO-2029","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2036","q":"2021-04-15","mw":250.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2047","q":"2021-04-15","mw":225.0,"outcome":"withdrawn","years":1.55,"est":false},{"id":"CAISO-2048","q":"2021-04-15","mw":280.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2061","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2063","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.45,"est":false},{"id":"CAISO-2067","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":0.32,"est":false},{"id":"CAISO-2071","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.56,"est":false},{"id":"CAISO-2080","q":"2021-04-15","mw":210.0,"outcome":"withdrawn","years":4.37,"est":false},{"id":"CAISO-2081","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2088","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.42,"est":false},{"id":"CAISO-2094","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.32,"est":false},{"id":"CAISO-2095","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-2100","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.45,"est":false},{"id":"CAISO-2107","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.61,"est":false},{"id":"CAISO-2140","q":"2021-04-15","mw":250.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2145","q":"2021-04-15","mw":220.0,"outcome":"withdrawn","years":5.12,"est":false},{"id":"CAISO-2161","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2162","q":"2021-04-15","mw":275.0,"outcome":"withdrawn","years":4.98,"est":false},{"id":"CAISO-643AE","q":"2010-07-31","mw":150.0,"outcome":"built","years":10.37,"est":false},{"id":"CAISO-643R","q":"2010-07-31","mw":153.0,"outcome":"waiting","years":15.98,"est":false},{"id":"CAISO-643X","q":"2010-07-31","mw":200.0,"outcome":"built","years":11.62,"est":false}],"adjusted":{"leave_out":["CAISO-0900","CAISO-0972","CAISO-1260","CAISO-1593","CAISO-1596"],"realistic":1136.0106890106892,"range":[535.7591717038722,1630.0016379681006],"waiting":1735.0}};
+const M = {"as_of":"2026-07-24","places":[{"place":"Midway 500 kV","kv":500,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"},{"place":"Midway 230 kV","kv":230,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"},{"place":"Midway 115 kV","kv":115,"county":"Kern","lat":35.4029429,"lon":-119.4522985,"by":"openstreetmap","source":"OpenStreetMap way/24333232, data of 2026-10-06"}],"curve":[{"y":0.0,"built":0,"lo":0,"hi":0,"withdrawn":0},{"y":0.25,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.087},{"y":0.5,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.1377},{"y":0.75,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.1377},{"y":1.0,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3043},{"y":1.25,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3551},{"y":1.5,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.3551},{"y":1.75,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.4565},{"y":2.0,"built":0.0,"lo":0.0,"hi":0.0,"withdrawn":0.4638},{"y":2.25,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4638},{"y":2.5,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4638},{"y":2.75,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.471},{"y":3.0,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4783},{"y":3.25,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4855},{"y":3.5,"built":0.0072,"lo":0.0,"hi":0.0217,"withdrawn":0.4928},{"y":3.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5},{"y":4.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5145},{"y":4.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5145},{"y":4.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5362},{"y":4.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5362},{"y":5.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5507},{"y":5.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":5.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":5.75,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.558},{"y":6.0,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.25,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.5,"built":0.0145,"lo":0.0,"hi":0.0362,"withdrawn":0.5669},{"y":6.75,"built":0.0258,"lo":0.0,"hi":0.0576,"withdrawn":0.5669},{"y":7.0,"built":0.0371,"lo":0.0072,"hi":0.0763,"withdrawn":0.5669},{"y":7.25,"built":0.0484,"lo":0.0119,"hi":0.0881,"withdrawn":0.5669},{"y":7.5,"built":0.0484,"lo":0.0119,"hi":0.0881,"withdrawn":0.5669},{"y":7.75,"built":0.0613,"lo":0.0211,"hi":0.1082,"withdrawn":0.5669},{"y":8.0,"built":0.0741,"lo":0.0239,"hi":0.1345,"withdrawn":0.5669},{"y":8.25,"built":0.0869,"lo":0.0349,"hi":0.1401,"withdrawn":0.5669},{"y":8.5,"built":0.1002,"lo":0.0406,"hi":0.159,"withdrawn":0.5669},{"y":8.75,"built":0.1269,"lo":0.0543,"hi":0.1891,"withdrawn":0.5669},{"y":9.0,"built":0.1402,"lo":0.0752,"hi":0.1978,"withdrawn":0.5669},{"y":9.25,"built":0.1535,"lo":0.0759,"hi":0.2208,"withdrawn":0.5802},{"y":9.5,"built":0.1535,"lo":0.0759,"hi":0.2208,"withdrawn":0.5802},{"y":9.75,"built":0.1701,"lo":0.0945,"hi":0.2483,"withdrawn":0.5802},{"y":10.0,"built":0.1701,"lo":0.0945,"hi":0.2483,"withdrawn":0.5802},{"y":10.25,"built":0.1868,"lo":0.1115,"hi":0.2661,"withdrawn":0.5802},{"y":10.5,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":10.75,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.0,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.25,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.5,"built":0.2256,"lo":0.1235,"hi":0.3188,"withdrawn":0.5802},{"y":11.75,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.0,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.25,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.5,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":12.75,"built":0.2534,"lo":0.1545,"hi":0.3623,"withdrawn":0.5802},{"y":13.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":13.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":14.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":15.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.0,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.25,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.5,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135},{"y":16.75,"built":0.2866,"lo":0.1654,"hi":0.403,"withdrawn":0.6135}],"odds":{"3":{"chance":0.007246376811594205,"range":[0.0,0.02173913043478262],"watched":71,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"5":{"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"watched":60,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"7":{"chance":0.03712136049092572,"range":[0.0072463768115942,0.08074534161490682],"watched":35,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"10":{"chance":0.17012970066638552,"range":[0.09528237111841147,0.2487922705314011],"watched":15,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"},"15":{"chance":0.28664526775939836,"range":[0.16976360304696145,0.4029856441480988],"watched":3,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39,"group":"Solar + battery, 150-300 MW, across California"}},"history_from":"projects that applied before the 2023 rule change (CAISO queue report of 2026-07-24)","ladder":[{"desc":"Solar + battery, 150-300 MW, at Midway 230 kV","kind":"voltage section","area":"Midway 230 kV","projects":4,"resolved":4,"built":0,"enough":false,"longest":3.9,"used":false,"by_n":{}},{"desc":"Solar + battery, 150-300 MW, at the Midway substation","kind":"site","area":"Midway","projects":6,"resolved":5,"built":0,"enough":false,"longest":9.2,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates-Arco 230 kV Line bottleneck","kind":"bottleneck area","area":"Gates-Arco 230 kV Line","projects":9,"resolved":8,"built":0,"enough":false,"longest":9.2,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Cal Flat-Gates 230 kV line bottleneck","kind":"bottleneck area","area":"Cal Flat-Gates 230 kV line","projects":23,"resolved":20,"built":4,"enough":false,"longest":10.4,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Mustang-Henrietta 230 kV line bottleneck","kind":"bottleneck area","area":"Mustang-Henrietta 230 kV line","projects":29,"resolved":24,"built":4,"enough":false,"longest":10.4,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates 500/230kV TB #12 bottleneck","kind":"bottleneck area","area":"Gates 500/230kV TB #12","projects":47,"resolved":35,"built":5,"enough":false,"longest":15.3,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, behind the Gates 500/230kV TB #11 bottleneck","kind":"bottleneck area","area":"Gates 500/230kV TB #11","projects":48,"resolved":36,"built":5,"enough":false,"longest":15.3,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, in Kern County","kind":"county","area":"Kern","projects":30,"resolved":25,"built":3,"enough":false,"longest":17.0,"used":false,"chance":0.0,"range":[0.0,0.0],"by_n":{}},{"desc":"Solar + battery, 150-300 MW, across California","kind":"California","area":null,"projects":138,"resolved":99,"built":19,"enough":true,"longest":17.0,"used":true,"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"by_n":{"3":{"chance":0.007246376811594205,"range":[0.0,0.02173913043478262],"watched":71,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"5":{"chance":0.014492753623188411,"range":[0.0,0.03623188405797102],"watched":60,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"7":{"chance":0.03712136049092572,"range":[0.0072463768115942,0.08074534161490682],"watched":35,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39},"10":{"chance":0.17012970066638552,"range":[0.09528237111841147,0.2487922705314011],"watched":15,"wait":9.015742642026009,"wait_range":[8.224503764544833,10.417522245037645],"projects":138,"built":19,"withdrawn":80,"waiting":39}}},{"desc":"Solar + battery, across California","kind":"California","area":null,"projects":425,"resolved":286,"built":44,"enough":true,"longest":19.9,"used":false,"chance":0.014117647058823547,"range":[0.0047058823529411795,0.02588235294117649],"by_n":{"3":{"chance":0.002352941176470589,"range":[0.0,0.007058823529411772],"watched":226,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"5":{"chance":0.014117647058823547,"range":[0.0047058823529411795,0.02588235294117649],"watched":195,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"7":{"chance":0.03518139459173505,"range":[0.016567541504860703,0.05598768204272794],"watched":113,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139},"10":{"chance":0.13012770651876754,"range":[0.09120770735905147,0.1753198399513027],"watched":49,"wait":9.634496919917865,"wait_range":[8.260095824777549,10.417522245037645],"projects":425,"built":44,"withdrawn":242,"waiting":139}}},{"desc":"All projects, across California","kind":"California","area":null,"projects":2278,"resolved":2008,"built":249,"enough":true,"longest":22.7,"used":false,"chance":0.04126426690079026,"range":[0.03336259877085166,0.050043898156277376],"by_n":{"3":{"chance":0.01536435469710276,"range":[0.01097453906935911,0.021071115013169456],"watched":818,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"5":{"chance":0.04126426690079026,"range":[0.03336259877085166,0.050043898156277376],"watched":577,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"7":{"chance":0.076480927898108,"range":[0.06623401868943156,0.09017939244927954],"watched":258,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270},"10":{"chance":0.12382895298884694,"range":[0.10593455078478446,0.1384455298305478],"watched":108,"wait":7.137577002053388,"wait_range":[6.631074606433949,7.734428473648186],"projects":2278,"built":249,"withdrawn":1759,"waiting":270}}}],"ahead":{"realistic":2035.0895730895734,"range":[976.9074672993374,2997.1019439114675],"waiting":3175.0,"new":300.0,"projects":[{"id":"CAISO-0900","name":"Midway Temblor 115 kV line","q":"2012-04-02","types":["Battery","Solar"],"step":"Agreement signed","mw":20.0,"waited":14.3,"line":true,"chance":0.10317460317460324,"group":"Solar + battery, across California"},{"id":"CAISO-0972","name":"Midway-Temblor 115kV line","q":"2013-04-30","types":["Battery","Solar"],"step":"Agreement signed","mw":20.0,"waited":13.2,"line":true,"chance":0.19708994708994704,"group":"Solar + battery, across California"},{"id":"CAISO-1260","name":"Midway-Wheeler Ridge #2 230 kV Line","q":"2016-05-02","types":["Solar"],"step":"Agreement signed","mw":100.0,"waited":10.2,"line":true,"chance":0.5714285714285717,"group":"Solar only, 50-150 MW, across California"},{"id":"CAISO-1593","name":"Gates-Midway 230 kV Line","q":"2019-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":500.0,"waited":7.3,"line":true,"chance":0.6444444444444446,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1596","name":"Midway 500 kV","q":"2019-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":800.0,"waited":7.3,"line":false,"chance":0.6444444444444446,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1745","name":"Midway 230 kV","q":"2020-04-15","types":["Natural Gas"],"step":"Second study done","mw":35.0,"waited":6.3,"line":false,"chance":0.2,"group":"Gas, under 50 MW, across California"},{"id":"CAISO-1751","name":"Midway 115 kV","q":"2020-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":200.0,"waited":6.3,"line":false,"chance":0.6501039501039502,"group":"Solar + battery, 150-300 MW, across California"},{"id":"CAISO-1949","name":"Manning-Midway 500kV Line","q":"2021-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":1150.0,"waited":5.3,"line":true,"chance":0.6647619047619049,"group":"Solar + battery, 300 MW and over, across California"},{"id":"CAISO-1987","name":"Midway 500 kV","q":"2021-04-15","types":["Battery","Solar"],"step":"Agreement signed","mw":350.0,"waited":5.3,"line":false,"chance":0.6647619047619049,"group":"Solar + battery, 300 MW and over, across California"}],"new_projects":[{"id":"CAISO-2300","name":"ARCO-MIDWAY","q":"2025-02-12","types":["Battery","Solar"],"step":null,"mw":200.0,"waited":1.4,"line":true,"chance":null,"group":null},{"id":"CAISO-2301","name":"ARCO-MIDWAY","q":"2025-02-12","types":["Battery","Solar"],"step":null,"mw":100.0,"waited":1.4,"line":true,"chance":null,"group":null}],"left_out":[]},"bottlenecks":[{"place":"Midway 115 kV","bottleneck":"Cal Flat-Gates 230 kV line","via":null,"room":0.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 115 kV","bottleneck":"Gates-Arco 230 kV Line","via":null,"room":0.0,"added":7067.0,"cost":940.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":133.01259374557804},{"place":"Midway 115 kV","bottleneck":"Midway 230/115kV TB #3","via":null,"room":1346.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 115 kV","bottleneck":"Gates 500/230kV TB #12","via":null,"room":0.0,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 115 kV","bottleneck":"Gates 500/230kV TB #11","via":null,"room":-0.1000000000003638,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 115 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302},{"place":"Midway 230 kV","bottleneck":"Cal Flat-Gates 230 kV line","via":null,"room":0.0,"added":null,"cost":null,"listed":"CAISO bottleneck list, 2024 edition","costed":null,"perkw":null},{"place":"Midway 230 kV","bottleneck":"Gates-Arco 230 kV Line","via":null,"room":0.0,"added":7067.0,"cost":940.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":133.01259374557804},{"place":"Midway 230 kV","bottleneck":"Gates 500/230kV TB #12","via":null,"room":0.0,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 230 kV","bottleneck":"Gates 500/230kV TB #11","via":null,"room":-0.1000000000003638,"added":1982.0,"cost":221.0,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":111.50353178607467},{"place":"Midway 230 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302},{"place":"Midway 500 kV","bottleneck":"Mustang-Henrietta 230 kV line","via":null,"room":2177.0,"added":2511.0,"cost":5.7,"listed":"CAISO bottleneck list, 2024 edition","costed":"CAISO transmission capability estimates, 2026","perkw":2.270011947431302}],"upgrades":[{"id":"1314-R-13","name":"Midway \u2013 Kern PP #2 230 kV Line","utility":"PG&E","finish":"2028-12-29","year":2028,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 230 kV"},{"id":"2526-R-08","name":"Midway 115 kV Bus Upgrade","utility":"PG&E","finish":"2033-05-01","year":2033,"lo":44.0,"hi":89.0,"source":"CAISO approved-projects tracker, July 2026; CAISO 2025-2026 transmission plan, Appendix H","place":"Midway 115 kV"},{"id":"1011-R-12","name":"Midway-Kern PP Nos. 1,3 and 4 230 kV Lines Capacity Increase (Kern PP 230 kV Area Reinforcement Project)","utility":"PG&E","finish":"2029-02-07","year":2029,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 230 kV"},{"id":"1213-R-19","name":"Midway-Temblor 115 kV Line Reconductor and Voltage Support","utility":"PG&E","finish":"2030-02-27","year":2030,"lo":null,"hi":null,"source":"CAISO approved-projects tracker, July 2026","place":"Midway 115 kV"}],"rows":[{"id":"CAISO-0146","q":"2006-11-16","mw":250.0,"outcome":"built","years":2.04,"est":true},{"id":"CAISO-0467","q":"2008-06-02","mw":230.0,"outcome":"built","years":8.22,"est":false},{"id":"CAISO-0506","q":"2009-07-31","mw":299.6,"outcome":"waiting","years":16.98,"est":false},{"id":"CAISO-0576","q":"2010-02-01","mw":224.0,"outcome":"built","years":12.89,"est":false},{"id":"CAISO-0779","q":"2011-03-31","mw":200.0,"outcome":"waiting","years":15.32,"est":false},{"id":"CAISO-0877","q":"2012-04-02","mw":280.0,"outcome":"built","years":6.92,"est":false},{"id":"CAISO-0897","q":"2012-04-02","mw":200.0,"outcome":"withdrawn","years":12.82,"est":false},{"id":"CAISO-0954","q":"2013-04-30","mw":150.0,"outcome":"built","years":10.42,"est":false},{"id":"CAISO-0971","q":"2013-04-30","mw":200.0,"outcome":"built","years":8.3,"est":false},{"id":"CAISO-1062","q":"2014-04-30","mw":200.0,"outcome":"waiting","years":12.23,"est":false},{"id":"CAISO-1120","q":"2015-04-30","mw":150.0,"outcome":"built","years":8.62,"est":false},{"id":"CAISO-1129","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1139","q":"2015-04-30","mw":250.0,"outcome":"built","years":8.62,"est":false},{"id":"CAISO-1161","q":"2015-04-30","mw":180.5,"outcome":"withdrawn","years":0.21,"est":false},{"id":"CAISO-1198","q":"2015-04-30","mw":150.0,"outcome":"built","years":9.63,"est":false},{"id":"CAISO-1200","q":"2015-04-30","mw":200.0,"outcome":"built","years":8.91,"est":false},{"id":"CAISO-1203","q":"2015-04-30","mw":167.55,"outcome":"withdrawn","years":1.01,"est":false},{"id":"CAISO-1204","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1207","q":"2015-04-30","mw":200.0,"outcome":"waiting","years":11.23,"est":false},{"id":"CAISO-1215","q":"2015-04-30","mw":150.0,"outcome":"built","years":10.02,"est":false},{"id":"CAISO-1230","q":"2016-05-02","mw":152.2,"outcome":"withdrawn","years":1.0,"est":false},{"id":"CAISO-1242","q":"2016-05-02","mw":246.4,"outcome":"waiting","years":10.23,"est":false},{"id":"CAISO-1243","q":"2016-05-02","mw":249.7,"outcome":"waiting","years":10.23,"est":false},{"id":"CAISO-1302","q":"2016-05-02","mw":213.5,"outcome":"built","years":7.92,"est":false},{"id":"CAISO-1313","q":"2016-05-02","mw":182.0,"outcome":"built","years":7.56,"est":false},{"id":"CAISO-1316","q":"2016-05-02","mw":161.05,"outcome":"withdrawn","years":1.0,"est":false},{"id":"CAISO-1319","q":"2016-05-02","mw":250.0,"outcome":"built","years":9.02,"est":false},{"id":"CAISO-1332","q":"2016-05-02","mw":205.15,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1338","q":"2016-05-02","mw":256.8,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1341","q":"2016-05-02","mw":250.0,"outcome":"built","years":3.58,"est":true},{"id":"CAISO-1379","q":"2017-05-01","mw":150.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1380","q":"2017-05-01","mw":150.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1385","q":"2017-05-01","mw":150.0,"outcome":"withdrawn","years":2.63,"est":false},{"id":"CAISO-1391","q":"2017-05-01","mw":200.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1394","q":"2017-05-01","mw":200.0,"outcome":"withdrawn","years":9.21,"est":false},{"id":"CAISO-1404","q":"2017-05-01","mw":150.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1420","q":"2017-05-01","mw":200.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1435","q":"2017-05-01","mw":250.0,"outcome":"waiting","years":9.23,"est":false},{"id":"CAISO-1471","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":1.06,"est":false},{"id":"CAISO-1477","q":"2018-04-16","mw":150.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1485","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1504","q":"2015-04-16","mw":150.0,"outcome":"withdrawn","years":3.89,"est":false},{"id":"CAISO-1506","q":"2018-04-16","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1509","q":"2018-04-16","mw":250.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1514","q":"2018-04-16","mw":175.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1526","q":"2018-04-16","mw":150.0,"outcome":"built","years":6.67,"est":false},{"id":"CAISO-1527","q":"2018-04-16","mw":150.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1534","q":"2018-04-16","mw":250.0,"outcome":"waiting","years":8.27,"est":false},{"id":"CAISO-1543","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1560","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1561","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.87,"est":false},{"id":"CAISO-1562","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1567","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.24,"est":false},{"id":"CAISO-1575","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1576","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1577","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1582","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":0.9,"est":false},{"id":"CAISO-1586","q":"2019-04-15","mw":150.0,"outcome":"withdrawn","years":5.88,"est":false},{"id":"CAISO-1594","q":"2019-04-15","mw":250.0,"outcome":"withdrawn","years":3.14,"est":false},{"id":"CAISO-1601","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.91,"est":false},{"id":"CAISO-1603","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1604","q":"2019-04-15","mw":200.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1617","q":"2019-04-15","mw":150.0,"outcome":"built","years":7.06,"est":false},{"id":"CAISO-1618","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1621","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.89,"est":false},{"id":"CAISO-1622","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.87,"est":false},{"id":"CAISO-1624","q":"2019-04-15","mw":240.0,"outcome":"withdrawn","years":0.28,"est":false},{"id":"CAISO-1626","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":1.04,"est":false},{"id":"CAISO-1630","q":"2019-04-15","mw":250.0,"outcome":"withdrawn","years":0.25,"est":false},{"id":"CAISO-1634","q":"2019-04-15","mw":200.0,"outcome":"withdrawn","years":0.27,"est":false},{"id":"CAISO-1650","q":"2019-04-15","mw":200.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1654","q":"2019-04-15","mw":250.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1667","q":"2019-04-15","mw":150.0,"outcome":"waiting","years":7.27,"est":false},{"id":"CAISO-1710","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.99,"est":false},{"id":"CAISO-1714","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1722","q":"2020-04-15","mw":250.0,"outcome":"withdrawn","years":0.98,"est":false},{"id":"CAISO-1729","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.07,"est":false},{"id":"CAISO-1736","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1741","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.05,"est":false},{"id":"CAISO-1742","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.96,"est":false},{"id":"CAISO-1751","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1755","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1757","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1772","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.21,"est":false},{"id":"CAISO-1774","q":"2020-04-15","mw":150.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1777","q":"2020-04-15","mw":150.0,"outcome":"withdrawn","years":0.23,"est":false},{"id":"CAISO-1779","q":"2020-04-15","mw":150.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1789","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1792","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1798","q":"2020-04-15","mw":250.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1799","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1801","q":"2020-04-15","mw":200.0,"outcome":"waiting","years":6.27,"est":false},{"id":"CAISO-1817","q":"2020-04-15","mw":200.0,"outcome":"withdrawn","years":1.07,"est":false},{"id":"CAISO-1822","q":"2020-04-15","mw":215.0,"outcome":"withdrawn","years":3.98,"est":false},{"id":"CAISO-1826","q":"2020-04-15","mw":250.0,"outcome":"withdrawn","years":0.22,"est":false},{"id":"CAISO-1844","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":3.62,"est":false},{"id":"CAISO-1848","q":"2021-04-15","mw":210.0,"outcome":"withdrawn","years":1.66,"est":false},{"id":"CAISO-1852","q":"2021-04-15","mw":225.0,"outcome":"withdrawn","years":3.27,"est":false},{"id":"CAISO-1855","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":1.67,"est":false},{"id":"CAISO-1868","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-1870","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-1916","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":2.95,"est":false},{"id":"CAISO-1934","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1935","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1937","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.66,"est":false},{"id":"CAISO-1941","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.61,"est":false},{"id":"CAISO-1945","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":1.59,"est":false},{"id":"CAISO-1956","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1958","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-1967","q":"2021-04-15","mw":189.91,"outcome":"withdrawn","years":1.7,"est":false},{"id":"CAISO-1976","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.76,"est":false},{"id":"CAISO-1984","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.63,"est":false},{"id":"CAISO-1985","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":1.63,"est":false},{"id":"CAISO-1992","q":"2021-04-15","mw":150.0,"outcome":"withdrawn","years":4.3,"est":false},{"id":"CAISO-2013","q":"2021-04-15","mw":160.0,"outcome":"withdrawn","years":4.44,"est":false},{"id":"CAISO-2017","q":"2021-04-15","mw":160.0,"outcome":"withdrawn","years":4.88,"est":false},{"id":"CAISO-2029","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2036","q":"2021-04-15","mw":250.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2047","q":"2021-04-15","mw":225.0,"outcome":"withdrawn","years":1.55,"est":false},{"id":"CAISO-2048","q":"2021-04-15","mw":280.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2061","q":"2021-04-15","mw":150.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2063","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.45,"est":false},{"id":"CAISO-2067","q":"2021-04-15","mw":250.0,"outcome":"withdrawn","years":0.32,"est":false},{"id":"CAISO-2071","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.56,"est":false},{"id":"CAISO-2080","q":"2021-04-15","mw":210.0,"outcome":"withdrawn","years":4.37,"est":false},{"id":"CAISO-2081","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2088","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.42,"est":false},{"id":"CAISO-2094","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.32,"est":false},{"id":"CAISO-2095","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.57,"est":false},{"id":"CAISO-2100","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":0.45,"est":false},{"id":"CAISO-2107","q":"2021-04-15","mw":200.0,"outcome":"withdrawn","years":1.61,"est":false},{"id":"CAISO-2140","q":"2021-04-15","mw":250.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2145","q":"2021-04-15","mw":220.0,"outcome":"withdrawn","years":5.12,"est":false},{"id":"CAISO-2161","q":"2021-04-15","mw":200.0,"outcome":"waiting","years":5.27,"est":false},{"id":"CAISO-2162","q":"2021-04-15","mw":275.0,"outcome":"withdrawn","years":4.98,"est":false},{"id":"CAISO-643AE","q":"2010-07-31","mw":150.0,"outcome":"built","years":10.37,"est":false},{"id":"CAISO-643R","q":"2010-07-31","mw":153.0,"outcome":"waiting","years":15.98,"est":false},{"id":"CAISO-643X","q":"2010-07-31","mw":200.0,"outcome":"built","years":11.62,"est":false}],"adjusted":{"leave_out":["CAISO-0900","CAISO-0972","CAISO-1260","CAISO-1593","CAISO-1596"],"realistic":1136.0106890106892,"range":[535.7591717038722,1630.0016379681006],"waiting":1735.0},"site_rows":[{"id":"CAISO-0166","status":"built","new":false,"q":"2007-01-23","years":7.8,"est":false,"mw":210.0,"types":["Solar"]},{"id":"CAISO-0194","status":"built","new":false,"q":"2007-04-05","years":7.6,"est":false,"mw":190.0,"types":["Solar"]},{"id":"CAISO-0239","status":"built","new":false,"q":"2007-07-11","years":6.6,"est":false,"mw":250.0,"types":["Solar"]},{"id":"CAISO-0242","status":"built","new":false,"q":"2007-07-13","years":7.3,"est":false,"mw":150.0,"types":["Solar"]},{"id":"CAISO-0288","status":"withdrawn","new":false,"q":"2007-12-21","years":0.4,"est":false,"mw":375.0,"types":["Solar"]},{"id":"CAISO-0300","status":"withdrawn","new":false,"q":"2008-02-04","years":3.3,"est":false,"mw":400.0,"types":["Natural Gas"]},{"id":"CAISO-0357","status":"withdrawn","new":false,"q":"2008-04-28","years":2.6,"est":false,"mw":100.0,"types":["Solar"]},{"id":"CAISO-0358","status":"withdrawn","new":false,"q":"2008-04-30","years":0.6,"est":false,"mw":100.0,"types":["Solar"]},{"id":"CAISO-0402","status":"withdrawn","new":false,"q":"2008-05-30","years":0.2,"est":false,"mw":600.0,"types":["Natural Gas"]},{"id":"CAISO-0403","status":"withdrawn","new":false,"q":"2008-05-30","years":2.5,"est":false,"mw":30.0,"types":["Solar"]},{"id":"CAISO-0404","status":"withdrawn","new":false,"q":"2008-05-30","years":0.2,"est":false,"mw":450.0,"types":["Natural Gas"]},{"id":"CAISO-0487","status":"withdrawn","new":false,"q":"2009-07-31","years":1.2,"est":false,"mw":600.0,"types":["Solar"]},{"id":"CAISO-0533","status":"withdrawn","new":false,"q":"2009-11-11","years":0.4,"est":false,"mw":20.0,"types":["Solar"]},{"id":"CAISO-0582","status":"withdrawn","new":false,"q":"2010-02-01","years":1.0,"est":false,"mw":500.0,"types":["Solar"]},{"id":"CAISO-0641","status":"withdrawn","new":false,"q":"2010-07-23","years":0.4,"est":false,"mw":11.2,"types":["Natural Gas"]},{"id":"CAISO-0654","status":"built","new":false,"q":"2010-10-25","years":4.3,"est":false,"mw":20.0,"types":["Solar"]},{"id":"CAISO-0680","status":"withdrawn","new":false,"q":"2011-03-31","years":2.1,"est":false,"mw":1000.0,"types":["Solar"]},{"id":"CAISO-0726","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":150.0,"types":["Solar"]},{"id":"CAISO-0727","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":150.0,"types":["Solar"]},{"id":"CAISO-0743","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":100.0,"types":["Solar"]},{"id":"CAISO-0748","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":20.0,"types":["Solar"]},{"id":"CAISO-0803","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":1080.0,"types":["Solar"]},{"id":"CAISO-0822","status":"withdrawn","new":false,"q":"2011-03-31","years":1.0,"est":false,"mw":110.0,"types":["Solar"]},{"id":"CAISO-0870","status":"withdrawn","new":false,"q":"2011-11-15","years":1.5,"est":false,"mw":300.0,"types":["Other"]},{"id":"CAISO-0900","status":"waiting","new":false,"q":"2012-04-02","years":null,"est":false,"mw":20.0,"types":["Battery","Solar"]},{"id":"CAISO-0901","status":"built","new":false,"q":"2012-04-02","years":4.8,"est":false,"mw":15.0,"types":["Solar"]},{"id":"CAISO-0946","status":"built","new":false,"q":"2013-04-30","years":12.0,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-0966","status":"withdrawn","new":false,"q":"2013-04-30","years":0.8,"est":false,"mw":47.82,"types":["Natural Gas"]},{"id":"CAISO-0972","status":"waiting","new":false,"q":"2013-04-30","years":null,"est":false,"mw":20.0,"types":["Battery","Solar"]},{"id":"CAISO-0995","status":"withdrawn","new":false,"q":"2013-04-30","years":0.2,"est":false,"mw":150.0,"types":["Solar"]},{"id":"CAISO-0996","status":"withdrawn","new":false,"q":"2013-04-30","years":0.2,"est":false,"mw":150.0,"types":["Solar"]},{"id":"CAISO-1000","status":"withdrawn","new":false,"q":"2013-04-30","years":1.0,"est":false,"mw":300.0,"types":["Other"]},{"id":"CAISO-1037","status":"withdrawn","new":false,"q":"2014-04-30","years":0.9,"est":false,"mw":300.0,"types":["Natural Gas"]},{"id":"CAISO-108A","status":"withdrawn","new":false,"q":"2006-06-14","years":0.4,"est":false,"mw":300.0,"types":["Solar"]},{"id":"CAISO-1161","status":"withdrawn","new":false,"q":"2015-04-30","years":0.2,"est":false,"mw":180.5,"types":["Battery","Solar"]},{"id":"CAISO-1241","status":"withdrawn","new":false,"q":"2016-05-02","years":0.9,"est":false,"mw":307.624,"types":["Solar"]},{"id":"CAISO-1258","status":"withdrawn","new":false,"q":"2016-05-02","years":0.9,"est":false,"mw":229.16,"types":["Solar"]},{"id":"CAISO-1259","status":"built","new":false,"q":"2016-05-02","years":9.0,"est":false,"mw":50.0,"types":["Solar"]},{"id":"CAISO-1260","status":"waiting","new":false,"q":"2016-05-02","years":null,"est":false,"mw":100.0,"types":["Solar"]},{"id":"CAISO-1262","status":"withdrawn","new":false,"q":"2016-05-02","years":0.9,"est":false,"mw":157.735,"types":["Solar"]},{"id":"CAISO-1394","status":"withdrawn","new":false,"q":"2017-05-01","years":9.2,"est":false,"mw":200.0,"types":["Battery","Solar"]},{"id":"CAISO-1500","status":"withdrawn","new":false,"q":"2018-04-16","years":0.9,"est":false,"mw":125.0,"types":["Battery","Solar"]},{"id":"CAISO-1501","status":"withdrawn","new":false,"q":"2018-04-16","years":1.0,"est":false,"mw":100.0,"types":["Battery"]},{"id":"CAISO-1504","status":"withdrawn","new":false,"q":"2015-04-16","years":3.9,"est":false,"mw":150.0,"types":["Battery","Solar"]},{"id":"CAISO-1591","status":"withdrawn","new":false,"q":"2019-04-15","years":4.4,"est":false,"mw":55.0,"types":["Battery","Solar"]},{"id":"CAISO-1593","status":"waiting","new":false,"q":"2019-04-15","years":null,"est":false,"mw":500.0,"types":["Battery","Solar"]},{"id":"CAISO-1594","status":"withdrawn","new":false,"q":"2019-04-15","years":3.1,"est":false,"mw":250.0,"types":["Battery","Solar"]},{"id":"CAISO-1595","status":"withdrawn","new":false,"q":"2019-04-15","years":0.9,"est":false,"mw":350.0,"types":["Solar"]},{"id":"CAISO-1596","status":"waiting","new":false,"q":"2019-04-15","years":null,"est":false,"mw":800.0,"types":["Battery","Solar"]},{"id":"CAISO-1597","status":"withdrawn","new":false,"q":"2019-04-15","years":0.9,"est":false,"mw":138.0,"types":["Solar"]},{"id":"CAISO-1600","status":"withdrawn","new":false,"q":"2019-04-15","years":0.8,"est":false,"mw":1500.0,"types":["Battery","Wind Turbine"]},{"id":"CAISO-1601","status":"withdrawn","new":false,"q":"2019-04-15","years":0.9,"est":false,"mw":200.0,"types":["Battery","Solar"]},{"id":"CAISO-1724","status":"withdrawn","new":false,"q":"2020-04-15","years":1.1,"est":false,"mw":300.0,"types":["Battery","Solar"]},{"id":"CAISO-1725","status":"withdrawn","new":false,"q":"2020-04-15","years":0.2,"est":false,"mw":300.0,"types":["Battery","Solar"]},{"id":"CAISO-1734","status":"withdrawn","new":false,"q":"2020-04-15","years":0.2,"est":false,"mw":27.0,"types":["Solar"]},{"id":"CAISO-1737","status":"withdrawn","new":false,"q":"2020-04-15","years":1.1,"est":false,"mw":350.0,"types":["Battery","Solar"]},{"id":"CAISO-1745","status":"waiting","new":false,"q":"2020-04-15","years":null,"est":false,"mw":35.0,"types":["Natural Gas"]},{"id":"CAISO-1751","status":"waiting","new":false,"q":"2020-04-15","years":null,"est":false,"mw":200.0,"types":["Battery","Solar"]},{"id":"CAISO-1949","status":"waiting","new":false,"q":"2021-04-15","years":null,"est":false,"mw":1150.0,"types":["Battery","Solar"]},{"id":"CAISO-1981","status":"withdrawn","new":false,"q":"2021-04-15","years":1.6,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-1982","status":"withdrawn","new":false,"q":"2021-04-15","years":1.6,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-1986","status":"withdrawn","new":false,"q":"2021-04-15","years":1.6,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-1987","status":"waiting","new":false,"q":"2021-04-15","years":null,"est":false,"mw":350.0,"types":["Battery","Solar"]},{"id":"CAISO-1990","status":"withdrawn","new":false,"q":"2021-04-15","years":1.7,"est":false,"mw":100.0,"types":["Battery"]},{"id":"CAISO-1991","status":"withdrawn","new":false,"q":"2021-04-15","years":1.7,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-2004","status":"withdrawn","new":false,"q":"2021-04-15","years":5.1,"est":false,"mw":400.0,"types":["Battery","Solar"]},{"id":"CAISO-2005","status":"withdrawn","new":false,"q":"2021-04-15","years":1.6,"est":false,"mw":300.0,"types":["Battery","Solar"]},{"id":"CAISO-2010","status":"withdrawn","new":false,"q":"2021-04-15","years":3.9,"est":false,"mw":115.0,"types":["Battery","Solar"]},{"id":"CAISO-2011","status":"withdrawn","new":false,"q":"2011-04-15","years":11.7,"est":false,"mw":137.85,"types":["Battery","Solar"]},{"id":"CAISO-2019","status":"withdrawn","new":false,"q":"2021-04-15","years":1.7,"est":false,"mw":352.09,"types":["Battery","Solar"]},{"id":"CAISO-2289","status":"withdrawn","new":true,"q":"2025-02-12","years":0.8,"est":false,"mw":1150.0,"types":["Battery","Solar"]},{"id":"CAISO-2300","status":"waiting","new":true,"q":"2025-02-12","years":null,"est":false,"mw":200.0,"types":["Battery","Solar"]},{"id":"CAISO-2301","status":"waiting","new":true,"q":"2025-02-12","years":null,"est":false,"mw":100.0,"types":["Battery","Solar"]},{"id":"CAISO-2326","status":"withdrawn","new":true,"q":"2025-02-12","years":0.2,"est":false,"mw":250.0,"types":["Battery"]},{"id":"CAISO-2354","status":"withdrawn","new":true,"q":"2025-02-12","years":0.8,"est":false,"mw":500.0,"types":["Battery"]},{"id":"CAISO-653EB","status":"withdrawn","new":false,"q":"2010-09-30","years":1.4,"est":false,"mw":20.0,"types":["Solar"]}]};
 </script>
 <script>
 "use strict";
@@ -462,19 +578,21 @@ const I = {
   info:'<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9v5M10 6.2v.3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
   arrow:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8m-3-3 3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   back:'<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M11 7H3m3-3L3 7l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  close:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  chat:'<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h7A2.5 2.5 0 0 1 15 4.5v5a2.5 2.5 0 0 1-2.5 2.5H8l-3.5 3v-3H5.5A2.5 2.5 0 0 1 3 9.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
   search:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
 };
 
 // Realistic MW ahead, in four plain classes.
 const BREAKS = [300, 1000, 2000];
-const CLASS_LABEL = ["under 300", "300–1,000", "1,000–2,000", "2,000+"];
+const CLASS_LABEL = ["under 300", "300\u20131,000", "1,000\u20132,000", "2,000+"];
 const classOf = v => BREAKS.filter(b => v >= b).length;
 const classVar = k => ["var(--t1)","var(--t2)","var(--t3)","var(--t5)"][k];
 const RADIUS = [4.5, 6, 7.5, 9.5];
 const onlyNew = s => s.n === 0 && s.nn > 0;
 const busierThan = v => SITES.filter(s => s.realistic < v).length;
 
-const state = { screen:"home", years:10, rung:null, view:"overview", tab:"fared",
+const state = { leftOut:new Set(), screen:"home", years:10, rung:null, view:"overview", tab:"fared",
   decisions:{}, rewritten:{}, editing:null, adjusted:false, proposal:null, log:[], final:false };
 document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
 function go(name){
@@ -495,7 +613,7 @@ const hideTip = () => { tip.hidden = true; };
 // HOME
 // ======================================================================
 const TYPES = [["Solar","Solar only"],["Solar + battery","Solar + battery"],["Battery","Battery only"],["Wind","Wind"],["Gas","Gas"]];
-const SIZES = [["Under 50 MW","small"],["50–150 MW","medium"],["150–300 MW","large"],["Over 300 MW","very large"]];
+const SIZES = [["Under 50 MW","small"],["50\u2013150 MW","medium"],["150\u2013300 MW","large"],["Over 300 MW","very large"]];
 const TERMS = {
   queue:["The queue","The waiting list every new power project joins when it asks the grid operator for permission to connect. Each request is studied before it's allowed to plug in."],
   substation:["Substation","A fenced yard of equipment where power lines meet. It's where a new solar farm, wind farm or battery physically plugs into the grid."],
@@ -588,7 +706,7 @@ function renderTry(){
       <div class="dots" role="img" aria-label="Of 100 similar projects after 10 years: ${built} built, ${gave} withdrew, ${wait} still waiting">${cells.map(c=>`<i class="${c}"></i>`).join("")}</div>
       <div><div class="big t">${built}<small> in 100</small></div>
         <p>similar projects across California were built within 10 years. ${gave} withdrew; ${wait} are still waiting.</p>
-        <p class="fine" style="margin-top:6px">Likely between ${in100(d.range[0])} and ${in100(d.range[1])} in 100 · from ${d.projects} past projects${d.wait?` · those built took about ${Math.round(d.wait)} years`:""}</p></div>
+        <p class="fine" style="margin-top:6px">Likely between ${in100(d.range[0])} and ${in100(d.range[1])} in 100 \u00b7 from ${d.projects} past projects${d.wait?` \u00b7 those built took about ${Math.round(d.wait)} years`:""}</p></div>
     </div>
     <div class="key"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--sand)"></i>withdrew</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--sky-edge)"></i>still waiting</span></div>
     <p class="fine">This is the statewide history; it varies a lot by substation. <button class="link" data-go="map">Explore the map ${I.arrow}</button></p>`;
@@ -639,7 +757,7 @@ function renderStory(){
     svg.innerHTML = html; svg.dataset.built = "1";
     svg.querySelectorAll(".col").forEach(r => {
       const y = +r.dataset.y, c = YEARS[y], n = Object.values(c).reduce((a,b)=>a+b,0);
-      r.addEventListener("pointermove", e => showTip(`<b>${y}</b> · ${n} applied<br>${c.built||0} built · ${c.gave||0} withdrew · ${(c.waiting||0)+(c.new||0)} still waiting`, e.clientX, e.clientY));
+      r.addEventListener("pointermove", e => showTip(`<b>${y}</b> \u00b7 ${n} applied<br>${c.built||0} built \u00b7 ${c.gave||0} withdrew \u00b7 ${(c.waiting||0)+(c.new||0)} still waiting`, e.clientX, e.clientY));
       r.addEventListener("pointerleave", hideTip);
     });
   }
@@ -668,13 +786,13 @@ function renderStrip(){
     <text class="lab" x="${m.l+bw+6}" y="${y(top.realistic)+4}">${esc(top.site)}: ${mw(top.realistic)} MW</text>
     <line x1="${m.l}" x2="${Wd-m.r}" y1="${y(median)}" y2="${y(median)}" stroke="var(--ink-2)" stroke-width="1"/>
     <text class="lab" x="${Wd-m.r}" y="${y(median)-8}" text-anchor="end">Half have under ${mw(median)} MW</text>
-    <text x="${m.l}" y="${Hd-6}">Busiest</text><text x="${Wd-m.r}" y="${Hd-6}" text-anchor="end">Calmest · ${sites.length} substations</text>
+    <text x="${m.l}" y="${Hd-6}">Busiest</text><text x="${Wd-m.r}" y="${Hd-6}" text-anchor="end">Calmest \u00b7 ${sites.length} substations</text>
     ${sites.map((s,i)=>`<rect class="hitbar" data-site="${esc(s.site)}" x="${(m.l+i*bw).toFixed(1)}" y="${m.t}" width="${bw.toFixed(1)}" height="${Hd-m.t-m.b}" fill="transparent" style="cursor:pointer"/>`).join("")}
   </svg>
   <p class="muted small" style="margin:10px 0 0">${quiet} of ${sites.length} substations have under 300 MW realistically ahead. Hover a bar to see which one; click to find it on the map.</p>`;
   host.querySelectorAll(".hitbar").forEach(c => {
     const s = SITES.find(q => q.site === c.dataset.site), bar = host.querySelector(`.sbar[data-site="${CSS.escape(s.site)}"]`);
-    c.addEventListener("pointermove", e => { bar.setAttribute("opacity", .6); showTip(`<b>${esc(s.site)}</b> · ${esc(s.county||"")} County<br>${mw(s.realistic)} MW realistically ahead`, e.clientX, e.clientY); });
+    c.addEventListener("pointermove", e => { bar.setAttribute("opacity", .6); showTip(`<b>${esc(s.site)}</b> \u00b7 ${esc(s.county||"")} County<br>${mw(s.realistic)} MW realistically ahead`, e.clientX, e.clientY); });
     c.addEventListener("pointerleave", () => { bar.removeAttribute("opacity"); hideTip(); });
     c.addEventListener("click", () => { hideTip(); go("map"); mapPickSite(s.site); });
   });
@@ -697,7 +815,7 @@ function initMap(){
   lmap = L.map("lmap", { zoomControl:false, attributionControl:true, minZoom:5, maxZoom:11, zoomSnap:0.25, worldCopyJump:false });
   lmap.fitBounds([[32.4,-124.5],[42,-114]], { paddingTopLeft:[innerWidth > 760 ? 400 : 0, 0] });   // a view must exist before shapes are added
   L.control.zoom({ position:"topright" }).addTo(lmap);
-  lmap.attributionControl.setPrefix(false).addAttribution("Boundaries: US Census Bureau · Substation positions: © OpenStreetMap contributors");
+  lmap.attributionControl.setPrefix(false).addAttribution("Boundaries: US Census Bureau \u00b7 Substation positions: \u00a9 OpenStreetMap contributors");
   L.geoJSON(STATES, { style: f => ({ className: "state" + (f.properties.code==="CA"?" home":""), weight:1 }), interactive:false }).addTo(lmap);
   L.geoJSON(COUNTIES, {
     style: f => ({ className: "county " + (f.properties.state==="CA"?"ca":"other"), weight:.8 }),
@@ -763,7 +881,7 @@ function renderMap(){
   requestAnimationFrame(() => { initMap(); renderPanel(); highlight(); });
 }
 function siteRow(s, extra){
-  const right = onlyNew(s) ? `<span class="v muted">—<small>only new-rules projects</small></span>` : `<span class="v t">${mw(s.realistic)} MW<small>ahead</small></span>`;
+  const right = onlyNew(s) ? `<span class="v muted">\u2014<small>only new-rules projects</small></span>` : `<span class="v t">${mw(s.realistic)} MW<small>ahead</small></span>`;
   return `<button class="row" data-site="${esc(s.site)}"><span class="nm">${esc(s.site)}<small>${extra}</small></span>${right}
     <svg class="bar" viewBox="0 0 100 8" preserveAspectRatio="none" width="100%" height="8" aria-hidden="true"><rect y="1" width="100" height="6" rx="3" fill="var(--soft)"/><rect y="1" width="${Math.max(s.realistic/MAXW*100, s.realistic>0?1.2:0)}" height="6" rx="3" fill="${classVar(classOf(s.realistic))}"/></svg></button>`;
 }
@@ -808,7 +926,7 @@ function renderPanel(){
       </div>`;
   } else {
     const s = SITES.find(q => q.site === mapState.site);
-    const where = {openstreetmap:`${s.county} County`, document:`${s.county} County · placed from a public filing`, planned:`${s.county} County · planned, not built yet`, county:`Somewhere in ${s.county} County`}[s.by];
+    const where = {openstreetmap:`${s.county} County`, document:`${s.county} County \u00b7 placed from a public filing`, planned:`${s.county} County \u00b7 planned, not built yet`, county:`Somewhere in ${s.county} County`}[s.by];
     p.innerHTML = `<div class="ph">
         <button class="link" data-back>${I.back} ${mapState.area ? (mapState.area.kind==="city" ? `Near ${esc(mapState.area.name)}` : `${esc(mapState.area.name)} County`) : "Search again"}</button>
         <div><h2>${esc(s.site)}</h2><p>${esc(where)}</p></div>
@@ -890,26 +1008,37 @@ function highlight(){
 // ======================================================================
 const usedIdx = () => state.rung ?? M.ladder.findIndex(r => r.used);
 const odds = n => M.ladder[usedIdx()].by_n[n];
-const curAhead = () => state.adjusted ? {realistic:M.adjusted.realistic, range:M.adjusted.range, waiting:M.adjusted.waiting} : {realistic:M.ahead.realistic, range:M.ahead.range, waiting:M.ahead.waiting};
+// What's realistically ahead after the projects a person has left out. The real app works this out
+// again from the data (the projects also leave the history); the prototype takes their share off.
+const afterLeaving = ids => {
+  const set = new Set(ids);
+  if (!set.size) return { realistic:M.ahead.realistic, range:M.ahead.range, waiting:M.ahead.waiting };
+  if (set.size === M.adjusted.leave_out.length && M.adjusted.leave_out.every(i => set.has(i))) return { realistic:M.adjusted.realistic, range:M.adjusted.range, waiting:M.adjusted.waiting };
+  const gone = M.ahead.projects.filter(p => set.has(p.id)), cut = gone.reduce((t,p)=>t+p.mw*p.chance,0), k = (M.ahead.realistic-cut)/M.ahead.realistic;
+  return { realistic:M.ahead.realistic-cut, range:[M.ahead.range[0]*k, M.ahead.range[1]*k], waiting:M.ahead.waiting-gone.reduce((t,p)=>t+p.mw,0) };
+};
+const curAhead = () => afterLeaving([...state.leftOut]);
 const typeName = t => { const s = new Set(t); if (s.has("Solar") && s.has("Battery") && s.size===2) return "Solar + battery"; if (s.size===1) return {"Natural Gas":"Gas","Wind Turbine":"Wind"}[t[0]] || t[0]; return t.join(" + "); };
-const plainGroup = r => r.desc.replace("Solar + battery","solar + battery projects").replace("All projects","all projects").replace(", 150-300 MW"," of 150–300 MW").replace(/, /," ");
+const plainGroup = r => r.desc.replace("Solar + battery","solar + battery projects").replace("All projects","all projects").replace(", 150-300 MW"," of 150\u2013300 MW").replace(/, /," ");
 
 function renderSite(){
   const el = $("#s-site");
-  const toReview = claims().filter(c => c.kind==="judgement" && !state.decisions[c.id]).length;
+  const toReview = claims().filter(c => c.kind==="opinion" && !state.decisions[c.id]).length;
   el.innerHTML = `<div class="page">
     <button class="link back" data-go="map">${I.back} All substations</button>
     <div class="head">
-      <div><h1>Midway</h1><div class="sub">Substation in Kern County · ${M.places.map(p=>p.kv).join(", ").replace(/, (\d+)$/," and $1")} kV</div></div>
+      <div><h1>Midway</h1><div class="sub">Substation in Kern County \u00b7 ${M.places.map(p=>p.kv).join(", ").replace(/, (\d+)$/," and $1")} kV</div></div>
       <div class="views" role="tablist" aria-label="View">
         <button role="tab" data-view="overview" aria-selected="${state.view==="overview"}">The odds</button>
+        <button role="tab" data-view="ask" aria-selected="${state.view==="ask"}">${I.chat} Ask</button>
         <button role="tab" data-view="writeup" aria-selected="${state.view==="writeup"}">Write-up ${toReview&&!state.final?`<span class="badge">${toReview} to review</span>`:""}</button>
       </div>
     </div>
-    <div id="view">${state.view==="overview" ? overview() : writeup()}</div>
+    <div id="view">${state.view==="overview" ? overview() : state.view==="ask" ? askView() : writeup()}</div>
   </div>`;
   if (state.view==="overview") { drawTab(); }
   wire();
+  if (state.view==="ask") wireAskView(el);
 }
 
 function overview(){
@@ -932,6 +1061,7 @@ function overview(){
         <div class="key"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--sand)"></i>withdrew</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--sky-edge)"></i>still waiting</span></div>
         <span class="range">Likely somewhere between ${in100(o.range[0])} and ${in100(o.range[1])} in 100.</span>
         <div class="years" role="group" aria-label="Within how many years">${[3,5,7,10].map(k=>`<button data-n="${k}" aria-pressed="${k===n}">${k} yrs</button>`).join("")}</div>`}
+        <div class="followups"><button data-open-ask="How many projects have withdrawn at Midway?">${I.chat} Ask: How many projects have withdrawn at Midway?</button></div>
         <div class="foot"><span>${o.projects} past projects</span><button class="link" data-why="chance">How we know ${I.arrow}</button></div>
       </article>
 
@@ -941,6 +1071,7 @@ function overview(){
         <p class="says">is typical, from applying to running, for the projects that did get built.</p>
         ${waitScale(o)}
         <span class="range">Likely between ${Math.round(o.wait_range[0])} and ${Math.round(o.wait_range[1])} years.</span>
+        <div class="followups"><button data-open-ask="How long did battery projects wait here?">${I.chat} Ask: How long did battery projects wait here?</button></div>
         <div class="foot"><span>${o.built} built projects</span><button class="link" data-why="wait">How we know ${I.arrow}</button></div>
       </article>
 
@@ -951,6 +1082,7 @@ function overview(){
         ${crowdBar(a)}
         <span class="range">Likely between ${mw(a.range[0])} and ${mw(a.range[1])} MW, out of ${mw(a.waiting)} MW waiting.</span>
         <div class="note">${I.info}<span>Another <b>${mw(M.ahead.new)} MW</b> applied under 2023's new rules. It's too soon to know how much of it will be built, so it isn't counted above.</span></div>
+        <div class="followups"><button data-open-ask="Which waiting projects have been in line longest?">${I.chat} Ask: Which waiting projects have been in line longest?</button></div>
         <div class="foot"><span>${M.ahead.projects.length + M.ahead.new_projects.length} waiting projects</span><button class="link" data-why="ahead">How we know ${I.arrow}</button></div>
       </article>
     </div>
@@ -1017,25 +1149,25 @@ function curve(){
     <text x="${(m.l+Wd-m.r)/2}" y="${Hd-2}" text-anchor="middle">years after applying</text>
     <line x1="${x(n)}" x2="${x(n)}" y1="${m.t}" y2="${y(0)}" stroke="var(--ink)" stroke-width="1.2"/>
     <text class="strong" x="${x(n)+6}" y="${m.t+14}">year ${n}: ${in100(nd.built)} built</text>
-    <text class="strong" x="${Wd-m.r+10}" y="${y((1+wTop(last))/2)+4}">Withdrew · ${in100(last.withdrawn)}</text>
-    <text class="strong" x="${Wd-m.r+10}" y="${y((wTop(last)+last.built)/2)+4}">Waiting · ${in100(1-last.withdrawn-last.built)}</text>
-    <text class="strong" x="${Wd-m.r+10}" y="${y(last.built/2)+4}">Built · ${in100(last.built)}</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y((1+wTop(last))/2)+4}">Withdrew \u00b7 ${in100(last.withdrawn)}</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y((wTop(last)+last.built)/2)+4}">Waiting \u00b7 ${in100(1-last.withdrawn-last.built)}</text>
+    <text class="strong" x="${Wd-m.r+10}" y="${y(last.built/2)+4}">Built \u00b7 ${in100(last.built)}</text>
     <line id="xh" y1="${m.t}" y2="${y(0)}" stroke="var(--ink-2)" opacity="0"/>
     <rect id="hit" x="${m.l}" y="${m.t}" width="${Wd-m.l-m.r}" height="${Hd-m.t-m.b}" fill="transparent"/>
   </svg>
-  <div class="key" style="margin-top:8px"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--band);box-shadow:inset 0 0 0 1px var(--t3)"></i>likely range of built</span><span><i style="background:var(--sky)"></i>still waiting</span><span><i style="background:var(--sand)"></i>withdrew</span><span>· per 100 projects</span></div>`;
+  <div class="key" style="margin-top:8px"><span><i style="background:var(--t3)"></i>built</span><span><i style="background:var(--band);box-shadow:inset 0 0 0 1px var(--t3)"></i>likely range of built</span><span><i style="background:var(--sky)"></i>still waiting</span><span><i style="background:var(--sand)"></i>withdrew</span><span>\u00b7 per 100 projects</span></div>`;
   const svg = host.querySelector("svg"), xh = $("#xh",host);
   $("#hit",host).addEventListener("pointermove", e => {
     const r = svg.getBoundingClientRect(), vx = (e.clientX - r.left) * (Wd / r.width);
     const yv = Math.max(0, Math.min(maxY, (vx - m.l) / (Wd-m.l-m.r) * maxY));
     const d = data.reduce((b,q)=>Math.abs(q.y-yv)<Math.abs(b.y-yv)?q:b, data[0]);
     xh.setAttribute("x1", x(d.y)); xh.setAttribute("x2", x(d.y)); xh.setAttribute("opacity", 1);
-    showTip(`<span class="dim">${d.y} years after applying, of 100</span><br><b>${in100(d.built)}</b> built <span class="dim">(likely ${in100(d.lo)}–${in100(d.hi)})</span><br><b>${in100(1-d.withdrawn-d.built)}</b> still waiting<br><b>${in100(d.withdrawn)}</b> withdrew`, e.clientX, e.clientY);
+    showTip(`<span class="dim">${d.y} years after applying, of 100</span><br><b>${in100(d.built)}</b> built <span class="dim">(likely ${in100(d.lo)}\u2013${in100(d.hi)})</span><br><b>${in100(1-d.withdrawn-d.built)}</b> still waiting<br><b>${in100(d.withdrawn)}</b> withdrew`, e.clientX, e.clientY);
   });
   $("#hit",host).addEventListener("pointerleave", () => { xh.setAttribute("opacity",0); hideTip(); });
 }
 function aheadTab(){
-  const out = new Set(state.adjusted ? M.adjusted.leave_out : []);
+  const out = state.leftOut;
   const all = [...M.ahead.projects, ...M.ahead.new_projects], max = Math.max(...all.map(p=>p.mw));
   const w = 260, sc = v => v/max*w;
   const step = s => ({"Agreement signed":"has signed its agreement","Second study done":"finished its second study","First study done":"finished its first study"}[s] || "hasn't been studied yet");
@@ -1044,9 +1176,9 @@ function aheadTab(){
     const bar = `<svg class="viz" width="100%" height="16" viewBox="0 0 ${w} 16" style="max-width:${w}px" aria-hidden="true">
       <rect x="0" y="3" width="${sc(p.mw)}" height="10" rx="5" fill="${isNew?"var(--lav-wash)":"var(--soft)"}" stroke="${isNew?"var(--lav)":"var(--rule-2)"}"/>
       ${isNew||isOut?"":`<rect x="0" y="3" width="${sc(p.mw*p.chance)}" height="10" rx="5" fill="var(--t3)"/>`}</svg>`;
-    const counts = isOut ? `<b>—</b><span>left out by you</span>` : isNew ? `<b class="t" style="color:var(--lav-ink)">?</b><span>odds unknown</span>` : `<b class="t">${mw(p.mw*p.chance)} MW</b><span>${pct(p.chance)} likely to be built</span>`;
+    const counts = isOut ? `<b>\u2014</b><span>left out by you</span>` : isNew ? `<b class="t" style="color:var(--lav-ink)">?</b><span>odds unknown</span>` : `<b class="t">${mw(p.mw*p.chance)} MW</b><span>${pct(p.chance)} likely to be built</span>`;
     return `<div class="prow${isOut?" out":""}">
-      <div class="who"><b>${mw(p.mw)} MW ${esc(typeName(p.types).toLowerCase())}</b><span>Applied ${p.q.slice(0,4)}, ${step(p.step)}${p.line?" · on a line, counts at both ends":""}</span></div>
+      <div class="who"><b>${mw(p.mw)} MW ${esc(typeName(p.types).toLowerCase())}</b><span>Applied ${p.q.slice(0,4)}, ${step(p.step)}${p.line?" \u00b7 on a line, counts at both ends":""}</span></div>
       ${bar}<div class="counts">${counts}</div></div>`;
   };
   const a = curAhead();
@@ -1066,8 +1198,8 @@ function gridTab(){
   const costed = bn.filter(b => b.perkw != null).map(b => b.perkw);
   return `<div class="twin">
     <div><h3>Planned grid upgrades</h3><p class="lead">Approved by the grid operator, paid for by all electricity customers.</p>
-      ${ups.map(u=>`<div class="item"><b class="yr t">${u.year}</b><div><div class="nm">${esc(u.name)}</div><div class="s">${u.lo!=null?`About $${u.lo}–${u.hi} million`:"Cost not published"} · ${esc(u.utility)}</div></div></div>`).join("")}</div>
-    <div><h3>Bottlenecks nearby</h3><p class="lead">${full} of the ${bn.length} lines and transformers Midway sits behind have no room left${costed.length?`. Adding room costs about <b>$${Math.round(Math.min(...costed))}–${Math.round(Math.max(...costed))} per kW</b>`:""}.</p>
+      ${ups.map(u=>`<div class="item"><b class="yr t">${u.year}</b><div><div class="nm">${esc(u.name)}</div><div class="s">${u.lo!=null?`About $${u.lo}\u2013${u.hi} million`:"Cost not published"} \u00b7 ${esc(u.utility)}</div></div></div>`).join("")}</div>
+    <div><h3>Bottlenecks nearby</h3><p class="lead">${full} of the ${bn.length} lines and transformers Midway sits behind have no room left${costed.length?`. Adding room costs about <b>$${Math.round(Math.min(...costed))}\u2013${Math.round(Math.max(...costed))} per kW</b>`:""}.</p>
       ${bn.sort((a,b)=>(a.room??1e9)-(b.room??1e9)).map(b=>`<div class="item" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="nm">${esc(b.bottleneck)}</div><div class="s">${b.room===0?"Full":b.room==null?"Room not listed":`${mw(b.room)} MW of room left`}</div></div><div class="t" style="text-align:right;font-weight:650">${b.perkw!=null?`$${Math.round(b.perkw)}/kW`:`<span class="faint" style="font-weight:400">not costed</span>`}</div></div>`).join("")}
     </div></div>
     <p class="boxnote">Costs are the operator's estimates in 2022 dollars. Neither box changes the odds above; they're here so you can see what's coming.</p>`;
@@ -1075,7 +1207,7 @@ function gridTab(){
 function comparedTab(){
   const n = state.years, used = usedIdx();
   const label = r => ({"voltage section":"Midway 230 kV only","site":"All of Midway","bottleneck area":`Behind ${r.area}`,"county":`${r.area} County`,"California":"Across California"}[r.kind]);
-  const typeLine = r => r.desc.split(",").slice(0,-1).join(",").replace("150-300","150–300");
+  const typeLine = r => r.desc.split(",").slice(0,-1).join(",").replace("150-300","150\u2013300");
   return `<h3>Who we compared with</h3>
     <p class="lead">We start with projects as close to yours as possible and widen the circle until there are enough to trust: at least 30 that finished one way or the other, and 10 that were built.</p>
     <div class="steps">${M.ladder.map((r,i) => {
@@ -1083,9 +1215,9 @@ function comparedTab(){
       const prog = Math.min(1, r.resolved/30), w = 160;
       return `<div class="step${r.enough?" ok":""}${i===used?" used":""}">
         <span class="dot" aria-hidden="true"></span>
-        <div class="what"><b>${esc(label(r))}</b><span>${esc(typeLine(r))} · ${r.resolved} finished, ${r.built} built</span></div>
+        <div class="what"><b>${esc(label(r))}</b><span>${esc(typeLine(r))} \u00b7 ${r.resolved} finished, ${r.built} built</span></div>
         <svg class="viz" width="100%" height="10" viewBox="0 0 ${w} 10" style="max-width:${w}px" aria-hidden="true"><rect y="2" width="${w}" height="6" rx="3" fill="var(--soft)"/><rect y="2" width="${prog*w}" height="6" rx="3" fill="${r.enough?"var(--t2)":"var(--rule-2)"}"/></svg>
-        <div class="fig">${i===used ? `${in100(est.chance)} in 100<span>in use</span>` : est ? `<button class="btn sm" data-rung="${i}">Use · ${in100(est.chance)} in 100</button>` : `<span style="font-weight:400;color:var(--muted)">too few</span>`}</div>
+        <div class="fig">${i===used ? `${in100(est.chance)} in 100<span>in use</span>` : est ? `<button class="btn sm" data-rung="${i}">Use \u00b7 ${in100(est.chance)} in 100</button>` : `<span style="font-weight:400;color:var(--muted)">too few</span>`}</div>
       </div>`;}).join("")}</div>
     <p class="boxnote">"In 100" is the chance of being built within ${n} years. The bar shows how close each group comes to having enough finished projects.</p>`;
 }
@@ -1094,15 +1226,16 @@ function comparedTab(){
 function claims(){
   const o10 = M.ladder[M.ladder.findIndex(r=>r.used)].by_n[10], a = curAhead();
   return [
-    {id:"f1", kind:"fact", parts:["Of ", {v:o10.projects,u:"",k:"chance"}, " past solar + battery projects of 150–300 MW across California, ", {v:o10.built,u:"",k:"chance"}, " were built, ", {v:o10.withdrawn,u:"",k:"chance"}, " withdrew and ", {v:o10.waiting,u:"",k:"chance"}, " are still waiting."]},
+    {id:"f1", kind:"fact", parts:["Of ", {v:o10.projects,u:"",k:"chance"}, " past solar + battery projects of 150\u2013300 MW across California, ", {v:o10.built,u:"",k:"chance"}, " were built, ", {v:o10.withdrawn,u:"",k:"chance"}, " withdrew and ", {v:o10.waiting,u:"",k:"chance"}, " are still waiting."]},
     {id:"f2", kind:"fact", parts:["Projects like this one had a ", {v:o10.chance,u:"%",k:"chance"}, " chance of being built within 10 years, likely between ", {v:o10.range[0],u:"%",k:"chance"}, " and ", {v:o10.range[1],u:"%",k:"chance"}, "."]},
     {id:"f3", kind:"fact", parts:["About ", {v:a.realistic,u:"MW",k:"ahead"}, " of projects are realistically ahead at Midway, out of ", {v:a.waiting,u:"MW",k:"ahead"}, " waiting."]},
     {id:"f4", kind:"fact", parts:["Another ", {v:M.ahead.new,u:"MW",k:"ahead"}, " applied under 2023's new rules; its odds aren't known yet."]},
     {id:"j1", kind:"opinion", text:"Midway, its bottlenecks and Kern County each have too few past projects, so the California-wide figure is the best guide available. Conditions at Midway may differ."},
     {id:"j2", kind:"opinion", text:"Most of the MW ahead comes from two large projects that signed agreements in 2019 and 2021. If either stalls, the line ahead is much shorter than it looks."},
+    ...chat.extra,
   ];
 }
-const val = (v,u) => u==="%" ? pct(v) : u==="MW" ? mw(v)+" MW" : v.toLocaleString("en-US");
+const val = (v,u) => u==="%" ? pct(v) : u==="MW" ? mw(v)+" MW" : u==="years" ? yrs(v)+" years" : v.toLocaleString("en-US");
 function writeup(){
   const cl = claims(), ops = cl.filter(c=>c.kind==="opinion"), decided = ops.filter(j=>state.decisions[j.id]).length, left = ops.length - decided;
   return `<div class="writeup">
@@ -1113,8 +1246,8 @@ function writeup(){
         ${state.final ? `${I.check}<span><b>Final.</b> Every point has been reviewed.</span>` : left ? `${I.ask}<span><b>${left} point${left===1?"":"s"} need${left===1?"s":""} your review.</b> Facts are checked by code; opinions need a person.</span>` : `${I.check}<span><b>All reviewed.</b> You can finalise it.</span>`}
         <div class="bar" aria-hidden="true">${cl.map(c=>`<i style="flex:1;background:${c.kind==="fact"||state.decisions[c.id]&&state.decisions[c.id]!=="rejected"?"var(--ok-mark)":state.decisions[c.id]==="rejected"?"var(--no-mark)":"var(--ask-mark)"}"></i>`).join("")}</div>
       </div>
-      ${cl.map(c => c.kind==="fact" ? `<div class="stmt"><span>${I.check}</span><div><p>${c.parts.map(p=>typeof p==="string"?esc(p):`<button class="num t" data-why="${p.k}" title="See where this comes from">${val(p.v,p.u)}</button>`).join("")}</p>
-          <div class="meta"><span class="ok">Fact · checked against the data</span>${state.adjusted&&c.id==="f3"?`<span class="pill out">updated after your change</span>`:""}</div></div></div>` : opinion(c)).join("")}
+      ${cl.map(c => c.kind==="fact" ? `<div class="stmt"><span>${I.check}</span><div><p>${c.html ? c.html : c.parts.map(p=>typeof p==="string"?esc(p):`<button class="num t" data-why="${p.k}" title="See where this comes from">${val(p.v,p.u)}</button>`).join("")}</p>
+          <div class="meta"><span class="ok">Fact \u00b7 checked against the data</span>${c.html?`<span class="pill">from your question</span>`:""}${state.leftOut.size&&c.id==="f3"?`<span class="pill out">updated after your change</span>`:""}</div></div></div>` : opinion(c)).join("")}
       <div style="display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap">
         <button class="btn p" id="finalise" ${!left&&!state.final?"":"disabled"}>${state.final?"Finalised":"Finalise"}</button>
         <span class="muted small">${state.final?"No more changes can be made.":left?`Review the ${left} remaining opinion${left===1?"":"s"} first.`:"Ready."}</span>
@@ -1122,11 +1255,9 @@ function writeup(){
     </article>
     <div class="side-cards">
       <section class="c" aria-labelledby="h-ask">
-        <h3 id="h-ask">Ask or request a change</h3>
-        ${state.proposal ? proposal() : `
-          <div class="ask-in"><input id="ask-in" placeholder="Ask anything about Midway" aria-label="Ask about Midway" ${state.final?"disabled":""}><button class="btn p sm" id="ask-go" ${state.final?"disabled":""}>Ask</button></div>
-          <div class="suggest">${["Ignore projects stuck since 2019","How long do batteries wait here?"].map(s=>`<button data-suggest="${esc(s)}" ${state.final?"disabled":""}>${esc(s)}</button>`).join("")}</div>
-          <p class="faint small" style="margin:0">If you ask to leave projects out, you'll see exactly what would change before anything does.</p>`}
+        <h3 id="h-ask">Questions and changes</h3>
+        <p class="small muted" style="margin:0">Ask about Midway in plain words. Answers are checked before you see them, and you choose which ones join the write-up. Changes to what's counted wait for you to confirm.</p>
+        <button class="btn p sm" style="justify-self:start" data-open-ask ${state.final?"disabled":""}>${I.chat} Open Ask</button>
       </section>
       <section class="c" aria-labelledby="h-log">
         <h3 id="h-log">History</h3>
@@ -1138,7 +1269,7 @@ function writeup(){
 function opinion(j){
   const d = state.decisions[j.id], text = state.rewritten[j.id] || j.text;
   const icon = d==="rejected" ? I.no : d ? I.check : I.ask;
-  const status = d==="approved" ? `<span class="ok">You agreed</span>` : d==="rejected" ? `<span class="no">You disagreed; it won't be shown</span>` : d==="rewritten" ? `<span class="ok">Reworded by you</span>` : `<span class="ask">Opinion · do you agree?</span>`;
+  const status = d==="approved" ? `<span class="ok">You agreed</span>` : d==="rejected" ? `<span class="no">You disagreed; it won't be shown</span>` : d==="rewritten" ? `<span class="ok">Reworded by you</span>` : `<span class="ask">Opinion \u00b7 do you agree?</span>`;
   return `<div class="stmt opinion${d?" done":""}${d==="rejected"?" rejected":""}"><span>${icon}</span><div>
     ${state.editing===j.id ? `<label class="small muted" for="rw">Say it your way</label><textarea id="rw">${esc(text)}</textarea>
       <div class="choices"><button class="btn p sm" data-save="${j.id}">Save</button><button class="btn q sm" data-cancel>Cancel</button></div>`
@@ -1152,7 +1283,7 @@ function proposal(){
     <b>Here's what that would change</b>
     <span class="small">Leave out ${ps.length} projects still waiting that applied in 2019 or earlier:</span>
     <ul>${ps.map(p=>`<li>${mw(p.mw)} MW ${esc(typeName(p.types).toLowerCase())}, applied ${p.q.slice(0,4)}</li>`).join("")}</ul>
-    <div class="change">Realistically ahead: <s class="t">${mw(M.ahead.realistic)} MW</s> → <b class="t">${mw(M.adjusted.realistic)} MW</b></div>
+    <div class="change">Realistically ahead: <s class="t">${mw(M.ahead.realistic)} MW</s> \u2192 <b class="t">${mw(M.adjusted.realistic)} MW</b></div>
     <span class="small muted">Numbers are recalculated and checked again. Opinions that rest on them come back for review.</span>
     <div style="display:flex;gap:8px"><button class="btn p sm" id="apply">Make this change</button><button class="btn q sm" id="discard">Never mind</button></div>
   </div>`;
@@ -1166,6 +1297,8 @@ function wire(){
   el.querySelectorAll(".basis [data-tab]").forEach(b => b.addEventListener("click", () => { state.tab = b.dataset.tab; renderSite(); $(".deeper").scrollIntoView({behavior:"smooth"}); }));
   el.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { state.years = +b.dataset.n; renderSite(); }));
   el.querySelectorAll(".answers [data-why], .doc-card [data-why]").forEach(b => b.addEventListener("click", () => why(b.dataset.why, b)));
+  el.querySelectorAll("[data-open-ask]").forEach(b => b.addEventListener("click", () => { state.view = "ask"; window.scrollTo(0,0); b.dataset.openAsk ? send(b.dataset.openAsk) : renderSite(); }));
+  el.querySelectorAll(".doc-card [data-rows-key]").forEach(b => b.addEventListener("click", () => { const m = chat.msgs.slice().reverse().find(x => x.rowsKeys && x.rowsKeys[b.dataset.rowsKey]); m && rowsDrawer(m.rowsKeys[b.dataset.rowsKey], b); }));
   el.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => { state.decisions[b.dataset.j] = b.dataset.dec; state.log.push({t:now(), w:`You ${b.dataset.dec==="approved"?"agreed with":"disagreed with"} an opinion`}); renderSite(); }));
   el.querySelectorAll("[data-undo]").forEach(b => b.addEventListener("click", () => { delete state.decisions[b.dataset.undo]; renderSite(); }));
   el.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => { state.editing = b.dataset.edit; renderSite(); $("#rw").focus(); }));
@@ -1175,7 +1308,7 @@ function wire(){
   $("#ask-go") && $("#ask-go").addEventListener("click", ask);
   $("#ask-in") && $("#ask-in").addEventListener("keydown", e => { if (e.key==="Enter") ask(); });
   el.querySelectorAll("[data-suggest]").forEach(b => b.addEventListener("click", () => { $("#ask-in").value = b.dataset.suggest; ask(); }));
-  $("#apply") && $("#apply").addEventListener("click", () => { const y = state.proposal; state.adjusted = true; state.proposal = null; delete state.decisions.j2;
+  $("#apply") && $("#apply").addEventListener("click", () => { const y = state.proposal; M.adjusted.leave_out.forEach(id => state.leftOut.add(id)); state.proposal = null; delete state.decisions.j2;
     state.log.push({t:now(), w:`You left out ${M.adjusted.leave_out.length} projects. Realistically ahead went from ${mw(M.ahead.realistic)} to ${mw(M.adjusted.realistic)} MW, checked again. One opinion came back for review.`, y}); renderSite(); });
   $("#discard") && $("#discard").addEventListener("click", () => { state.proposal = null; renderSite(); });
   $("#finalise") && $("#finalise").addEventListener("click", () => { state.final = true; state.log.push({t:now(), w:"You finalised the write-up"}); renderSite(); });
@@ -1204,7 +1337,7 @@ function why(kind, from){
   }
   $("#drawer-root").innerHTML = `<div class="scrim" data-close></div>
   <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h">
-    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${title}</h2></div><button class="btn q sm" data-close aria-label="Close">✕</button></header>
+    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${title}</h2></div><button class="btn q sm" data-close aria-label="Close">${I.close}</button></header>
     <div class="body">
       <p style="margin:0;color:var(--ink-2)">${say}</p>
       ${tally}
@@ -1220,6 +1353,366 @@ function escWhy(e){ if (e.key === "Escape") closeWhy(); }
 function closeWhy(){ $("#drawer-root").innerHTML = ""; document.removeEventListener("keydown", escWhy); lastFocus && lastFocus.focus && lastFocus.focus(); }
 
 // ======================================================================
+// ASK: a workspace for one substation and one project
+// ======================================================================
+// Left: the data you can point at. Right: the conversation. In the real app every reply comes
+// from the agent's lookups and is checked by code before it's shown; here the replies are
+// scripted from Midway's real rows so the flow can be tried.
+const chat = { msgs:[], busy:null, left:10, extra:[], nextFact:5, nextOp:3, refs:[], selected:new Set(), draft:"", ctxOpen:false, changes:[] };
+const OLD = () => M.site_rows.filter(r => !r.new);
+const hasBattery = r => r.types.includes("Battery");
+const median = xs => { const s = xs.slice().sort((a,b)=>a-b), n = s.length; return n ? (n%2 ? s[(n-1)/2] : (s[n/2-1]+s[n/2])/2) : null; };
+const TOOL = { list:"Listed projects at Midway", chance:"Worked out the chance of being built", ahead:"Worked out the MW realistically ahead", propose:"Drafted a change for you to confirm" };
+const QUESTIONS = ["How many projects have withdrawn at Midway?","How long did battery projects wait here?","Which waiting projects have been in line longest?"];
+const ALL_WAITING = () => [...M.ahead.projects, ...M.ahead.new_projects];
+const projById = id => ALL_WAITING().find(p => p.id === id);
+const shortType = p => typeName(p.types).toLowerCase();
+const keyNumbers = () => { const n = state.years, o = odds(n), a = curAhead(); return [
+  { key:"chance", label:`Chance of being built within ${n} years`, short:`${in100(o.chance)} in 100 built within ${n} years`, html:`${in100(o.chance)}<small>in 100</small>` },
+  { key:"wait", label:"Typical wait, if built", short:`about ${Math.round(o.wait)} years to be built`, html:`${Math.round(o.wait)}<small>years</small>` },
+  { key:"ahead", label:"Realistically ahead", short:`${mw(a.realistic)} MW realistically ahead`, html:`${mw(a.realistic)}<small>MW</small>` },
+  { key:"new", label:"New-rules projects waiting", short:`${mw(M.ahead.new)} MW of new-rules projects`, html:`${mw(M.ahead.new)}<small>MW \u00b7 odds unknown</small>` },
+]; };
+
+// ---------- the workspace ----------
+function askView(){ return `<div class="ws">${ctxPane()}<section class="conv" aria-label="Conversation">${convBody()}${composer()}</section></div>`; }
+
+function ctxPane(){
+  const rung = M.ladder[usedIdx()], out = state.leftOut;
+  const sel = [...chat.selected];
+  return `<aside class="ctx-pane${chat.ctxOpen?"":" closed"}" aria-label="What we're looking at">
+    <button class="ctx-toggle" id="ctx-toggle" aria-expanded="${chat.ctxOpen}">What we're looking at <span>${chat.ctxOpen?"Hide":"Show"}</span></button>
+    <p class="intro">Point at anything here to ask about it or change it.</p>
+    <div class="ctx-sec"><h3>Project</h3><div class="ctx-proj">200 MW solar + battery at Midway 230 kV</div><div class="muted small">Data of ${dateLong(M.as_of)}</div></div>
+    <div class="ctx-sec"><h3>Key numbers</h3>
+      ${keyNumbers().map(k=>`<div class="knum"><span class="k">${esc(k.label)}</span><span class="v t">${k.html}</span>
+        <span class="acts"><button class="mini" data-explain="${k.key}">Explain</button><button class="mini" data-ref-num="${k.key}">Ask about</button></span></div>`).join("")}
+    </div>
+    <div class="ctx-sec"><h3>Compared with <button class="link" data-qa="compare">Change</button></h3>
+      <div class="cgroup"><b>${odds(state.years).projects} past ${esc(plainGroup(rung))}</b></div>
+      <div class="muted small" style="margin-top:4px">Midway itself has too few past projects to go on.</div></div>
+    <div class="ctx-sec"><h3>Projects waiting here <span class="t">${ALL_WAITING().length}</span></h3>
+      <div class="plist2">${ALL_WAITING().slice().sort((a,b)=>(b.chance==null)-(a.chance==null) || b.mw*(b.chance||0)-a.mw*(a.chance||0)).map(p => {
+        const isOut = out.has(p.id), on = chat.selected.has(p.id);
+        return `<label class="pick${on?" on":""}${isOut?" out":""}"><input type="checkbox" data-sel="${esc(p.id)}" ${on?"checked":""} ${isOut?"disabled":""}>
+          <span><b>${mw(p.mw)} MW ${esc(shortType(p))}</b><small><span class="mono">${esc(p.id)}</span> \u00b7 applied ${p.q.slice(0,4)}</small></span>
+          <span class="c">${isOut ? `<small>left out</small>` : p.chance==null ? `<small style="color:var(--lav-ink)">odds unknown</small>` : `${mw(p.mw*p.chance)}<small> MW</small>`}</span></label>`; }).join("")}</div>
+      <p class="faint small" style="margin:8px 0 0">Right column: how many of its MW count as realistically ahead.</p>
+    </div>
+    ${chat.changes.length ? `<div class="ctx-sec"><h3>Changes made</h3>${chat.changes.map(c=>`<div class="small" style="display:flex;gap:6px;margin-bottom:6px">${I.check.replace('width="20" height="20"','width="16" height="16"')}<span>${esc(c)}</span></div>`).join("")}</div>` : ""}
+    ${sel.length ? `<div class="selbar"><b>${sel.length} selected</b><button class="mini" data-sel-ask>Ask about ${sel.length===1?"it":"these"}</button><button class="mini p" data-sel-leave>Leave ${sel.length===1?"it":"these"} out\u2026</button><button class="link" data-sel-clear style="font-size:12.5px">Clear</button></div>` : ""}
+  </aside>`;
+}
+function convBody(){
+  return `<div class="conv-body" id="conv-body" aria-live="polite">${chat.msgs.length ? chat.msgs.map(msgHtml).join("") : caps()}${chat.busy ? working() : ""}</div>`;
+}
+function caps(){
+  const k = keyNumbers();
+  const card = (ic, h, p, ex) => `<div class="cap"><div class="h"><span class="ic">${ic}</span>${h}</div><p>${p}</p><div class="ex">${ex}</div></div>`;
+  return `<div class="caps">
+    <h2>What the assistant can do here</h2>
+    <p>It works only from the grid operator's queue data, for Midway and projects like this one. Every number it gives you is recalculated by code before you see it.</p>
+    <div class="capgrid">
+      ${card(I.chat, "Answer questions", "About past and waiting projects at Midway, and the odds for projects like this one.", QUESTIONS.slice(0,2).map(q=>`<button data-q="${esc(q)}">\u201c${esc(q)}\u201d</button>`).join(""))}
+      ${card(I.search, "Explain a number", "How any number on the page was worked out, and the exact rows behind it.", [k[0],k[2]].map(x=>`<button data-explain="${x.key}">Explain the ${esc(x.short)}</button>`).join(""))}
+      ${card(`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h10M3 11h10M6 2.5 3 5l3 2.5M10 8.5l3 2.5-3 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`, "Change what's counted", "Leave projects out, or compare with a different group. You see the effect first; nothing changes until you confirm.", `<button data-qa="leave">Leave some projects out</button><button data-qa="compare">Compare with a different group</button>`)}
+      ${card(`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h6l3 3v9H4z M10 2v3h3 M6 9h5 M6 12h3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`, "Build the write-up", "Keep the answers you want. They join the write-up as checked facts; any opinion waits for your review.", `<button data-view-go="writeup">Open the write-up</button>`)}
+    </div>
+    <div class="cant-list"><b>It can't</b> say what a project would pay to connect, describe what the power lines can carry, compare Midway with other substations, or forecast beyond what past projects show. If you ask, it will say so and point you to what might help.</div>
+  </div>`;
+}
+function composer(){
+  const dis = chat.left<=0 || state.final || chat.busy ? "disabled" : "";
+  return `<div class="composer">
+    <div class="qa" role="group" aria-label="Guided actions">
+      <button data-qa="explain" ${dis}>${I.search} Explain a number</button>
+      <button data-qa="leave" ${dis}>Leave projects out</button>
+      <button data-qa="compare" ${dis}>Compare differently</button>
+    </div>
+    <div class="box">
+      ${chat.refs.length ? `<div class="chips-sm" style="gap:4px">${chat.refs.map((r,i)=>`<span class="ref">${esc(r.label)}<button data-unref="${i}" aria-label="Remove ${esc(r.label)}">${I.close.replace(/width="\d+" height="\d+"/,'width="12" height="12"')}</button></span>`).join("")}</div>` : ""}
+      <div class="row3"><textarea id="ask-text" rows="1" placeholder="${chat.refs.length ? "What would you like to know or change about this?" : "Ask about Midway, or tell the assistant what to change"}" aria-label="Your question" ${dis}>${esc(chat.draft)}</textarea>
+        <button class="btn p sm" id="ask-send" ${dis}>Ask</button></div>
+    </div>
+    <div class="meta"><span>${state.final ? "The write-up is final, so no more changes can be made." : "Uses CAISO's queue data only. Numbers are checked before they're shown."}</span><span class="t">${chat.left} questions left today</span></div>
+  </div>`;
+}
+function working(){
+  return `<div class="working" role="status">${chat.busy.steps.map((s,i)=>`<span>${i < chat.busy.at ? `<i class="ok"></i>` : `<i class="spin"></i>`}${esc(s)}</span>`).slice(0, chat.busy.at+1).join("")}</div>`;
+}
+const smallCheck = () => I.check.replace('width="20" height="20"','width="16" height="16"');
+function numBtn(v, u, key){ return `<button class="num t" data-rows-key="${key}">${val(v,u)}</button>`; }
+function traceHtml(t){
+  return `<details class="trace"><summary>${smallCheck()} ${t.lookups.length} lookup${t.lookups.length===1?"":"s"} \u00b7 ${t.checked} number${t.checked===1?"":"s"} checked \u00b7 how this was answered</summary>
+    <ol>${t.lookups.map(l=>`<li>${esc(TOOL[l.tool])}: <code>${esc(l.args)}</code>, ${l.rows} rows</li>`).join("")}<li>Code recalculated every number from those rows. All matched.</li></ol></details>`;
+}
+function msgHtml(m, i){
+  const who = `<span class="who">Assistant</span>`;
+  if (m.who === "you") return `<div class="msg you">${m.refs && m.refs.length ? `<div class="refs">${m.refs.map(r=>`<span class="ref">${esc(r.label)}</span>`).join("")}</div>` : ""}<div class="bubble">${esc(m.text)}</div></div>`;
+  if (m.kind === "answer") return `<div class="msg bot">${who}
+      ${m.say ? `<p class="say">${m.say}</p>` : ""}
+      ${m.facts.map(f=>`<div class="fact"><span>${I.check}</span><p>${f}</p></div>`).join("")}
+      ${m.table || ""}
+      ${(m.opinions||[]).map(o=>`<div class="opin"><span>${I.ask}</span><p>${esc(o)}<small>Opinion \u00b7 not checked by code</small></p></div>`).join("")}
+      ${traceHtml(m.trace)}
+      <div class="acts">${m.added ? `<span class="done">${smallCheck()} Added to the write-up${(m.opinions||[]).length?"; the opinion is waiting for review":""}</span>` : state.final ? "" : `<button class="btn sm" data-add="${i}">Add to write-up</button>`}${m.rowsMain ? `<button class="btn q sm" data-rows-key="${m.rowsMain}">See the rows</button>` : ""}</div>
+      ${m.follow ? `<div class="followups">${m.follow.map(q=>`<button data-q="${esc(q)}">${esc(q)} ${I.arrow}</button>`).join("")}</div>` : ""}
+    </div>`;
+  if (m.kind === "proposal") return `<div class="msg bot">${who}
+      <div class="prop${m.status!=="open"?" closed":""}">
+        <span class="lbl">${m.status==="open" ? "Proposed change \u00b7 nothing applied yet" : m.status==="applied" ? "Change applied" : "Change not applied"}</span>
+        ${m.body}
+        ${m.status==="open" ? (state.final ? `<span class="muted small">The write-up is final, so this can't be applied.</span>` : `<div class="acts"><button class="btn p sm" data-apply="${i}">Make this change</button><button class="btn q sm" data-skip="${i}">Never mind</button></div>`)
+          : m.status==="applied" ? `<span class="done">${smallCheck()} ${esc(m.after)}</span>` : `<span class="muted small">Nothing was changed.</span>`}
+      </div>${traceHtml(m.trace)}</div>`;
+  if (m.kind === "pick-number") return `<div class="msg bot">${who}<p class="say">Which number should I explain?</p>
+      <div class="choose">${keyNumbers().map(k=>`<button class="opt" data-explain="${k.key}" ${m.done?"disabled":""}>${esc(k.label)}<span>${esc(k.short)}</span></button>`).join("")}</div></div>`;
+  if (m.kind === "pick-group") {
+    const used = usedIdx();
+    return `<div class="msg bot">${who}<p class="say">Which group should projects like this one be compared with? Narrower groups are closer to Midway but need enough finished projects to be trusted.</p>
+      <div class="choose">${M.ladder.map((r,j)=>{ const est = r.enough && r.by_n[10]; const label = ({"voltage section":"Midway 230 kV only","site":"All of Midway","bottleneck area":`Behind ${r.area}`,"county":`${r.area} County`,"California":"Across California"})[r.kind] + (r.kind==="California" ? ` \u00b7 ${r.desc.split(",").slice(0,-1).join(",").replace("150-300","150\u2013300")}` : "");
+        return `<button class="opt" data-group="${j}" ${(!est||j===used||m.done)?"disabled":""}>${esc(label)}<span>${j===used ? "in use" : est ? `${in100(est.chance)} in 100 \u00b7 ${r.projects} projects` : `too few \u00b7 ${r.resolved} finished, ${r.built} built`}</span></button>`; }).join("")}</div></div>`;
+  }
+  if (m.kind === "pick-projects") return `<div class="msg bot">${who}<p class="say">Which projects should I leave out? Tick them here or in the list on the left, and say why.</p>
+      <div class="choose"><div class="pickwrap">${M.ahead.projects.filter(p=>!state.leftOut.has(p.id)).map(p=>`<label class="pick${chat.selected.has(p.id)?" on":""}"><input type="checkbox" data-sel="${esc(p.id)}" ${chat.selected.has(p.id)?"checked":""} ${m.done?"disabled":""}><span><b>${mw(p.mw)} MW ${esc(shortType(p))}</b><small><span class="mono">${esc(p.id)}</span> \u00b7 applied ${p.q.slice(0,4)}, waited ${yrs(p.waited)} years</small></span><span class="c">${mw(p.mw*p.chance)}<small> MW</small></span></label>`).join("")}</div>
+        <label class="small muted" for="why-out">Why? This goes in the change log.</label><input type="text" id="why-out" placeholder="e.g. these have been stuck for years" ${m.done?"disabled":""}>
+        <div class="acts"><button class="btn p sm" data-leave-go ${m.done?"disabled":""}>Show me what would change</button></div></div></div>`;
+  return `<div class="msg bot">${who}<div class="cant-reply"><div class="h">${I.info} ${esc(m.title)}</div><p>${m.why}</p>${m.help ? `<p>${m.help}</p>` : ""}
+      <div class="chips-sm" style="margin-top:8px">${(m.instead||QUESTIONS.slice(0,2)).map(q=>`<button data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div></div></div>`;
+}
+
+// ---------- replies, scripted from Midway's real rows ----------
+function leaveProposal(ids, why){
+  const ps = ids.map(projById).filter(p => p && p.chance != null && !state.leftOut.has(p.id));
+  const after = afterLeaving([...state.leftOut, ...ps.map(p=>p.id)]);
+  return { kind:"proposal", status:"open", apply:"leaveOut", ids:ps.map(p=>p.id), why,
+    steps:["Reading your request", `Finding the ${ps.length} project${ps.length===1?"":"s"}`, "Working out what would change"],
+    body:`<p style="margin:0">Leave out <b>${ps.length} project${ps.length===1?"":"s"}</b> still waiting at Midway:</p>
+      <ul>${ps.map(p=>`<li><span class="mono">${esc(p.id)}</span> \u00b7 ${mw(p.mw)} MW ${esc(shortType(p))}, applied ${p.q.slice(0,4)}</li>`).join("")}</ul>
+      <div class="change">Realistically ahead: <s class="t">${mw(curAhead().realistic)} MW</s> \u2192 <b class="t">${mw(after.realistic)} MW</b></div>
+      ${why ? `<span class="small">Reason: \u201c${esc(why)}\u201d</span>` : ""}
+      <span class="small muted">They'd also be left out of the history the chances come from. Every fact that uses them is worked out and checked again; opinions resting on a number that moves come back for review.</span>`,
+    after:`Left out ${ps.length} project${ps.length===1?"":"s"}. Realistically ahead is now ${mw(after.realistic)} MW, checked again.`,
+    trace:{ lookups:[{tool:"list", args:`site Midway, waiting, ${ps.length} named`, rows:ps.length},{tool:"propose", args:`leave out ${ps.map(p=>p.id).join(", ")}`, rows:ps.length}], checked:1 } };
+}
+function groupProposal(i){
+  const r = M.ladder[i], cur = odds(10), nw = r.by_n[10];
+  return { kind:"proposal", status:"open", apply:"rung", rung:i,
+    steps:["Reading your request","Finding that comparison group","Working out what would change"],
+    body:`<p style="margin:0">Compare with <b>${r.projects} past ${esc(plainGroup(r))}</b> instead of the ${cur.projects} used now.</p>
+      <div class="change">Built within 10 years: <s class="t">${in100(cur.chance)} in 100</s> \u2192 <b class="t">${in100(nw.chance)} in 100</b> <span class="muted small">(likely ${in100(nw.range[0])}\u2013${in100(nw.range[1])})</span></div>
+      <span class="small muted">${r.projects > cur.projects ? "A bigger group gives a narrower range, but includes projects less like this one." : "A closer group is more like this project, but has fewer projects behind it."}</span>`,
+    after:`Now comparing with ${r.projects} past ${plainGroup(r)}. Every number on the page was worked out again.`,
+    trace:{ lookups:[{tool:"chance", args:`${r.desc}, 10 years`, rows:r.projects},{tool:"propose", args:"use a different comparison group", rows:r.projects}], checked:2 } };
+}
+function explainReply(key){
+  const n = state.years, o = odds(n), rung = M.ladder[usedIdx()], a = curAhead();
+  const grpRows = M.rows.map(r => ({...r, status:r.outcome}));
+  if (key === "chance" || key === "wait") return { kind:"answer", rowsKeys:{grp:grpRows}, rowsMain:"grp",
+    steps:["Reading your question", "Looking up the comparison group", "Checking the numbers against the data"],
+    say: key === "chance"
+      ? `<b>${in100(o.chance)} in 100</b> comes from following every past project like this one from the day it applied: built, withdrew, or still waiting. A project still waiting counts only for the years it has been watched, never as a failure. The likely range (${in100(o.range[0])} to ${in100(o.range[1])}) comes from redrawing the group at random 400 times.`
+      : `<b>About ${Math.round(o.wait)} years</b> is when half of the projects that got built had been built. The likely range (${Math.round(o.wait_range[0])} to ${Math.round(o.wait_range[1])} years) comes from redrawing the group at random 400 times.`,
+    facts:[`The group is ${numBtn(o.projects,"","grp")} past ${esc(plainGroup(rung))}: ${numBtn(o.built,"","grp")} were built, ${numBtn(o.withdrawn,"","grp")} withdrew and ${numBtn(o.waiting,"","grp")} are still waiting.`,
+      key === "chance" ? `${numBtn(o.watched,"","grp")} of them have been watched for ${n} years or more; the figure rests mostly on them.` : `Of the ${numBtn(o.built,"","grp")} built, half were running within ${numBtn(o.wait,"years","grp")} of applying.`],
+    follow:["Compare with a different group", "How many projects have withdrawn at Midway?"],
+    trace:{ lookups:[{tool:"chance", args:`${rung.desc}, ${n} years`, rows:o.projects}], checked:key==="chance"?5:5 } };
+  if (key === "ahead") {
+    const ps = M.ahead.projects.filter(p => !state.leftOut.has(p.id)).sort((x,y)=>y.mw*y.chance-x.mw*x.chance);
+    return { kind:"answer", rowsKeys:{ahead:ps}, rowsMain:"ahead", steps:["Reading your question","Working out the MW realistically ahead","Checking the numbers against the data"],
+      say:`Each project still waiting at Midway counts by its chance of still being built, given how long it has already waited. Those chances come from similar projects across California. Projects from the 2023 batch aren't counted, because nothing under the new rules has finished yet.`,
+      facts:[`${numBtn(ps.length,"","ahead")} old-rules projects are waiting, adding up to ${numBtn(a.waiting,"MW","ahead")}. Counted by their chances, that's ${numBtn(a.realistic,"MW","ahead")}.`,
+        `The two largest, ${esc(ps[0].id)} and ${esc(ps[1].id)}, account for ${numBtn(ps[0].mw*ps[0].chance + ps[1].mw*ps[1].chance,"MW","ahead")} of it.`],
+      table:`<table class="t" style="margin:0"><thead><tr><th>Project</th><th class="r">MW</th><th class="r">Waited</th><th class="r">Chance</th><th class="r">Counts as</th></tr></thead><tbody>${ps.slice(0,5).map(p=>`<tr><td class="mono">${esc(p.id)}</td><td class="r t">${Math.round(p.mw)}</td><td class="r t">${yrs(p.waited)} yrs</td><td class="r t">${pct(p.chance)}</td><td class="r t">${Math.round(p.mw*p.chance)} MW</td></tr>`).join("")}</tbody></table>`,
+      follow:["Leave out projects waiting since 2019 or earlier","Which waiting projects have been in line longest?"],
+      trace:{ lookups:[{tool:"ahead", args:"site Midway", rows:ps.length + M.ahead.new_projects.length}], checked:3 } };
+  }
+  return { kind:"answer", rowsKeys:{nw:M.ahead.new_projects}, rowsMain:"nw", steps:["Reading your question","Listing new-rules projects at Midway"],
+    say:`Projects that applied under the 2023 rules are shown at their full size and never added to the realistic figure: none has finished under those rules yet, so there's no history to judge their odds.`,
+    facts:[`${numBtn(M.ahead.new_projects.length,"","nw")} new-rules projects are waiting at Midway, adding up to ${numBtn(M.ahead.new,"MW","nw")}.`],
+    trace:{ lookups:[{tool:"list", args:"site Midway, waiting, 2023 rules", rows:M.ahead.new_projects.length}], checked:2 } };
+}
+function aboutProjects(ids){
+  const ps = ids.map(projById).filter(Boolean);
+  return { kind:"answer", rowsKeys:{sel:ps}, rowsMain:"sel", steps:["Reading your question", `Looking up ${ps.length} project${ps.length===1?"":"s"}`, "Checking the numbers against the data"],
+    facts: ps.slice(0,4).map(p => p.chance == null
+      ? `<span class="mono">${esc(p.id)}</span> (${mw(p.mw)} MW) applied under the 2023 rules, so it's shown at full size and its odds aren't known.`
+      : `<span class="mono">${esc(p.id)}</span> has waited ${numBtn(p.waited,"years","sel")}. Of similar projects still waiting after that long, ${numBtn(p.chance,"%","sel")} were later built, so its ${numBtn(p.mw,"MW","sel")} count as ${numBtn(p.mw*p.chance,"MW","sel")}.`),
+    follow:[`Leave ${ps.length===1?"it":"these"} out`],
+    followRefs: ids,
+    trace:{ lookups:[{tool:"list", args:`site Midway, ${ps.map(p=>p.id).join(", ")}`, rows:ps.length}], checked:ps.length*4 } };
+}
+function reply(q, refs){
+  const t = q.toLowerCase(), old = OLD();
+  const projRefs = refs.filter(r => r.kind === "proj").map(r => r.key), numRef = refs.find(r => r.kind === "num");
+  if (projRefs.length && /leave|exclude|ignore|remove|drop|without/.test(t)) return leaveProposal(projRefs, q);
+  if (projRefs.length) return aboutProjects(projRefs);
+  if (numRef) return explainReply(numRef.key);
+  if (/^explain|where does|how (is|was) .* worked out/.test(t)) return { kind:"pick-number" };
+  if (/different group|compare differently|comparison group/.test(t)) return { kind:"pick-group" };
+  if (/(leave|ignore|exclude|without|drop|remove).*(2019|stuck|old)|stuck since/.test(t)) return leaveProposal(M.adjusted.leave_out, q);
+  if (/^leave (some )?projects out$|^leave some projects out$/.test(t)) return { kind:"pick-projects" };
+  if (/any size|all sizes|wider|broader|regardless of size/.test(t)) return groupProposal(M.ladder.findIndex(r => r.kind==="California" && r.desc.startsWith("Solar + battery, across")));
+  if (/only.*(midway|here|this substation)|just (at )?midway/.test(t)) {
+    const r = M.ladder.find(x => x.kind === "site");
+    return { kind:"cant", title:"There are too few past projects at Midway to give a figure", steps:["Reading your request","Looking for projects like this one at Midway"],
+      why:`Only <b>${r.resolved}</b> solar + battery projects of 150\u2013300 MW at Midway have finished, and <b>${r.built}</b> were built. A chance worked out from so few would swing with every new project, so it isn't given.`,
+      help:`<button class="link" data-qa="compare">See every group, from Midway outwards</button>`, instead:["How many projects have withdrawn at Midway?","Compare with solar + battery projects of any size"] };
+  }
+  if (/batter/.test(t)) {
+    const bat = old.filter(hasBattery), b = bat.filter(r=>r.status==="built"), w = bat.filter(r=>r.status==="withdrawn"), wt = bat.filter(r=>r.status==="waiting");
+    return { kind:"answer", rowsKeys:{bat}, rowsMain:"bat", steps:["Reading your question","Listing projects with a battery at Midway","Checking 5 numbers against the data"],
+      facts:[`Of ${numBtn(bat.length,"","bat")} projects with a battery that applied at Midway under the old rules, ${numBtn(b.length,"","bat")} ${b.length===1?"was":"were"} built, ${numBtn(b[0].years,"years","bat")} after applying.`,
+        `${numBtn(w.length,"","bat")} withdrew; half of them had left within ${numBtn(median(w.map(r=>r.years)),"years","bat")} of applying.`, `${numBtn(wt.length,"","bat")} are still waiting.`],
+      opinions:["With only one battery project ever built here, Midway's own history says little about how long a new one would take. The California-wide figure is the better guide."],
+      follow:["Which waiting projects have been in line longest?","Compare with solar + battery projects of any size"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, has a battery, old rules, any status", rows:bat.length}], checked:5 } };
+  }
+  if (/longest|oldest|been waiting|in line|waited/.test(t)) {
+    const wt = M.ahead.projects.slice().sort((a,b)=>b.waited-a.waited), top = wt.filter(p => +p.q.slice(0,4) < 2017);
+    return { kind:"answer", rowsKeys:{wait:wt}, rowsMain:"wait", steps:["Reading your question","Listing projects waiting at Midway","Checking 3 numbers against the data"],
+      facts:[`${numBtn(top.length,"","wait")} of the ${numBtn(wt.length,"","wait")} projects waiting at Midway applied before 2017. Together they add up to ${numBtn(top.reduce((s,p)=>s+p.mw,0),"MW","wait")}.`],
+      table:`<table class="t" style="margin:0"><thead><tr><th>Project</th><th class="r">MW</th><th>Applied</th><th class="r">Waiting</th></tr></thead><tbody>${wt.slice(0,5).map(p=>`<tr><td class="mono">${esc(p.id)}</td><td class="r t">${Math.round(p.mw)}</td><td class="t">${p.q.slice(0,4)}</td><td class="r t">${yrs(p.waited)} yrs</td></tr>`).join("")}</tbody></table>`,
+      follow:["Leave out projects waiting since 2019 or earlier","How many projects have withdrawn at Midway?"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, waiting, old rules", rows:wt.length}], checked:3 } };
+  }
+  if (/withdr|how many|built|drop/.test(t) && !/cost|pay/.test(t)) {
+    const by = s => old.filter(r => r.status === s), b = by("built"), w = by("withdrawn"), wt = by("waiting");
+    return { kind:"answer", rowsKeys:{old}, rowsMain:"old", steps:["Reading your question","Listing projects at Midway by outcome","Checking 5 numbers against the data"],
+      facts:[`Of ${numBtn(old.length,"","old")} projects that applied at Midway under the old rules, ${numBtn(w.length,"","old")} withdrew, ${numBtn(b.length,"","old")} were built and ${numBtn(wt.length,"","old")} are still waiting.`,
+        `The ${numBtn(w.length,"","old")} that withdrew added up to ${numBtn(w.reduce((s,r)=>s+(r.mw||0),0),"MW","old")}.`],
+      follow:["How long did battery projects wait here?","Which waiting projects have been in line longest?"],
+      trace:{ lookups:[{tool:"list", args:"site Midway, withdrawn, old rules", rows:w.length},{tool:"list", args:"site Midway, built, old rules", rows:b.length},{tool:"list", args:"site Midway, waiting, old rules", rows:wt.length}], checked:5 } };
+  }
+  if (/cost|price|pay|\$|dollar|upgrade|power lines?|lines? (around|near)|transmission|capacity|power flow|curtail|congestion|fee/.test(t)) return { kind:"cant", title:"I can't answer that from the queue data", steps:["Reading your question","Checking what the data covers"],
+    why:"The grid operator's queue report doesn't say what individual projects pay to connect, or how much power the lines around Midway can carry. Anything I said about that would be a guess.",
+    help:`This page does show planned upgrades near Midway and the operator's estimate of the area's cost to add room per kW. <button class="link" data-tab-open="grid">Open Upgrades and costs</button>` };
+  if (/windhub|colorado|tesla|gates|vincent|other substation| vs |versus|compare (it )?with|nearby substation/.test(t)) return { kind:"cant", title:"This workspace is about Midway only", steps:["Reading your question"],
+    why:"Every lookup here is limited to Midway and this project, so I can't answer about another substation from here.",
+    help:`Open the other substation from the <button class="link" data-go-map>map</button>; the map also lists nearby substations side by side.` };
+  return { kind:"cant", title:"That's outside what this data can answer", steps:["Reading your question","Checking what the data covers"],
+    why:"I can only answer from the grid operator's queue data: how likely projects like this are to be built and how long they take, which projects are waiting at Midway, and what happened to past projects here.", instead:QUESTIONS };
+}
+
+function send(text, opts = {}){
+  if (chat.busy || chat.left <= 0 || state.final) return;
+  const refs = opts.refs ?? chat.refs;
+  if (state.view !== "ask") state.view = "ask";
+  chat.msgs.push({ who:"you", text, refs });
+  chat.refs = []; chat.draft = "";
+  const r = opts.reply || reply(text, refs);
+  if (r.kind.startsWith("pick")) { chat.msgs.push({ who:"bot", ...r }); renderSite(); return; }
+  chat.left--;
+  chat.busy = { steps:r.steps, at:0 }; renderSite();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, step = reduce ? 0 : 480;
+  const tick = () => {
+    if (chat.busy.at < chat.busy.steps.length - 1) { chat.busy.at++; renderSite(); setTimeout(tick, step); }
+    else { chat.busy = null; chat.msgs.push({ who:"bot", ...r }); renderSite(); }
+  };
+  setTimeout(tick, step);
+  state.log.push({ t:new Date().toTimeString().slice(0,5), w:`You asked: "${text}"` });
+}
+function startAction(kind){
+  if (kind === "explain") send("Explain a number", { reply:{ kind:"pick-number" } });
+  if (kind === "compare") send("Compare with a different group", { reply:{ kind:"pick-group" } });
+  if (kind === "leave") {
+    if (chat.selected.size) { const ids = [...chat.selected]; chat.selected.clear();
+      send(`Leave ${ids.length===1?"this":"these"} out`, { refs:ids.map(id=>({kind:"proj", key:id, label:`${id} \u00b7 ${mw(projById(id).mw)} MW`})), reply:leaveProposal(ids, "") }); }
+    else send("Leave some projects out", { reply:{ kind:"pick-projects" } });
+  }
+}
+
+function wireAskView(el){
+  const now = () => new Date().toTimeString().slice(0,5);
+  const body = $("#conv-body", el); if (body && chat.msgs.length) body.scrollTop = body.scrollHeight;
+  const ta = $("#ask-text", el);
+  if (ta) {
+    const go1 = () => { const v = ta.value.trim(); if (v) send(v); };
+    $("#ask-send", el).onclick = go1;
+    ta.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go1(); } });
+    ta.addEventListener("input", () => { chat.draft = ta.value; ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; });
+  }
+  const focusBox = () => { const t = $("#ask-text"); if (t) { t.focus(); t.setSelectionRange(t.value.length, t.value.length); } };
+  el.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => {
+    const m = b.closest(".msg") && chat.msgs[[...el.querySelectorAll(".msg")].indexOf(b.closest(".msg"))];
+    if (m && m.followRefs && /^Leave/.test(b.dataset.q)) send(b.dataset.q, { refs:m.followRefs.map(id=>({kind:"proj", key:id, label:id})) });
+    else send(b.dataset.q);
+  }));
+  el.querySelectorAll("[data-explain]").forEach(b => b.addEventListener("click", () => {
+    const k = keyNumbers().find(x => x.key === b.dataset.explain);
+    const pick = b.closest(".msg"); if (pick) chat.msgs.forEach(m => { if (m.kind === "pick-number") m.done = true; });
+    send(`Explain the ${k.short}`, { refs:[], reply:explainReply(k.key) });
+  }));
+  el.querySelectorAll("[data-ref-num]").forEach(b => b.addEventListener("click", () => {
+    const k = keyNumbers().find(x => x.key === b.dataset.refNum);
+    if (!chat.refs.some(r => r.key === k.key)) chat.refs.push({ kind:"num", key:k.key, label:k.short });
+    renderSite(); focusBox();
+  }));
+  el.querySelectorAll("[data-unref]").forEach(b => b.addEventListener("click", () => { chat.refs.splice(+b.dataset.unref, 1); renderSite(); focusBox(); }));
+  el.querySelectorAll("[data-qa]").forEach(b => b.addEventListener("click", () => startAction(b.dataset.qa)));
+  el.querySelectorAll("[data-view-go]").forEach(b => b.addEventListener("click", () => { state.view = b.dataset.viewGo; renderSite(); }));
+  el.querySelectorAll("[data-sel]").forEach(b => b.addEventListener("change", () => { b.checked ? chat.selected.add(b.dataset.sel) : chat.selected.delete(b.dataset.sel); renderSite(); }));
+  el.querySelectorAll("[data-sel-clear]").forEach(b => b.addEventListener("click", () => { chat.selected.clear(); renderSite(); }));
+  el.querySelectorAll("[data-sel-ask]").forEach(b => b.addEventListener("click", () => {
+    [...chat.selected].forEach(id => { if (!chat.refs.some(r=>r.key===id)) chat.refs.push({ kind:"proj", key:id, label:`${id} \u00b7 ${mw(projById(id).mw)} MW` }); });
+    chat.selected.clear(); renderSite(); focusBox();
+  }));
+  el.querySelectorAll("[data-sel-leave]").forEach(b => b.addEventListener("click", () => startAction("leave")));
+  el.querySelectorAll("[data-leave-go]").forEach(b => b.addEventListener("click", () => {
+    const ids = [...chat.selected]; if (!ids.length) { b.textContent = "Tick at least one project first"; return; }
+    const why = ($("#why-out", el)||{}).value || "";
+    chat.msgs.forEach(m => { if (m.kind === "pick-projects") m.done = true; });
+    chat.selected.clear();
+    send(`Leave out ${ids.join(", ")}`, { refs:[], reply:leaveProposal(ids, why) });
+  }));
+  el.querySelectorAll("[data-group]").forEach(b => b.addEventListener("click", () => {
+    chat.msgs.forEach(m => { if (m.kind === "pick-group") m.done = true; });
+    const r = M.ladder[+b.dataset.group];
+    send(`Compare with ${plainGroup(r)}`, { refs:[], reply:groupProposal(+b.dataset.group) });
+  }));
+  el.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => {
+    const m = chat.msgs[+b.dataset.add]; m.added = true;
+    m.facts.forEach(f => chat.extra.push({ id:"f"+(chat.nextFact++), kind:"fact", html:f, rowsKeys:m.rowsKeys }));
+    (m.opinions||[]).forEach(o => chat.extra.push({ id:"j"+(chat.nextOp++), kind:"opinion", text:o }));
+    state.log.push({ t:now(), w:`You added an answer to the write-up` });
+    renderSite();
+  }));
+  el.querySelectorAll("[data-apply]").forEach(b => b.addEventListener("click", () => {
+    const m = chat.msgs[+b.dataset.apply]; m.status = "applied";
+    if (m.apply === "leaveOut") { m.ids.forEach(id => state.leftOut.add(id)); delete state.decisions.j2; }
+    if (m.apply === "rung") state.rung = m.rung;
+    chat.changes.push(m.after); state.log.push({ t:now(), w:m.after, y:m.why });
+    renderSite();
+  }));
+  el.querySelectorAll("[data-skip]").forEach(b => b.addEventListener("click", () => { chat.msgs[+b.dataset.skip].status = "skipped"; renderSite(); }));
+  el.querySelectorAll(".conv [data-rows-key]").forEach(b => b.addEventListener("click", () => {
+    const msg = b.closest(".msg"), i = [...el.querySelectorAll(".conv .msg")].indexOf(msg), m = chat.msgs[i];
+    rowsDrawer(m.rowsKeys[b.dataset.rowsKey], b);
+  }));
+  el.querySelectorAll("[data-tab-open]").forEach(b => b.addEventListener("click", () => { state.view = "overview"; state.tab = b.dataset.tabOpen; renderSite(); $(".deeper").scrollIntoView({behavior:"smooth"}); }));
+  el.querySelectorAll("[data-go-map]").forEach(b => b.addEventListener("click", () => go("map")));
+  const tg = $("#ctx-toggle", el); tg && tg.addEventListener("click", () => { chat.ctxOpen = !chat.ctxOpen; renderSite(); });
+}
+
+function rowsDrawer(rows, from){
+  lastFocus = from;
+  const label = {built:"Built", withdrawn:"Withdrew", waiting:"Still waiting"};
+  $("#drawer-root").innerHTML = `<div class="scrim" data-close></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-h" style="z-index:70">
+    <header><div><div class="muted small">How we know</div><h2 id="dr-h">${rows.length} row${rows.length===1?"":"s"} from the queue report</h2></div><button class="btn q sm" data-close aria-label="Close">${I.close}</button></header>
+    <div class="body">
+      <p style="margin:0;color:var(--ink-2)">These are the exact projects the lookup returned. Code recalculated the numbers in the answer from these rows, using all of them.</p>
+      <div class="verified">${I.check}<div><b>Checked</b><span>Every number in the answer matched these rows, from CAISO's queue report of ${dateLong(M.as_of)}.</span></div></div>
+      <div class="scroll-x"><table class="t"><thead><tr><th>Project</th><th>Applied</th><th class="r">MW</th><th>Status</th><th class="r">Years</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="mono">${esc(r.id)}</td><td class="t">${String(r.q).slice(0,4)}</td><td class="r t">${Math.round(r.mw||0)}</td><td>${label[r.status]||"Still waiting"}${r.est?' <span class="pill">date estimated</span>':""}</td><td class="r t">${r.years!=null?Number(r.years).toFixed(1):r.waited!=null?Number(r.waited).toFixed(1):"\u2013"}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div></aside>`;
+  document.querySelectorAll("#drawer-root [data-close]").forEach(b => b.addEventListener("click", closeWhy));
+  $("#drawer-root .drawer [data-close]").focus();
+  document.addEventListener("keydown", escWhy);
+}
+
+// ======================================================================
 // DECISIONS
 // ======================================================================
 function renderDec(){
@@ -1230,7 +1723,11 @@ function renderDec(){
       <div class="swatches">${sw("--t1","")}${sw("--t2","")}${sw("--t3","teal: more ahead")}${sw("--t5","")}${sw("--sand","withdrew")}${sw("--sky","waiting")}${sw("--lav","unknown")}</div>`],
     ["How the page reads", "#35", `<p><b>Answers first.</b> The page opens with three questions a newcomer would ask, each answered in one plain sentence with one simple picture: <i>Will it get built? How long does it take? How crowded is it?</i> Chances are said as "17 in 100" with a grid of 100 dots, which people read more easily than percentages.</p>
       <p><b>Detail on request.</b> Charts, the list of projects ahead, upgrades and costs, and how we chose the comparison sit in four tabs below. Every answer has "How we know", which explains the method in a sentence or two, says it was checked, and only then offers the raw rows.</p>`],
-    ["Review", "#35", `<p>The write-up has its own view so it never crowds the numbers; a badge on its tab shows how many points need you. Facts carry a green check and their numbers open "How we know". Opinions are tinted, asking "do you agree?", with <b>Agree · Disagree · Reword</b>. A request to leave projects out shows exactly what would change before anything does. Finalise unlocks once every opinion is answered.</p>`],
+    ["Review", "#35", `<p>The write-up has its own view so it never crowds the numbers; a badge on its tab shows how many points need you. Facts carry a green check and their numbers open "How we know". Opinions are tinted, asking "do you agree?", with <b>Agree \u00b7 Disagree \u00b7 Reword</b>. A request to leave projects out shows exactly what would change before anything does. Finalise unlocks once every opinion is answered.</p>`],
+    ["Asking the assistant", "#65, #35", `<p><b>Its own workspace.</b> "Ask" is a third view of the substation page, beside "The odds" and "Write-up". On the left is what we're looking at: the project, the key numbers, who it's compared with, the projects waiting here, and changes made so far. Anything there can be pointed at: "Explain" a number, "Ask about" it (it attaches to the question as a chip), or tick projects and ask about them or leave them out.</p>
+      <p><b>What it can do is shown up front:</b> four cards (answer questions, explain a number, change what's counted, build the write-up), each with examples you can click, and one line on what it can't do. Three guided actions sit above the box (Explain a number, Leave projects out, Compare differently) and walk you through by asking a short follow-up, so you never need to know the right words.</p>
+      <p><b>Replies.</b> Answers are facts with a green check; their numbers open the exact rows, and "how this was answered" lists each lookup. You choose which answers join the write-up. Changes come back as a proposal showing exactly what would move; nothing happens until you confirm, and applied changes show on the left. Questions the data can't answer get a plain reply saying why and what might help.</p>
+      <p class="muted">Needs two backend changes: answers held until a person adds them (today they're added at once), and an honest "can't answer" reply instead of running into the spending limit.</p>`],
     ["How the history ladder is shown", "Ticket 4", `<p>"Who we compared with": a short list that widens from Midway 230 kV out to all of California. Each step shows how close it comes to having enough finished projects, and the one in use is marked. Steps with enough history offer "Use", with their chance, so you can make the comparison wider.</p>`],
     ["The landing page", "New", `<p>Explains the problem before showing any substation. The hero states it in one sentence and lets you try it straight away: pick a project type and size and see "17 in 100" as a grid of dots. Below, a step-through chart puts every past project on screen as a dot by the year it applied, then lights up the ones built, the ones that withdrew and the ones still waiting. A ranked bar chart shows why location matters. Jargon (queue, substation, MW, the 2023 rule change) is tappable for a plain definition.</p>`],
     ["The map", "#32, #45", `<p>A real map of California's counties, drawn from public Census boundaries, with towns for orientation. No list of substation names on arrival: the panel asks "Where is your project?" and takes a town, county or substation name. Picking a town lists the substations within 60 miles, closest first, and names the least crowded one. Clicking a county lists its substations.</p>
