@@ -63,14 +63,14 @@ Built so far:
 
 - **The checked assessment** (ticket "The agent writes a checked assessment"): the model looks
   things up and writes an assessment made only of Factual Claims and Judgements, following
-  the writing skill (`src/interconnection_agent/skills/writing-an-assessment/SKILL.md`).
+  the writing skill (`backend/src/interconnection_agent/skills/writing-an-assessment/SKILL.md`).
   Code checks every number before it's shown (see "What the checking proves" below). A
   person can leave projects out or pick a narrower or broader comparison group (the numbers
   are worked out and checked again), approve, reject or rewrite each Judgement, and
   finalise once every Judgement is decided. Every change is logged. A plain request ("ignore projects stuck since 2019") becomes a proposed
   change that applies only when a person confirms it.
 
-- **The map app, Headway** (ticket "The map app"): a website (`web/`, Next.js and Leaflet)
+- **The map app, Headway** (ticket "The map app"): a website (`frontend/`, Next.js and Leaflet)
   over a small API (`interconnection_agent.api`). A landing page explains the queue before
   showing any substation. The map shows California's counties from US Census boundaries,
   every substation with projects waiting coloured by realistic MW ahead, planned substations
@@ -104,11 +104,11 @@ A claim that fails isn't shown, and leaving projects out later never brings it b
 Judgement is never shown as checked, and can't state a number of its own. Two things code
 can't catch, so the writing skill rules them out: numbers written as words ("half"), and
 interpretation slipped into a Factual Claim's sentence. The tests feed the checker correct claims and deliberately broken copies
-(`tests/integration/test_number_check.py`); every broken one is caught.
+(`backend/tests/integration/test_number_check.py`); every broken one is caught.
 
 What it can't prove is that the lookup was the *right* one: the wrong substation or a missing
 filter gives numbers that check out perfectly about the wrong thing. Answer-key questions
-with hand-written SQL answers (`tests/e2e/test_answer_key.py`) check that the agent picks the
+with hand-written SQL answers (`backend/tests/e2e/test_answer_key.py`) check that the agent picks the
 right rows. They call the real model, so they run only when `ANTHROPIC_API_KEY` is set. What
 neither can judge is whether past projects are a fair comparison for this one: that's what
 the Judgements, and the person deciding on them, are for.
@@ -120,7 +120,11 @@ the Judgements, and the person deciding on them, are for.
 
 ## Start the database and run the tests
 
+The Python code, its tests and the database setup live in `backend/`; run these commands there.
+
 ```bash
+cd backend
+
 # 1. Start Postgres (on port 5433 of your machine; see below).
 docker compose up -d
 
@@ -150,7 +154,8 @@ address works the same way there.
 ## Run the website
 
 ```bash
-# 1. Load the data into the database and keep it (about 30 seconds).
+# 1. In backend/, load the data into the database and keep it (about 30 seconds).
+cd backend
 uv run python -m interconnection_agent.cli load
 
 # 2. Start the API on port 8000. Written assessments use Claude if ANTHROPIC_API_KEY is
@@ -158,7 +163,7 @@ uv run python -m interconnection_agent.cli load
 uv run python -m interconnection_agent.api
 
 # 3. In another terminal, start the website, then open http://localhost:3000.
-cd web && npm install && npm run dev
+cd frontend && npm install && npm run dev
 ```
 
 The website sends `/api` requests to `http://127.0.0.1:8000`; set `HEADWAY_API` to point it
@@ -172,7 +177,7 @@ The agent calls the model, and these guards apply to every call it makes.
 1. **Set a monthly spending cap in the Anthropic console first.** This is required, not
    optional. It is the one limit that holds even if the code has a bug, so it must exist
    before any agent run.
-2. **Put the API key in `.env`, never in a committed file.** Copy `.env.example` to `.env`
+2. **Put the API key in `backend/.env`, never in a committed file.** Copy `backend/.env.example` to `backend/.env`
    and fill in `ANTHROPIC_API_KEY`. Git ignores `.env`, and CI scans every commit for
    anything that looks like a key and fails the build if it finds one.
 3. **Per-assessment limits are enforced in code** (`interconnection_agent.budget`). One
@@ -191,35 +196,39 @@ The same checks CI runs on every push and pull request (see `.github/workflows/c
 CI also scans the full git history for leaked keys, which needs no local step.
 
 ```bash
+cd backend
 uv run ruff check           # lint
 uv run ruff format --check  # formatting
 uv run mypy                 # type check (strict)
 uv run pytest               # tests (needs Postgres running)
-cd web && npm run typecheck # the website's types
+
+cd ../frontend
+npm run typecheck           # the website's types
 ```
 
-The browser tests (`tests/e2e/test_map_app.py`) run the website, the API and the database
+The browser tests (`backend/tests/e2e/test_map_app.py`) run the website, the API and the database
 together in Chromium, with a scripted stand-in for the model. They need the data loaded
-(`cli load`), `npm install` in `web/` and `uv run playwright install chromium`, and are
+(`cli load`), `npm install` in `frontend/` and `uv run playwright install chromium`, and are
 skipped otherwise.
 
 ## Layout
 
 ```
-src/interconnection_agent/        # the application code
-src/interconnection_agent/api/    # the API the website reads (FastAPI)
-src/interconnection_agent/tests/  # fast tests for that code (no database)
-web/                              # the website, Headway (Next.js and Leaflet)
-tests/integration/                # tests against the real Postgres
-tests/e2e/                        # the website in a browser, and tests of the real model
-data/                             # the saved source spreadsheets, and their credits
-docker-compose.yml                # the local Postgres
-.github/workflows/ci.yml          # CI: checks, tests, and the key scan
-docs/                             # design decisions, plans, agent instructions
-CONTEXT.md                        # what the domain words mean
+backend/                                  # the API, the numbers, the checking (Python)
+backend/src/interconnection_agent/        # the application code
+backend/src/interconnection_agent/api/    # the API the website reads (FastAPI)
+backend/src/interconnection_agent/tests/  # fast tests for that code (no database)
+backend/tests/integration/                # tests against the real Postgres
+backend/tests/e2e/                        # the website in a browser, and tests of the real model
+backend/data/                             # the saved source spreadsheets, and their credits
+backend/docker-compose.yml                # the local Postgres
+frontend/                                 # the website, Headway (Next.js and Leaflet)
+.github/workflows/ci.yml                  # CI: checks, tests, and the key scan
+docs/                                     # design decisions, plans, agent instructions
+CONTEXT.md                                # what the domain words mean
 ```
 
-Where tests go is explained in [`tests/README.md`](tests/README.md).
+Where tests go is explained in [`backend/tests/README.md`](backend/tests/README.md).
 
 ## Grouping substation names
 
@@ -234,14 +243,14 @@ grouping could quietly change which rows a checked number is built from:
    versus `230 kV`, and spacing around hyphens. It keeps words like "Substation", "Line",
    and "Bus", and never merges voltage levels. A 230 kV bus and a 500 kV bus at the same
    site are different connection points.
-2. **Look up in a reviewed table** (`src/interconnection_agent/poi/aliases.csv`, in version
+2. **Look up in a reviewed table** (`backend/src/interconnection_agent/poi/aliases.csv`, in version
    control). Each tidied name maps to one official name, by exact match only. This is where
    real synonyms, typos ("Vota-South" → "Volta-South"), and different endings get grouped.
    A name with no entry gets `normalized_poi = NULL` and `poi_unmapped = true`. It's counted,
    never guessed.
 
 Fuzzy matching is only used by an offline helper script
-(`scripts/propose_poi_aliases.py`, using `rapidfuzz`) that suggests groupings for a person
+(`backend/scripts/propose_poi_aliases.py`, using `rapidfuzz`) that suggests groupings for a person
 to review. The running program can't import it, and the test `test_poi_offline_only.py`
 fails if anyone tries.
 
@@ -252,20 +261,20 @@ is no connection history there anyway. The target was under 2% of the MW waiting
 reproduce the number:
 
 ```bash
-# Needs Postgres running (see above); prints the coverage line as it loads.
+# In backend/, with Postgres running (see above); prints the coverage line as it loads.
 PYTHONPATH=src uv run python -m interconnection_agent.cli ingest data/publicqueuereport.xlsx
 ```
 
 The reviewed groupings are also compared with the substation names in LBNL's dataset for the
 projects that appear in both. Any disagreement is reported for review by
-`tests/integration/test_poi_lbnl_crosscheck.py`.
+`backend/tests/integration/test_poi_lbnl_crosscheck.py`.
 
 ## Data and credits
 
-The `data/` folder holds saved copies of the public datasets this project loads: CAISO's
+The `backend/data/` folder holds saved copies of the public datasets this project loads: CAISO's
 Public Queue Report and LBNL's "Queued Up" file. They're used for educational and research
 purposes and aren't covered by this repository's software license. Each source's credit and
-terms are in [`data/README.md`](data/README.md). County and state outlines on the map come
+terms are in [`backend/data/README.md`](backend/data/README.md). County and state outlines on the map come
 from the US Census Bureau's cartographic boundary files (2023, public domain). Substation
 positions come from
 OpenStreetMap: © OpenStreetMap contributors, under the

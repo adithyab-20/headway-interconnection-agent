@@ -1,11 +1,11 @@
 """The map app: the three behaviours of ticket "The map app", in a real browser.
 
-Everything runs for real: the website (``web/``), the API and the database, loaded with
+Everything runs for real: the website (``frontend/``), the API and the database, loaded with
 ``load_all`` beforehand. The one stand-in is the model, scripted below, so
 writing and asking need no API key. Expected values come from hand-written SQL, or, for the
 estimates themselves, from the tested functions in ``interconnection_agent.chances``.
 
-Needs the data loaded (``load_all``), ``npm install`` in ``web/`` and Playwright's Chromium
+Needs the data loaded (``load_all``), ``npm install`` in ``frontend/`` and Playwright's Chromium
 (``uv run playwright install chromium``); skipped otherwise.
 """
 
@@ -37,7 +37,7 @@ from interconnection_agent.db import connect
 
 Conn = psycopg.Connection[tuple[object, ...]]
 ROOT = Path(__file__).resolve().parents[2]
-WEB = ROOT / "web"
+WEB = ROOT.parent / "frontend"
 API_PORT, WEB_PORT = 8765, 3765
 SLOW = 90_000  # ms: the first map load works out every substation's figures
 
@@ -64,7 +64,7 @@ def site(tmp_path_factory: pytest.TempPathFactory) -> Iterator[str]:
     if not _loaded():
         pytest.skip("The data isn't loaded: run load_all first.")
     if not (WEB / "node_modules").exists():
-        pytest.skip("Run npm install in web/ first.")
+        pytest.skip("Run npm install in frontend/ first.")
     if not (_free(API_PORT) and _free(WEB_PORT)):
         pytest.skip(f"Ports {API_PORT} and {WEB_PORT} must be free.")
 

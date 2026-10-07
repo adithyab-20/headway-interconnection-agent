@@ -1,4 +1,4 @@
-// The API's shapes and calls (src/interconnection_agent/api).
+// The API's shapes and calls (backend/src/interconnection_agent/api).
 
 export type ProjectType = "Solar only" | "Solar + battery" | "Battery only" | "Wind" | "Gas";
 export const PROJECT_TYPES: [ProjectType, string][] = [
