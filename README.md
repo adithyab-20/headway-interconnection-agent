@@ -216,8 +216,14 @@ Each deploys from its own folder of this repository.
 
 1. Create a project with a **Postgres** database, then add a service from this GitHub
    repository.
-2. In the service's settings, set the root directory to `/backend` and the config file to
-   `/backend/railway.toml`. Railway then builds `backend/Dockerfile`.
+2. In the service's settings (Railway no longer reads settings from a file in the repository
+   for new services, so these are set in its dashboard):
+   - **Source:** root directory `/backend`, and turn on **Wait for CI** so only changes that
+     pass the checks are deployed.
+   - **Build:** the builder is the Dockerfile (`backend/Dockerfile`, found on its own once the
+     root directory is set). Watch paths: `/backend/**`, so only changes to the API redeploy.
+   - **Deploy:** pre-deploy command `python -m interconnection_agent.cli load`, and restart
+     on failure.
 3. Give the service these variables:
    - `DATABASE_URL`: `${{Postgres.DATABASE_URL}}`, which points at the project's database.
    - `ANTHROPIC_API_KEY`: only if the site should write assessments. Set the spending cap
@@ -272,7 +278,7 @@ backend/tests/integration/                # tests against the real Postgres
 backend/tests/e2e/                        # the website in a browser, and tests of the real model
 backend/data/                             # the saved source spreadsheets, and their credits
 backend/docker-compose.yml                # the local Postgres
-backend/Dockerfile, railway.toml          # how Railway builds and runs the API
+backend/Dockerfile                        # how Railway builds and runs the API
 frontend/                                 # the website, Headway (Next.js and Leaflet)
 .github/workflows/ci.yml                  # CI: checks, tests, and the key scan
 docs/                                     # design decisions, plans, agent instructions
