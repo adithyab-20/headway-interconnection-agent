@@ -140,12 +140,15 @@ def data_as_of(conn: Conn) -> datetime.date:
     return row[0]
 
 
-def history(conn: Conn, as_of: datetime.date | None = None) -> list[Record]:
+def history(
+    conn: Conn, as_of: datetime.date | None = None, leave_out: frozenset[str] = frozenset()
+) -> list[Record]:
     """Every old-rules project, with how long it was watched, how it ended, and where.
 
     ``as_of`` replays the history as it stood on an earlier day, for the backtest: only
     projects that had joined by then, and only outcomes that had happened by then; the rest
-    were still waiting. By default, the day the data was taken.
+    were still waiting. By default, the day the data was taken. ``leave_out`` names
+    projects a person has left out (an Adjustment).
     """
     taken = data_as_of(conn)
     as_of = as_of or taken
@@ -164,7 +167,7 @@ def history(conn: Conn, as_of: datetime.date | None = None) -> list[Record]:
         outcome = OUTCOMES[str(status)]
         assert isinstance(q_date, datetime.date)
         assert isinstance(parts, list) and isinstance(places, list)
-        if q_date > as_of:
+        if q_date > as_of or str(native_id) in leave_out:
             continue
         if outcome is Outcome.WAITING:
             end = as_of
@@ -326,16 +329,18 @@ def odds_for(
     mw: float | None = None,
     place: str | None = None,
     use: ComparisonGroup | None = None,
+    leave_out: frozenset[str] = frozenset(),
 ) -> Odds:
     """The chance of being built within ``within_years``, and the typical wait, for the most
     specific comparison group with enough history. ``mw`` is the MW to grid; ``place`` a
     voltage section such as "Birds Landing 230 kV". ``use`` picks another group from the
-    ladder instead, even one with too few projects (it stays marked as such).
+    ladder instead, even one with too few projects (it stays marked as such). ``leave_out``
+    names projects a person has left out of the history (an Adjustment).
 
     Raises :class:`NotEnoughHistory` if no group of this project type (or the group picked)
     has been watched for ``within_years``.
     """
-    records = history(conn)
+    records = history(conn, leave_out=leave_out)
     ladder = comparison_ladder(records, conn, project_type, mw, place)
     usable = [use] if use else usable_groups(ladder)
     used = next((g for g in usable if g.longest_watched_years >= within_years), None)
