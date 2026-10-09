@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Dots, OutcomeKey } from "@/components/Dots";
 import { Term } from "@/components/Term";
 import { api, type Overview, type SiteSummary, type YearCounts } from "@/shared/api";
-import { NAME } from "@/shared/brand";
+import { GITHUB_URL, NAME } from "@/shared/brand";
 import { classOf, classVar, dateLong, in100, mw } from "@/shared/format";
 import { Arrow, Back, Pause, Play, Search } from "@/shared/icons";
 
@@ -52,7 +52,7 @@ export function Home() {
     <div className="home">
       <section className="hero">
         <div>
-          <div className="eyebrow">A look at California&apos;s grid connection queue</div>
+          <div className="eyebrow">An independent project · Public data, checked analysis</div>
           <h1>What happens to power projects waiting to join California&apos;s grid</h1>
           <p className="lede">
             Before a new solar farm, wind farm or battery can send power to the grid, it applies to connect and waits in
@@ -149,8 +149,8 @@ export function Home() {
           <div>
             <h3>What it is</h3>
             <p>
-              An independent project exploring how a language model can write analysis whose every number is checked
-              against public data. It isn&apos;t affiliated with the grid operator.
+              An independent, public-source project exploring how a language model can write analysis whose every number is checked
+              against public data. Built in the open, and still in development. It isn&apos;t affiliated with the grid operator.
             </p>
           </div>
           <div>
@@ -177,9 +177,11 @@ export function Home() {
             </p>
           </div>
         </div>
-        <Link className="link" href="/map" transitionTypes={["page-forward"]} style={{ marginTop: 6 }}>
-          Explore the map <Arrow />
-        </Link>
+        <div className="project-links">
+          <a className="link" href={GITHUB_URL} target="_blank" rel="noopener noreferrer">View the source <Arrow /></a>
+          <Link className="link" href="/changelog">Changelog <Arrow /></Link>
+          <a className="link" href={`${GITHUB_URL}/issues`} target="_blank" rel="noopener noreferrer">Report an issue <Arrow /></a>
+        </div>
       </section>
     </div>
   );

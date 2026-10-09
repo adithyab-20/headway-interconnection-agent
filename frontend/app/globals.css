@@ -4,6 +4,7 @@
 /* Layout: a calm page that answers first. Three plain answers, then "dig deeper" tabs,
    with the write-up and review in their own view so neither crowds the other. */
 :root{
+  --appbar-height:60px;
   --ground:#F2F5F3; --panel:#FFFFFF; --soft:#E9EFEB; --rule:#DCE4DF; --rule-2:#C9D4CE;
   --ink:#1D2926; --ink-2:#3A4945; --muted:#62716C; --faint:#85928D;
   /* Magnitude: one teal, light to dark. */
@@ -51,9 +52,37 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 .small{font-size:13px}
 
 
-.appbar{display:flex;align-items:center;gap:12px;height:60px;padding-inline:20px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;background:none;border:0;padding:0;cursor:pointer}
-.appbar .meta{margin-left:auto;font-size:13px;color:var(--muted)}
+.appbar{display:flex;align-items:center;gap:12px;height:var(--appbar-height);padding-inline:20px;background:var(--panel);border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;background:none;border:0;padding:0;cursor:pointer;flex-shrink:0}
+.project-badge{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-wash);padding:2px 7px;border-radius:5px}
+.project-nav{display:flex;gap:4px;align-items:center;margin-left:auto;min-width:0;overflow-x:auto}
+.nav-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;padding:7px 10px;border-radius:7px;color:var(--muted);font-size:13px;white-space:nowrap}
+.nav-link:hover{color:var(--ink);background:var(--soft)}
+.nav-link[aria-current="page"]{color:var(--accent);background:var(--accent-wash)}
+.nav-link svg{flex-shrink:0}
+.project-links{display:flex;gap:12px 24px;flex-wrap:wrap;margin-top:6px}
+.changelog{max-width:780px;margin:0 auto;padding:56px 24px 80px}
+.changelog h1{font-size:40px;line-height:1.15;margin-top:8px}
+.changelog .lede{font-size:17px;margin:16px 0 22px;color:var(--muted)}
+.changelog-entry{border-top:1px solid var(--rule);padding:28px 0;margin-top:28px}
+.changelog-entry time{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.changelog-entry h2{font-size:22px;margin:8px 0 12px}
+.changelog-entry ul{padding-left:20px;color:var(--ink-2);display:grid;gap:8px;margin-bottom:18px}
+@media (max-width:760px){
+  .appbar{gap:8px;padding-inline:12px}
+  .project-badge{display:none}
+  .project-nav{gap:2px}
+  .nav-link{padding:8px;font-size:12px}
+  .nav-link svg{display:none}
+}
+@media (max-width:540px){
+  :root{--appbar-height:100px}
+  .appbar{flex-wrap:wrap;align-content:center;gap:6px 10px}
+  .project-badge{display:inline}
+  .project-nav{width:100%;margin-left:0}
+  .nav-link{flex:1;padding:7px 5px}
+  .changelog{padding-top:32px}
+}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--rule-2);background:var(--panel);border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;cursor:pointer;transition:background .15s,border-color .15s}
 .btn:hover{border-color:var(--ink-2)}
@@ -68,7 +97,7 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 .link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 
 /* ---------------- Map ---------------- */
-.mapwrap{position:relative;height:calc(100vh - 60px - 34px);min-height:600px;margin:0 16px 16px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.mapwrap{position:relative;height:calc(100vh - var(--appbar-height) - 34px);min-height:600px;margin:0 16px 16px;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 #lmap{position:absolute;inset:0;background:var(--sea)}
 .leaflet-container{font-family:var(--sans);background:var(--sea)}
 .leaflet-container .state{fill:var(--land-2);stroke:var(--land-edge);stroke-width:1}
@@ -233,7 +262,7 @@ body:not(.leaflet-dragging) .leaflet-container.over-county{cursor:pointer}
   .about-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 }
 @media (max-width:760px){
-  .mapwrap{margin:0 8px 8px;height:calc(100vh - 60px - 34px)}
+  .mapwrap{margin:0 8px 8px}
   .panel{top:auto;left:8px;right:8px;bottom:8px;width:auto;max-width:none;max-height:52%}
   .legend{top:8px;left:8px;right:auto;bottom:auto;padding:8px 10px}
   .hoverchip{display:none}
@@ -520,7 +549,6 @@ table.t .r{text-align:right}
   .step{grid-template-columns:24px minmax(0,1fr) 100px}
   .step .viz{grid-column:2/-1;order:3}
   
-  .appbar .meta{display:none}
   .doc-card{padding:20px}
   .stmt.opinion{margin-inline:-20px;padding-inline:20px}
 }
